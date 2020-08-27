@@ -10,12 +10,12 @@ Player::Player()
     p_Sprite.setTexture(p_Texture);
 
     // start position
-    p_Position.x = 300;
-    p_Position.y = 300;
+    p_Position.x = 100;
+    p_Position.y = 100;
     p_Velocity.x = 0.1;
     p_Velocity.y = 0.1;
     onGround = false;
-    p_rect = FloatRect(300, 600, 40, 80);
+    p_rect = FloatRect(100, 100, 40, 80);
     p_texture_rect = IntRect(0, 0, 40, 80);
     //p_Sprite.setScale(1/p_rect.width, 1/p_rect.height);
     p_Sprite.setTextureRect(IntRect(p_texture_rect));
@@ -38,6 +38,7 @@ void Player::moveLeft()
         p_texture_rect.left = 0;
     }
     p_Sprite.setTextureRect(IntRect(p_texture_rect));
+
 }
 
 void Player::moveRight()
@@ -51,16 +52,31 @@ void Player::moveRight()
     }
     p_Sprite.setTextureRect(IntRect(p_texture_rect));
 
+
 }
 
 void Player::moveTop()
 {
     p_TopPressed = true;
+    p_texture_rect.left += 40;
+    p_texture_rect.top = 0;
+    if (p_texture_rect.left > 80)
+    {
+        p_texture_rect.left = 0;
+    }
+    p_Sprite.setTextureRect(IntRect(p_texture_rect));
 }
 
 void Player::moveBot()
 {
     p_BotPressed = true;
+    p_texture_rect.left += 40;
+    p_texture_rect.top = 0;
+    if (p_texture_rect.left > 80)
+    {
+        p_texture_rect.left = 0;
+    }
+    p_Sprite.setTextureRect(IntRect(p_texture_rect));
 }
 
 void Player::stopLeft()
@@ -89,21 +105,37 @@ void Player::update(float elapsedTime)
     if (p_RightPressed)
     {
         p_Velocity.x += p_Speed;
+        p_Direction.x = 1;
+        p_Direction.y = 0;
+        p_TopPressed = false;
+        p_BotPressed = false;
     }
 
     if (p_LeftPressed)
     {
         p_Velocity.x -= p_Speed;
+        p_Direction.x = -1;
+        p_Direction.y = 0;
+        p_TopPressed = false;
+        p_BotPressed = false;
     }
 
     if (p_TopPressed)
     {
         p_Velocity.y -= p_Speed;
+        p_Direction.y = -1;
+        p_Direction.x = 0;
+        p_RightPressed = false;
+        p_LeftPressed = false;
     }
 
     if (p_BotPressed)
     {
         p_Velocity.y += p_Speed;
+        p_Direction.y = 1;
+        p_Direction.x = 0;
+        p_RightPressed = false;
+        p_LeftPressed = false;
     }
 
     // gravity tests
@@ -111,13 +143,18 @@ void Player::update(float elapsedTime)
   
     // collisions
     p_rect.left += p_Velocity.x * elapsedTime;
-    collision(0);
-    if (!onGround) p_Velocity.y = p_Speed / 2;
+  //  collision(0);
+    /*if (!onGround)
+    {
+        p_Velocity.y = p_Speed*0.05;
+        p_Direction.y = 1;
+    }*/
+        
   //  onGround = false;
     p_rect.top += p_Velocity.y * elapsedTime;
     p_Velocity.x = p_Velocity.y = 0;
     onGround = false;
-    collision(1);
+ //   collision(1);
 
     if (p_Position.x < 0)
     {
@@ -143,22 +180,5 @@ void Player::update(float elapsedTime)
     // move sprite
     p_Sprite.setPosition(p_rect.left, p_rect.top);
 
-}
-
-void Player::collision(int dir)
-{
-    for (int i = p_Position.y / 40; i < (p_Position.y + p_rect.height) / 40; i++)
-        for (int j = p_Position.x / 40; j < (p_Position.x + p_rect.width) / 40; j++)
-        {
-            if (TileMap[i][j] == 'B')
-            {
-                if ((p_Velocity.x > 0) && (dir == 0)) p_Position.x = j * 40 - p_rect.width;
-                if ((p_Velocity.x < 0) && (dir == 0)) p_Position.x = j * 40 + 40;
-                if ((p_Velocity.y > 0) && (dir == 1)) { p_Position.y = i * 40 - p_rect.height; p_Velocity.y = 0;   onGround = true; }
-                if ((p_Velocity.y < 0) && (dir == 1)) { p_Position.y = i * 40 + 40;   p_Velocity.y = 0; }
-
-            }
-
-        }
 }
 

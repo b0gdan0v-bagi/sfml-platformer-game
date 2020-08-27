@@ -22,28 +22,6 @@ private:
 
     // speed in pixels
     float p_Speed;
-
-    const int H = 12;
-    const int W = 40;
-
-
-    String TileMap[12] = {
-
-    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-    "B                                B     B",
-    "B                                B     B",
-    "B                                B     B",
-    "B                                B     B",
-    "B         0000                BBBB     B",
-    "B                                B     B",
-    "BBB                              B     B",
-    "B              BB                BB    B",
-    "B              BB                      B",
-    "B    B         BB         BB           B",
-    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-
-    };
-
 public:
     
     Player();
@@ -52,7 +30,7 @@ public:
     Sprite getSprite();
     FloatRect p_rect;
     IntRect p_texture_rect;
-    Vector2f p_Position, p_Velocity;
+    Vector2f p_Position, p_Velocity, p_Direction;
     bool onGround;
 
     // For moving Volodya
@@ -69,6 +47,5 @@ public:
 
     // This function will be called every frame
     void update(float elapsedTime);
-    void collision(int dir);
 
 };

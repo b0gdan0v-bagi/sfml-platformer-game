@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Map.h"
+#include "MapBlock.h"
 
 using namespace sf;
 
@@ -22,10 +23,14 @@ private:
     // creation of volodya
     Player p_Player;
     Map m_Map;
-
+    MapBlock block[12][40];
+  //  MapBlock blockTEST;
+   
     void input();
     void update(float dtAsSeconds);
     void draw();
+    void blocks();
+    void intersects();
 
 public:
 

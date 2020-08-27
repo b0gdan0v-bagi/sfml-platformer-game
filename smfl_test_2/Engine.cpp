@@ -16,6 +16,11 @@ Engine::Engine()
   //  m_BackgroundTexture.loadFromFile("background.jpg");
     m_TextureVodka.loadFromFile("vodka.png");
     m_SpriteVodka.setTexture(m_TextureVodka);
+    //block[1][1].set(m_TextureVodka, 400, 400);
+    //block[1][2].set(m_TextureVodka, 400, 500);
+
+    blocks();
+   // blockTEST.set(m_TextureVodka, 500, 500);
  //   TextureSize = m_BackgroundTexture.getSize(); //Get size of texture.
   //  WindowSize = m_Window.getSize();             //Get size of window.
  //   float ScaleXBackground = (float)WindowSize.x / TextureSize.x;
@@ -37,9 +42,11 @@ void Engine::start()
         Time dt = clock.restart();
 
         float dtAsSeconds = dt.asSeconds();
+        
 
         input();
         update(dtAsSeconds);
         draw();
+        intersects();
     }
 }
