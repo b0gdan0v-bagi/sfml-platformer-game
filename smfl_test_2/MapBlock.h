@@ -18,7 +18,7 @@ private:
     const int W = 40;
 
 
-    String TileMap[12] = {
+    String TileMapC[12] = {
 
     "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
     "B                                B     B",

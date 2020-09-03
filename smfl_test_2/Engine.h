@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Player.h"
-#include "Map.h"
+#include "MapC.h"
 #include "MapBlock.h"
+
+#include <vector>
 
 using namespace sf;
 
@@ -19,10 +21,10 @@ private:
     Texture m_BackgroundTexture;
     Vector2u TextureSize;  //Added to store texture size.
     Vector2u WindowSize;   //Added to store window size.
-
+    View view;
     // creation of volodya
     Player p_Player;
-    Map m_Map;
+    MapC m_Map;
     MapBlock block[12][40];
   //  MapBlock blockTEST;
    
@@ -30,7 +32,7 @@ private:
     void update(float dtAsSeconds);
     void draw();
     void blocks();
-    void intersects();
+    void setPlayerCoordinateForView(float x, float y);
 
 public:
 

@@ -145,20 +145,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Draw.cpp" />
+    <ClCompile Include="Creatures.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapBlock.cpp" />
-    <ClCompile Include="Update.cpp" />
+    <ClCompile Include="MapC.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="creatures.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="Map.h" />
+    <ClInclude Include="level.h" />
     <ClInclude Include="MapBlock.h" />
+    <ClInclude Include="MapC.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="view.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

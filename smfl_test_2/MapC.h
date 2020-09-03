@@ -3,7 +3,7 @@
 
 using namespace sf;
 
-class Map
+class MapC
 {
 
 private:
@@ -17,7 +17,7 @@ private:
 
 public:
 
-    Map();
+    MapC();
 
     Sprite getSprite();
     Vector2f setPosition(int j, int i);
@@ -27,7 +27,7 @@ public:
     const int W = 40;
 
 
-    String TileMap[12] = {
+    String TileMapC[12] = {
 
     "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
     "B                                B     B",
