@@ -14,8 +14,11 @@ Engine::Engine()
     m_Window.setFramerateLimit(60);
     // load texture
   //  m_BackgroundTexture.loadFromFile("background.jpg");
-    m_TextureVodka.loadFromFile("vodka.png");
+    //m_TextureVodka.loadFromFile("vodka.png");
+    //m_SpriteVodka.setTexture(m_TextureVodka);
+    m_TextureVodka.loadFromFile("walls.png");
     m_SpriteVodka.setTexture(m_TextureVodka);
+    //m_SpriteVodka.setTextureRect(IntRect(432, 0, 32, 32));
     //block[1][1].set(m_TextureVodka, 400, 400);
     //block[1][2].set(m_TextureVodka, 400, 500);
 
@@ -35,9 +38,14 @@ void Engine::start()
 {
     // Calculationg of time
     Clock clock;
-
+ 
     while (m_Window.isOpen())
     {
+        Event event;
+        while (m_Window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)  m_Window.close();
+        }
         // Restart the timer and write the measured time in dt
         Time dt = clock.restart();
 
@@ -47,6 +55,6 @@ void Engine::start()
         input();
         update(dtAsSeconds);
         draw();
-        intersects();
+       // intersects();
     }
 }

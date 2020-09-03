@@ -21,8 +21,8 @@ void MapBlock::set(Texture& image, int x, int y)
     m_Sprite.setTexture(image);
     m_Position.x = x;
     m_Position.y = y;
-    m_rect = FloatRect(x, y, 40, 80);
-    m_Sprite.setTextureRect(IntRect(0, 0, 40, 40));
+    m_rect = FloatRect(x, y, 32, 32);
+    m_Sprite.setTextureRect(IntRect(0, 432, 32, 32));
 }
 
 void MapBlock::update(float elapsedTime)

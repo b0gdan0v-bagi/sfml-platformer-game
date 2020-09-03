@@ -2,14 +2,12 @@
 #include <SFML/Graphics.hpp>
 
 
+
 using namespace sf;
 
 class Player
 {
-
 private:
-
-    
     Sprite p_Sprite;
     Texture p_Texture;
     
@@ -22,6 +20,26 @@ private:
 
     // speed in pixels
     float p_Speed;
+    const int H = 12;
+    const int W = 40;
+
+
+    String TileMapC[12] = {
+
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "B                                B     B",
+    "B                                B     B",
+    "B                                B     B",
+    "B                                B     B",
+    "B         0000                BBBB     B",
+    "B                                B     B",
+    "BBB                              B     B",
+    "B              BB                BB    B",
+    "B              BB                      B",
+    "B    B         BB         BB           B",
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+
+    };
 public:
     
     Player();
@@ -44,7 +62,7 @@ public:
     void stopTop();
     void stopRight();
     void stopBot();
-
+    void checkCollisionWithMap(float Dx, float Dy);
     // This function will be called every frame
     void update(float elapsedTime);
 
