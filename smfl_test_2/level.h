@@ -276,4 +276,4 @@ std::string Object::GetPropertyString(const std::string& name)
 	return properties[name];
 }
 
-#endif#pragma once
+#endif

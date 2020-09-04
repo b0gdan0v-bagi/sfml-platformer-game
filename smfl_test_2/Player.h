@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <SFML/Graphics.hpp>
 
 
@@ -66,4 +66,4 @@ public:
     // This function will be called every frame
     void update(float elapsedTime);
 
-};
+};*/

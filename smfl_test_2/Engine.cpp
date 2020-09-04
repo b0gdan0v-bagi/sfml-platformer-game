@@ -1,11 +1,16 @@
 ﻿#pragma once
 #include "Engine.h"
+
 //hallo
 
 Engine::Engine()
+ {
+
+}
+/*Engine::Engine()
 {
     // Get screen resolution, make window SFML and View
-    Vector2f resolution;
+   /* Vector2f resolution;
     resolution.x = VideoMode::getDesktopMode().width;
     resolution.y = VideoMode::getDesktopMode().height;
 
@@ -13,7 +18,13 @@ Engine::Engine()
         "Volodya",
         Style::Default);
     m_Window.setFramerateLimit(60);
- //   view.reset(FloatRect(0, 0, resolution.x, resolution.y));
+    view.reset(FloatRect(0, 0, resolution.x, resolution.y));
+    TileMap lvl;
+    lvl.load("map.tmx");
+    Image player1Image;
+    player1Image.loadFromFile("volodya.png");
+    Object player = lvl.getObject("player");
+    Player
     // load texture
   //  m_BackgroundTexture.loadFromFile("background.jpg");
     //m_TextureVodka.loadFromFile("vodka.png");
@@ -35,34 +46,61 @@ Engine::Engine()
     
   //  m_BackgroundSprite.setTexture(m_BackgroundTexture);
   //  m_BackgroundSprite.setScale(ScaleXBackground, ScaleYBackground);
-}
+
+
+
+}*/
 
 void Engine::start()
 {
     // Calculationg of time
     Clock clock;
- 
-    while (m_Window.isOpen())
+    RenderWindow window(VideoMode(640, 480), "Lesson 22. kychka-pc.ru");
+    view.reset(FloatRect(0, 0, 640, 480));
+
+    lvl.load("map.tmx");
+    player = lvl.getObject("player");
+    easyEnemyObject = lvl.getObject("easyEnemy");
+    heroImage.loadFromFile("images/MilesTailsPrower.gif");
+    easyEnemyImage.loadFromFile("images/shamaich.png");
+    easyEnemyImage.createMaskFromColor(Color(255, 0, 0));
+    Player p(heroImage, "Player1", lvl, player.rect.left, player.rect.top, 40, 30);
+    Enemy easyEnemy(easyEnemyImage, "EasyEnemy", lvl, easyEnemyObject.rect.left, easyEnemyObject.rect.top, 200, 97);
+      player = lvl.getObject("player");
+    easyEnemyObject = lvl.getObject("easyEnemy");
+    while (window.isOpen())
     {
+        float time = clock.getElapsedTime().asMicroseconds();
+
+        clock.restart();
+        time = time / 800;
         Event event;
-        while (m_Window.pollEvent(event))
+        while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed)  m_Window.close();
+            if (event.type == Event::Closed)  window.close();
         }
         // Restart the timer and write the measured time in dt
-        Time dt = clock.restart();
+        /*Time dt = clock.restart();
 
-        float dtAsSeconds = dt.asSeconds();
-        
+        float dtAsSeconds = dt.asSeconds();*/
+        p.update(time);
+        easyEnemy.update(time);
+        window.setView(view);
+        window.clear(Color(77, 83, 140));
+        window.draw(lvl);
 
-        input();
+        window.draw(easyEnemy.sprite);
+        window.draw(p.sprite);
+        window.display();
+
+       /* input();
         update(dtAsSeconds);
         draw();
-       // intersects();
+       // intersects();*/
     }
 }
 
-void Engine::draw()
+/*void Engine::draw()
 {
     // Erasing the previous frame
     m_Window.clear(Color::White);
@@ -162,3 +200,4 @@ void Engine::setPlayerCoordinateForView(float x, float y) {
     if (y > 624) tempY = 624;//нижнюю стороню.для новой карты
     view.setCenter(tempX, tempY);
 }
+*/

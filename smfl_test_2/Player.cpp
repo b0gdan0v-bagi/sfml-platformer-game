@@ -1,6 +1,6 @@
 ﻿#include "Player.h"
 
-
+/*
 Player::Player()
 {
     // Speed
@@ -145,11 +145,7 @@ void Player::update(float elapsedTime)
     p_rect.left += p_Velocity.x * elapsedTime;
     checkCollisionWithMap(p_Velocity.x, 0);
   //  collision(0);
-    /*if (!onGround)
-    {
-        p_Velocity.y = p_Speed*0.05;
-        p_Direction.y = 1;
-    }*/
+
         
   //  onGround = false;
     p_rect.top += p_Velocity.y * elapsedTime;
@@ -179,3 +175,4 @@ void Player::checkCollisionWithMap(float Dx, float Dy)//ф ция проверк
         }
 }
 
+*/

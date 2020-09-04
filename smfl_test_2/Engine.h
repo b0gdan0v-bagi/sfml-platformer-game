@@ -1,19 +1,21 @@
-#pragma once
+//#ifndef ENGINE_H
+//#define ENGINE_H
 #include <SFML/Graphics.hpp>
-#include "Player.h"
-#include "MapC.h"
-#include "MapBlock.h"
-
+#include "creatures.h"
+#include "level.h"
 #include <vector>
+#include <list>
+
 
 using namespace sf;
 
 class Engine
 {
-private:
+public:
 
-    RenderWindow m_Window;
-
+    //RenderWindow m_Window;
+    RenderWindow window;
+    TileMap lvl;
     Sprite m_SpriteVodka;
     Texture m_TextureVodka;
     // Declaring the sprite and texture for the background
@@ -23,24 +25,33 @@ private:
     Vector2u WindowSize;   //Added to store window size.
     View view;
     // creation of volodya
-    Player p_Player;
-    MapC m_Map;
-    MapBlock block[12][40];
+    Image heroImage;
+
+    Image easyEnemyImage;
+ //   Player p_Player;
+    Object player;
+    Object easyEnemyObject;
+
+    Engine();
+
+    
   //  MapBlock blockTEST;
-   
+    /*
     void input();
     void update(float dtAsSeconds);
     void draw();
-    void blocks();
-    void setPlayerCoordinateForView(float x, float y);
+    void blocks();*/
+    //void setPlayerCoordinateForView(float x, float y);
 
-public:
+
 
 
     // engine constructor
-    Engine();
+
 
     // start call all private functions
     void start();
 
 };
+
+//#endif
