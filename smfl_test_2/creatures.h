@@ -35,23 +35,27 @@ class Player :public Entity
 {
 public:
 	enum { left, right, up, down, jump, stay, RightTop } state;
-	bool isShoot, win = false;
+	enum { leftDir, rightDir} direction;
+	bool isShoot, win;
 	int playerScore;
 
 	Player(Image& image, String Name, TileMap& lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
-		playerScore = 0; state = stay; obj = lev.getAllObjects();//èíèöèàëèçèðóåì.ïîëó÷àåì âñå îáúåêòû äëÿ âçàèìîäåéñòâèÿ ïåðñîíàæà ñ êàðòîé
+		playerScore = 0; state = stay; obj = lev.getAllObjects();
+		win = false;
+		direction = rightDir;
 		if (name == "Player1") {
 			sprite.setTextureRect(IntRect(0, 0, w, h));
 		}
 	}
 
 	void control() {
+		if (!win)
 		if (Keyboard::isKeyPressed) {
 			if (Keyboard::isKeyPressed(Keyboard::A)) {
-				state = left; speed = 0.2;
+				state = left; speed = 0.2; direction = leftDir;
 			}
 			if (Keyboard::isKeyPressed(Keyboard::D)) {
-				state = right; speed = 0.2;
+				state = right; speed = 0.2; direction = rightDir;
 			}
 
 			if ((Keyboard::isKeyPressed(Keyboard::W)) && (onGround)) {

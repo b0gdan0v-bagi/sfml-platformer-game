@@ -11,21 +11,40 @@ void changeLevel(TileMap& lvl, int& numberLevel)
 {
     switch (numberLevel)
     {
-    case 1:  lvl.load("map3.tmx"); break;
-    case 2:  lvl.load("map.tmx"); break;
+
+    case 1:  lvl.load("map1.tmx"); break;
+    case 2:  lvl.load("map2.tmx"); break;
+    case 3:  lvl.load("map_test.tmx"); break;
+    default: // в противном случае, возвращаем false
+        break;
     }
 }
+//<tileset firstgid = "1" name = "map3" tilewidth = "32" tileheight = "32" tilecount = "256" columns = "16">
+//<image source = "text2.png" width = "512" height = "512" / >
 
 
 //bool startGame(RenderWindow &window,int &numberLevel) 
 bool startGame(int& numberLevel)
 {
-    RenderWindow window(VideoMode(640, 480), "privet");
-    if (numberLevel == 1) { menu(window); }
+    Vector2f resolution;
+    resolution.x = VideoMode::getDesktopMode().width;
+    resolution.y = VideoMode::getDesktopMode().height;
+    RenderWindow window(VideoMode(resolution.x, resolution.y), "privet");
+    window.setFramerateLimit(60);
+    if (numberLevel == 1) { menu(window, resolution, numberLevel); }
     //menu(window);
     view.reset(FloatRect(0, 0, 640, 480));
     TileMap lvl;
-    changeLevel(lvl, numberLevel);
+
+    if (numberLevel != 0)
+    { 
+        changeLevel(lvl, numberLevel); 
+    }
+    else
+    {
+        return false;
+    }
+
     //lvl.load("map3.tmx");
     Image heroImage;
     Image easyEnemyImage;
@@ -39,8 +58,8 @@ bool startGame(int& numberLevel)
     //heroImage.loadFromFile("images/MilesTailsPrower.gif");
     heroImage.loadFromFile("images/volodya.png");
     heroImage.createMaskFromColor(Color(255, 255, 255));
-    easyEnemyImage.loadFromFile("images/shamaich.png");
-    easyEnemyImage.createMaskFromColor(Color(255, 0, 0));
+    easyEnemyImage.loadFromFile("images/kvak.png");
+    easyEnemyImage.createMaskFromColor(Color(255, 255, 255));
 
     std::list<Entity*> entities;
     std::list<Entity*>::iterator it;
@@ -49,7 +68,7 @@ bool startGame(int& numberLevel)
 
     for (int i = 0; i < e.size(); i++)
     {
-        entities.push_back(new Enemy(easyEnemyImage, "EasyEnemy", lvl, e[i].rect.left, e[i].rect.top, 200, 97));
+        entities.push_back(new Enemy(easyEnemyImage, "EasyEnemy", lvl, e[i].rect.left, e[i].rect.top, 32, 32));
     }
     Player p(heroImage, "Player1", lvl, player.rect.left, player.rect.top, 40, 80);
     //Enemy easyEnemy(easyEnemyImage, "EasyEnemy", lvl, easyEnemyObject.rect.left, easyEnemyObject.rect.top, 200, 97);
@@ -67,11 +86,14 @@ bool startGame(int& numberLevel)
             if (p.isShoot == true)
             {
                 p.isShoot = false;
-                entities.push_back(new Bullet(BulletImage, "Bullet", lvl, p.x, p.y, 16, 16, p.state));
+                entities.push_back(new Bullet(BulletImage, "Bullet", lvl, p.x, p.y+40, 16, 16, p.direction));
             }//если выстрелили, то появляется пуля. enum передаем как int 
         }
         if (Keyboard::isKeyPressed(Keyboard::U)) {
-            view.zoom(1.0100f); //масштабируем, уменьшение
+            view.zoom(1.0010f); //масштабируем, уменьшение
+        }
+        if (Keyboard::isKeyPressed(Keyboard::P)) {
+            view.zoom(0.990f); //масштабируем, уменьшение
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Q)) { std::cout << numberLevel << std::endl;}
@@ -101,7 +123,7 @@ bool startGame(int& numberLevel)
             }
         }
 
-        if (p.win) { p.win = false; return true; } // next level
+        if (p.win) { p.win = false; p.speed = 0; sleep(milliseconds(50)); numberLevel++; return true; } // next level
 
         window.setView(view);
         window.clear(Color(77, 83, 140));
@@ -123,7 +145,7 @@ void gameRunning(int& numberLevel)
     //if (startGame(window, numberLevel))
     if (startGame(numberLevel))
     {
-        numberLevel++;
+        //numberLevel++;
         //gameRunning(window, numberLevel);
         gameRunning(numberLevel);
     }

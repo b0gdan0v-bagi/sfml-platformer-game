@@ -9,6 +9,7 @@ int main()
     int numberLevel = 1;
     //gameRunning(window,numberLevel);
     gameRunning(numberLevel);
+    //if (numberLevel > 2)     return 0;
     return 0;
 }
 
