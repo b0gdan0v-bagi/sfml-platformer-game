@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "level.h"
 #include "view.h"
+#include <iostream>
 
 
 using namespace sf;
@@ -10,7 +11,7 @@ using namespace sf;
 class Entity {
 public:
 	std::vector<Object> obj;//âåêòîð îáúåêòîâ êàðòû
-	float dx, dy, x, y, speed, moveTimer;
+	float dx, dy, x, y, speed, moveTimer, currentFrame;
 	int w, h, health;
 	bool life, isMove, onGround;
 	Texture texture;
@@ -39,8 +40,13 @@ public:
 	bool isShoot, win;
 	int playerScore;
 
-	Player(Image& image, String Name, TileMap& lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
-		playerScore = 0; state = stay; obj = lev.getAllObjects();
+	Player(Image& image, String Name, TileMap& lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) 
+	{
+		health = 100;
+		playerScore = 0; 
+		state = stay;
+		obj = lev.getAllObjects();
+		currentFrame = 0;
 		win = false;
 		direction = rightDir;
 		if (name == "Player1") {
@@ -52,14 +58,20 @@ public:
 		if (!win)
 		if (Keyboard::isKeyPressed) {
 			if (Keyboard::isKeyPressed(Keyboard::A)) {
-				state = left; speed = 0.2; direction = leftDir;
+				state = left;
+				speed = 0.2; 
+				direction = leftDir;
 			}
 			if (Keyboard::isKeyPressed(Keyboard::D)) {
-				state = right; speed = 0.2; direction = rightDir;
+				state = right; 
+				speed = 0.2; 
+				direction = rightDir;
 			}
 
 			if ((Keyboard::isKeyPressed(Keyboard::W)) && (onGround)) {
-				state = jump; dy = -0.8; onGround = false;
+				state = jump;
+				dy = -0.8; 
+				onGround = false;
 			}
 
 
@@ -72,6 +84,7 @@ public:
 			}
 		}
 	}
+
 	void checkCollisionWithMap(float Dx, float Dy)
 	{
 		for (int i = 0; i < obj.size(); i++)
@@ -90,15 +103,68 @@ public:
 				}
 			}
 	}
+
 	void update(float time)
 	{
 		control();
+		currentFrame += 0.005 * time;
+		if (currentFrame > 3) currentFrame -= 3;
 		switch (state)
 		{
-		case right:dx = speed; break;
-		case left:dx = -speed; break;
+		case right: 
+		{	
+
+			//td::cout << currentFrame << " " << time << std::endl;
+			if ((onGround) && (dx != 0))
+			{ 
+				sprite.setTextureRect(IntRect(w*int(currentFrame), 0, w, h)); 
+			}
+			dx = speed; 
+			break; 
+		}
+		case left: 
+		{
+			dx = -speed;
+			if ((onGround) && (dx != 0))
+			{
+				sprite.setTextureRect(IntRect(w * int(currentFrame), h, w, h));
+			}
+			break; 
+		}
 		case up: break;
-		case down: dx = 0; break;
+		case down: 
+		{
+			dx = 0;
+			if (direction == rightDir) { sprite.setTextureRect(IntRect(0, h * 2 + 1, w, h)); }
+			else { sprite.setTextureRect(IntRect(41, h * 2 + 1, w, h)); }
+
+			//sprite.setPosition(x, y + h / 2);
+			break;
+		}
+		case jump:
+		{
+			if (direction == rightDir)
+			{
+				sprite.setTextureRect(IntRect(0, h * 3 + 1, w, h));
+			}
+			else
+			{
+				sprite.setTextureRect(IntRect(41, h * 3 + 1, w, h));
+			}
+			if (onGround)
+			{
+				if (direction = rightDir)
+				{
+					state = right;
+					//sprite.setTextureRect(IntRect(0, 0, w, h));
+				}
+				else
+				{
+					state = left;
+					//sprite.setTextureRect(IntRect(0, 0, w, h));
+				}
+			}
+		}
 		case stay: break;
 		}
 		x += dx * time;
@@ -109,7 +175,7 @@ public:
 		if (health <= 0) { life = false; }
 		if (!isMove) { speed = 0; }
 		setPlayerCoordinateForView(x, y);
-		if (life) { setPlayerCoordinateForView(x, y); }
+		//if (life) { setPlayerCoordinateForView(x, y); }
 		dy = dy + 0.0015 * time;
 	}
 };
@@ -143,10 +209,14 @@ public:
 	{
 		if (name == "EasyEnemy") {
 			//moveTimer += time;if (moveTimer>3000){ dx *= -1; moveTimer = 0; }//ìåíÿåò íàïðàâëåíèå ïðèìåðíî êàæäûå 3 ñåê
-			checkCollisionWithMap(dx, 0);
+
 			x += dx * time;
+			checkCollisionWithMap(dx, 0);
+			y += dy * time;
+			checkCollisionWithMap(0, dy);
 			sprite.setPosition(x + w / 2, y + h / 2);
 			if (health <= 0) { life = false; }
+			dy = dy + 0.0015 * time;
 		}
 	}
 };

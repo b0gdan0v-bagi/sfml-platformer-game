@@ -5,6 +5,8 @@
 #include <list>
 #include "menu.h"
 #include <iostream>
+#include <sstream>
+
 using namespace sf;
 
 void changeLevel(TileMap& lvl, int& numberLevel)
@@ -19,9 +21,6 @@ void changeLevel(TileMap& lvl, int& numberLevel)
         break;
     }
 }
-//<tileset firstgid = "1" name = "map3" tilewidth = "32" tileheight = "32" tilecount = "256" columns = "16">
-//<image source = "text2.png" width = "512" height = "512" / >
-
 
 //bool startGame(RenderWindow &window,int &numberLevel) 
 bool startGame(int& numberLevel)
@@ -31,9 +30,13 @@ bool startGame(int& numberLevel)
     resolution.y = VideoMode::getDesktopMode().height;
     RenderWindow window(VideoMode(resolution.x, resolution.y), "privet");
     window.setFramerateLimit(60);
-    if (numberLevel == 1) { menu(window, resolution, numberLevel); }
+
+    Font font;
+    font.loadFromFile("images/TimesNewRoman.ttf");
+    if (numberLevel == 1) { menu(window, resolution, numberLevel, font); }
+    window.setMouseCursorVisible(false);
     //menu(window);
-    view.reset(FloatRect(0, 0, 640, 480));
+    view.reset(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x/2, resolution.y/2));
     TileMap lvl;
 
     if (numberLevel != 0)
@@ -55,14 +58,19 @@ bool startGame(int& numberLevel)
     Object easyEnemyObject = lvl.getObject("easyEnemy");
     Clock clock;
 
+    RectangleShape polosa;
+    //std::ostringstream playerHealthString;
+    Text playerHealthText("", font, 30);
+
     //heroImage.loadFromFile("images/MilesTailsPrower.gif");
     heroImage.loadFromFile("images/volodya.png");
     heroImage.createMaskFromColor(Color(255, 255, 255));
     easyEnemyImage.loadFromFile("images/kvak.png");
-    easyEnemyImage.createMaskFromColor(Color(255, 255, 255));
+    easyEnemyImage.createMaskFromColor(Color(0, 0, 0));
 
     std::list<Entity*> entities;
     std::list<Entity*>::iterator it;
+    std::list<Entity*>::iterator it2;
 
     std::vector<Object> e = lvl.getObjectsByName("easyEnemy");
 
@@ -85,18 +93,19 @@ bool startGame(int& numberLevel)
             if (event.type == Event::Closed)  window.close();
             if (p.isShoot == true)
             {
+                p.health -= 1; // !!!! FOR TEST !!!!
                 p.isShoot = false;
                 entities.push_back(new Bullet(BulletImage, "Bullet", lvl, p.x, p.y+40, 16, 16, p.direction));
             }//если выстрелили, то появляется пуля. enum передаем как int 
         }
         if (Keyboard::isKeyPressed(Keyboard::U)) {
-            view.zoom(1.0010f); //масштабируем, уменьшение
+            view.zoom(1.0040f); //масштабируем, уменьшение
         }
         if (Keyboard::isKeyPressed(Keyboard::P)) {
             view.zoom(0.990f); //масштабируем, уменьшение
         }
 
-        if (Keyboard::isKeyPressed(Keyboard::Q)) { std::cout << numberLevel << std::endl;}
+        if (Keyboard::isKeyPressed(Keyboard::Q)) { std::cout << numberLevel << " " << time << std::endl;}
         if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
         if (Keyboard::isKeyPressed(Keyboard::Escape)) { return false; }
 
@@ -105,7 +114,10 @@ bool startGame(int& numberLevel)
         for (it = entities.begin(); it != entities.end();)
         {
             (*it)->update(time);
-            if ((*it)->life == false) { it = entities.erase(it); }
+            if ((*it)->life == false)
+            { 
+                it = entities.erase(it);
+            }
             else it++;
         }
 
@@ -113,28 +125,55 @@ bool startGame(int& numberLevel)
         {
             if ((*it)->getRect().intersects(p.getRect()))//если прямоугольник спрайта объекта пересекается с игроком
             {
-                if ((*it)->name == "EasyEnemy") {//и при этом имя объекта EasyEnemy,то..
-
-                    if ((p.dy > 0) && (p.onGround == false)) { (*it)->dx = 0; p.dy = -0.2; (*it)->health = 0; }//если прыгнули на врага,то даем врагу скорость 0,отпрыгиваем от него чуть вверх,даем ему здоровье 0
+                if ((*it)->name == "EasyEnemy") //и при этом имя объекта EasyEnemy,то..
+                {
+                    if ((p.dy > 0) && (p.onGround == false)) 
+                    {
+                        (*it)->dx = 0; 
+                        p.dy = -0.2; 
+                        (*it)->health = 0; 
+                    }//если прыгнули на врага,то даем врагу скорость 0,отпрыгиваем от него чуть вверх,даем ему здоровье 0
                     else {
-                        p.health -= 5;	//иначе враг подошел к нам сбоку и нанес урон
+                        //p.health -= 5;	//иначе враг подошел к нам сбоку и нанес урон
                     }
                 }
             }
+            for (it2 = entities.begin(); it2 != entities.end(); it2++) {
+                if ((*it)->getRect() != (*it2)->getRect())//different rectanglles
+                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and EasyEnemy
+                    {
+                        (*it)->dx = 0;//stop enemy
+                        (*it)->health = 0;// kill enemy
+                        (*it2)->dx = 0;
+                        (*it2)->life = false; // kill bullet
+                    }
+            }
         }
-
+        
         if (p.win) { p.win = false; p.speed = 0; sleep(milliseconds(50)); numberLevel++; return true; } // next level
 
         window.setView(view);
         window.clear(Color(77, 83, 140));
         window.draw(lvl);
 
-        for (it = entities.begin(); it != entities.end(); it++)
+        // draw all entites
+        for (it = entities.begin(); it != entities.end(); it++) 
         {
             window.draw((*it)->sprite);
         }
-        //window.draw(easyEnemy.sprite);
+
         window.draw(p.sprite);
+        // make interface agreed with camera
+        polosa = RectangleShape(Vector2f(view.getSize().x, view.getSize().y / 10));
+        polosa.setFillColor(Color::Black);
+        polosa.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y + view.getSize().y / 2 - polosa.getSize().y);
+        std::ostringstream playerHealthString;
+        playerHealthString << p.health;
+        playerHealthText.setString("Volodya HP : " + playerHealthString.str());
+        playerHealthText.setPosition(polosa.getPosition().x - 100, view.getCenter().y + view.getSize().y / 2 - polosa.getSize().y);
+        playerHealthText.setFillColor(Color::White);
+        window.draw(polosa);
+        window.draw(playerHealthText);
         window.display();
     }
 }

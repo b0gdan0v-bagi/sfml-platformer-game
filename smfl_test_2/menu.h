@@ -2,13 +2,11 @@
 #include <iostream>
 using namespace sf; 
 
-void menu(RenderWindow& window, Vector2f resolution, int& numberLevel) 
+void menu(RenderWindow& window, Vector2f resolution, int& numberLevel, Font& font) 
 {
-	Font font;
-	font.loadFromFile("images/TimesNewRoman.ttf");
 	Text about("", font, 50), menu1("", font, 50), menu2("", font, 50), menu3("", font, 50), menu4("", font, 50);
 	Text lvl1("", font, 50), lvl2("", font, 50), back("", font, 50);
-	about.setString("Game from Andrusha, ver 0.1");
+	about.setString("Game from Andrusha \n ver 0.1 \n Press ESQ to main menu");
 	menu1.setString("New game : PVE");
 	menu2.setString("About");
 	menu3.setString("Exit");
@@ -49,6 +47,7 @@ void menu(RenderWindow& window, Vector2f resolution, int& numberLevel)
 			if (event.type == Event::Closed)
 				window.close();
 		}
+		window.setMouseCursorVisible(true);
 		menu1.setFillColor(Color::White);
 		menu2.setFillColor(Color::White);
 		menu3.setFillColor(Color::White);
