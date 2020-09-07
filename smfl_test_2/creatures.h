@@ -1,8 +1,8 @@
 ﻿#ifndef CREATURES_H
 #define CREATURES_H
 #include <SFML/Graphics.hpp>
+#include "animation.h"
 #include "level.h"
-#include "view.h"
 #include <iostream>
 
 
@@ -10,79 +10,161 @@ using namespace sf;
 
 class Entity {
 public:
+	AnimationManager anim;
 	std::vector<Object> obj;//âåêòîð îáúåêòîâ êàðòû
-	float dx, dy, x, y, speed, moveTimer, currentFrame;
-	int w, h, health;
-	bool life, isMove, onGround;
-	Texture texture;
-	Sprite sprite;
-	String name;
-	Entity(Image& image, String Name, float X, float Y, int W, int H) {
-		x = X; y = Y; w = W; h = H; name = Name; moveTimer = 0;
-		speed = 0; health = 100; dx = 0; dy = 0;
-		life = true; onGround = false; isMove = false;
-		texture.loadFromImage(image);
-		sprite.setTexture(texture);
-		sprite.setOrigin(w / 2, h / 2);
+	float dx, dy, x, y, w, h, timer;
+	int health;
+	bool life, direction;
+	//Texture texture;
+	//Sprite sprite;
+	std::string name;
+
+	//Entity(Image& image, String Name, float X, float Y, int W, int H)
+	Entity(AnimationManager& A, std::string Name, float X, float Y, float W, float H)
+	{
+		anim = A;
+		x = X;
+		y = Y; 
+		w = W; 
+		h = H; 
+		name = Name; 
+		health = 100; 
+		dx = 0;
+		dy = 0;
+		life = true;
+		direction = false;
+		//texture.loadFromImage(image);
+		//sprite.setTexture(texture);
+		//sprite.setOrigin(w / 2, h / 2);
 	}
 
 	FloatRect getRect() {
 		return FloatRect(x, y, w, h);
 	}
 	virtual void update(float time) = 0;
+	void draw(RenderWindow& window)
+	{
+		anim.draw(window, x, y + h);
+	}
+	void option(std::string NAME, float SPEED = 0, int HEALTH = 100, std::string FIRST_ANIM = "")
+	{
+		name = NAME;
+		if (FIRST_ANIM != "") anim.set(FIRST_ANIM);
+		w = anim.getW();
+		h = anim.getH();
+		dx = SPEED;
+		health = HEALTH;
+	}
 };
 
 class Player :public Entity 
 {
 public:
-	enum { left, right, up, down, jump, stay, RightTop } state;
-	enum { leftDir, rightDir} direction;
-	bool isShoot, win;
-	int playerScore;
+	enum { stay, walk, duck, jump, climb, swim } STATE;
+	//enum { leftDir, rightDir} direction;
+	std::map<std::string, bool> key;
+	bool isShoot, win, onLadder, hit, canShoot;
+	float shootTimer;
 
-	Player(Image& image, String Name, TileMap& lev, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) 
+	Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y, float W, float H) :Entity(A, Name, X, Y, W, H)
 	{
-		health = 100;
-		playerScore = 0; 
-		state = stay;
+		option(Name, 0, 100, "stay");
 		obj = lev.getAllObjects();
-		currentFrame = 0;
+		STATE = stay;
 		win = false;
-		direction = rightDir;
-		if (name == "Player1") {
-			sprite.setTextureRect(IntRect(0, 0, w, h));
-		}
+		hit = false;
+		shootTimer = 0;
+		canShoot = true;
 	}
 
-	void control() {
-		if (!win)
-		if (Keyboard::isKeyPressed) {
-			if (Keyboard::isKeyPressed(Keyboard::A)) {
-				state = left;
-				speed = 0.2; 
-				direction = leftDir;
-			}
-			if (Keyboard::isKeyPressed(Keyboard::D)) {
-				state = right; 
-				speed = 0.2; 
-				direction = rightDir;
-			}
-
-			if ((Keyboard::isKeyPressed(Keyboard::W)) && (onGround)) {
-				state = jump;
-				dy = -0.8; 
-				onGround = false;
-			}
-
-
-			if (Keyboard::isKeyPressed(Keyboard::S)) {
-				state = down;
-			}
-			if (Keyboard::isKeyPressed(Keyboard::Space))
-			{
-				isShoot = true;
-			}
+	void Keyboard()
+	{
+		if (key["L"])
+		{
+			direction = true;
+			if (STATE != duck) dx = -0.15;
+			if (STATE == stay) STATE = walk;
 		}
+
+		if (key["R"])
+		{
+			direction = false;
+			if (STATE != duck) dx = 0.15;
+			if (STATE == stay) STATE = walk;
+		}
+
+		if (key["Up"])
+		{
+			if (onLadder) STATE = climb;
+			if (STATE == stay || STATE == walk) { dy = -0.37; STATE = jump; anim.play("stay"); }
+			if (STATE == climb) dy = -0.05;
+			if (STATE == climb) if (key["L"] || key["R"]) STATE = stay;
+		}
+
+		if (key["Down"])
+		{
+			if (STATE == stay || STATE == walk)
+			{ 
+				STATE = duck;
+				dx = 0; 
+			}
+			if (STATE == climb) dy = 0.05;
+		}
+
+		if (key["Space"])
+		{
+			isShoot = true;
+		}
+
+		/////////////////////если клавиша отпущена///////////////////////////
+		if (!(key["R"] || key["L"]))
+		{
+			dx = 0;
+			if (STATE == walk) STATE = stay;
+		}
+
+		if (!(key["Up"] || key["Down"]))
+		{
+			if (STATE == climb) dy = 0;
+		}
+
+		if (!key["Down"])
+		{
+			if (STATE == duck) { STATE = stay; }
+		}
+
+		if (!key["Space"])
+		{
+			isShoot = false;
+		}
+
+		key["R"] = key["L"] = key["Up"] = key["Down"] = key["Space"] = false;
+	}
+
+	void Animation(float time)
+	{
+		if (STATE == stay) anim.set("stay");
+		if (STATE == walk) anim.set("walk");
+		if (STATE == jump) anim.set("jump");
+		if (STATE == duck) anim.set("duck");
+		if (STATE == climb) { anim.set("stay"); anim.pause(); if (dy != 0) anim.play(); }
+
+		if (isShoot) {
+			//anim.set("shoot");
+			anim.set("stay");
+			if (STATE == walk) anim.set("stay");
+		}
+
+		/*if (hit) {
+			timer += time;
+			if (timer > 1000) { hit = false; timer = 0; }
+			anim.set("hit");
+		}*/
+
+		//if (direction) anim.flip();
+		anim.flip(direction);
+
+		anim.tick(time);
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy)
@@ -92,7 +174,7 @@ public:
 			{
 				if (obj[i].name == "solid")
 				{
-					if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; onGround = true; }
+					if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; STATE = stay; }
 					if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
 					if (Dx > 0) { x = obj[i].rect.left - w; }
 					if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; }
@@ -101,92 +183,44 @@ public:
 				{
 					win = true;
 				}
+				if (obj[i].name == "ladder") { onLadder = true; if (STATE == climb) x = obj[i].rect.left - 10; }
 			}
 	}
 
 	void update(float time)
 	{
-		control();
-		currentFrame += 0.005 * time;
-		if (currentFrame > 3) currentFrame -= 3;
-		switch (state)
+		Keyboard();
+		Animation(time);
+		if (STATE == climb) if (!onLadder) STATE = stay;
+		if (STATE != climb) dy += 0.0005 * time;
+		if (!canShoot) // for delay in shooting
 		{
-		case right: 
-		{	
-
-			//td::cout << currentFrame << " " << time << std::endl;
-			if ((onGround) && (dx != 0))
-			{ 
-				sprite.setTextureRect(IntRect(w*int(currentFrame), 0, w, h)); 
-			}
-			dx = speed; 
-			break; 
-		}
-		case left: 
-		{
-			dx = -speed;
-			if ((onGround) && (dx != 0))
+			shootTimer += time;
+			if (shootTimer > 600)
 			{
-				sprite.setTextureRect(IntRect(w * int(currentFrame), h, w, h));
-			}
-			break; 
-		}
-		case up: break;
-		case down: 
-		{
-			dx = 0;
-			if (direction == rightDir) { sprite.setTextureRect(IntRect(0, h * 2 + 1, w, h)); }
-			else { sprite.setTextureRect(IntRect(41, h * 2 + 1, w, h)); }
-
-			//sprite.setPosition(x, y + h / 2);
-			break;
-		}
-		case jump:
-		{
-			if (direction == rightDir)
-			{
-				sprite.setTextureRect(IntRect(0, h * 3 + 1, w, h));
-			}
-			else
-			{
-				sprite.setTextureRect(IntRect(41, h * 3 + 1, w, h));
-			}
-			if (onGround)
-			{
-				if (direction = rightDir)
-				{
-					state = right;
-					//sprite.setTextureRect(IntRect(0, 0, w, h));
-				}
-				else
-				{
-					state = left;
-					//sprite.setTextureRect(IntRect(0, 0, w, h));
-				}
+				canShoot = true;
+				shootTimer = 0;
 			}
 		}
-		case stay: break;
-		}
+		onLadder = false;
 		x += dx * time;
 		checkCollisionWithMap(dx, 0);
 		y += dy * time;
 		checkCollisionWithMap(0, dy);
-		sprite.setPosition(x + w / 2, y + h / 2);
 		if (health <= 0) { life = false; }
-		if (!isMove) { speed = 0; }
-		setPlayerCoordinateForView(x, y);
-		//if (life) { setPlayerCoordinateForView(x, y); }
-		dy = dy + 0.0015 * time;
 	}
 };
 
 class Enemy :public Entity 
 {
 public:
-	Enemy(Image& image, String Name, TileMap& lvl, float X, float Y, int W, int H) :Entity(image, Name, X, Y, W, H) {
-		obj = lvl.getObjectsByName("solid");//èíèöèàëèçèðóåì.ïîëó÷àåì íóæíûå îáúåêòû äëÿ âçàèìîäåéñòâèÿ âðàãà ñ êàðòîé
+	bool onGround;
+	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float W, float H) :Entity(A, Name, X, Y, W, H) {
+		obj = lvl.getObjectsByName("solid");
+		option(Name, 0.1, 1, "move");
+		anim.set("move");
 		if (name == "EasyEnemy") {
-			sprite.setTextureRect(IntRect(0, 0, w, h));
+			//sprite.setTextureRect(IntRect(0, 0, w, h));
 			dx = 0.1;
 		}
 	}
@@ -199,8 +233,8 @@ public:
 				if (obj[i].name == "solid"){//åñëè âñòðåòèëè ïðåïÿòñòâèå (îáúåêò ñ èìåíåì solid)
 				if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; onGround = true; }
 				if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
-				if (Dx > 0) { x = obj[i].rect.left - w;  dx = -0.1; sprite.scale(-1, 1); }
-				if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; dx = 0.1; sprite.scale(-1, 1); }
+				if (Dx > 0) { x = obj[i].rect.left - w;  dx = -0.1; anim.flip(true); }
+				if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; dx = 0.1; anim.flip(false);/* sprite.scale(-1, 1);*/ }
 				}
 			}
 	}
@@ -208,51 +242,47 @@ public:
 	void update(float time)
 	{
 		if (name == "EasyEnemy") {
-			//moveTimer += time;if (moveTimer>3000){ dx *= -1; moveTimer = 0; }//ìåíÿåò íàïðàâëåíèå ïðèìåðíî êàæäûå 3 ñåê
-
+			//moveTimer += time;if (moveTimer>3000){ dx *= -1; moveTimer = 0; }
 			x += dx * time;
 			checkCollisionWithMap(dx, 0);
 			y += dy * time;
 			checkCollisionWithMap(0, dy);
-			sprite.setPosition(x + w / 2, y + h / 2);
+			//sprite.setPosition(x + w / 2, y + h / 2);
 			if (health <= 0) { life = false; }
 			dy = dy + 0.0015 * time;
+			anim.tick(time);
 		}
 	}
 };
 
-class Bullet :public Entity {//класс пули
+class Bullet :public Entity 
+{
 public:
-	int direction;//направление пули
-
-	Bullet(Image& image, String Name, TileMap& lvl, float X, float Y, int W, int H, int dir) :Entity(image, Name, X, Y, W, H) {//всё так же, только взяли в конце состояние игрока (int dir)
-		obj = lvl.getObjectsByName("solid");//инициализируем .получаем нужные объекты для взаимодействия пули с картой
+	bool dir;// bullet dirrection
+	float speed;
+	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float W, float H, bool DIR) :Entity(A, Name, X, Y, W, H) 
+	{
+		obj = lvl.getObjectsByName("solid");// find solid objects
 		x = X;
 		y = Y;
-		direction = dir;
+		dir = DIR;
 		speed = 0.8;
 		w = h = 16;
 		life = true;
-		//выше инициализация в конструкторе
+		option(Name, 0.8, 1, "move");
 	}
 
 
 	void update(float time)
 	{
-		switch (direction)
-		{
-		case 0: dx = -speed; dy = 0;   break;//интовое значение state = left
-		case 1: dx = speed; dy = 0;   break;//интовое значение state = right
-		/*case 2: dx = 0; dy = -speed;   break;//интовое значение state = up
-		case 3: dx = 0; dy = -speed;   break;//интовое значение не имеющее отношения к направлению, пока просто стрельнем вверх, нам сейчас это не важно
-		case 4: dx = 0; dy = -speed;   break;//интовое значение не имеющее отношения к направлению, пока просто стрельнем вверх, нам сейчас это не важно
-		case 5: dx = 0; dy = -speed;   break;//интовое значение не имеющее отношения к направлению, пока просто стрельнем вверх, нам сейчас это не важно*/
-		}
+		anim.tick(time);
+		if (dir) dx = -speed;
+		else dx = +speed;
 
-		x += dx * time;//само движение пули по х
-		y += dy * time;//по у
+		x += dx * time;//x moving
+		y += dy * time;//y moving
 
-		if (x <= 0) x = 1;// задержка пули в левой стене, чтобы при проседании кадров она случайно не вылетела за предел карты и не было ошибки
+		if (x <= 0) x = 1;// check for mistakes for out of map
 		if (y <= 0) y = 1;
 
 		for (int i = 0; i < obj.size(); i++) {//проход по объектам solid
@@ -261,8 +291,6 @@ public:
 				life = false;// то пуля умирает
 			}
 		}
-
-		sprite.setPosition(x + w / 2, y + h / 2);//задается позицию пуле
 	}
 };
 
