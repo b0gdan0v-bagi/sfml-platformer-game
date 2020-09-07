@@ -53,11 +53,13 @@ bool startGame(int& numberLevel)
     Image heroImage;
     Image easyEnemyImage;
     Image BulletImage;
+    Image SkeletonImage;
     BulletImage.loadFromFile("images/bullet.png");
     BulletImage.createMaskFromColor(Color(0, 0, 0));
 
     Object player = lvl.getObject("player");
     Object easyEnemyObject = lvl.getObject("easyEnemy");
+    Object skelletonObject = lvl.getObject("skelleton");
     Clock clock;
 
     RectangleShape polosa;
@@ -67,13 +69,18 @@ bool startGame(int& numberLevel)
     heroImage.createMaskFromColor(Color(255, 255, 255));
     easyEnemyImage.loadFromFile("images/kvak.png");
     easyEnemyImage.createMaskFromColor(Color(0, 0, 0));
+    SkeletonImage.loadFromFile("images/SkeletonWalk.png");
+    SkeletonImage.createMaskFromColor(Color(255, 255, 255));
+
 
     std::list<Entity*> entities;
     std::list<Entity*>::iterator it;
     std::list<Entity*>::iterator it2;
 
     std::vector<Object> e = lvl.getObjectsByName("easyEnemy");
-
+    std::vector<Object> skelleton = lvl.getObjectsByName("skelleton");
+    std::cout << "easy enemy numbers: " << e.size() << std::endl;
+    std::cout << "skelleton numbers: " << skelleton.size() << std::endl;
 
     AnimationManager anim;
     anim.create("walk", heroImage, 0, 0, 40, 80, 3, 0.01, 40);
@@ -82,8 +89,11 @@ bool startGame(int& numberLevel)
     anim.create("duck", heroImage, 0, 161, 40, 80, 1, 0);
 
     AnimationManager animEasyEnemy;
-
     animEasyEnemy.create("move", easyEnemyImage, 0, 0, 32, 32, 1, 0.005);
+
+    AnimationManager animSkelleton;
+    animSkelleton.create("move", SkeletonImage, 0, 0, 20, 33, 13, 0.005, 22);
+
     AnimationManager animBullet;
     animBullet.create("move", BulletImage, 0, 0, 16, 16, 1, 0, 0);
 
@@ -91,51 +101,13 @@ bool startGame(int& numberLevel)
     {
         entities.push_back(new Enemy(animEasyEnemy, "EasyEnemy", lvl, e[i].rect.left, e[i].rect.top, 32, 32));
     }
+    for (int i = 0; i < skelleton.size(); i++)
+    {
+        entities.push_back(new Enemy(animSkelleton, "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top, 20, 33));
+        std::cout << "skelleton number: " << i << " created!" << std::endl;
+    }
 
     Player p(anim, "Player1", lvl, player.rect.left, player.rect.top, 40, 80);
-
-   /* sf::RenderWindow windowTEST(sf::VideoMode(300, 300), "SFML window");
-    while (windowTEST.isOpen())
-    {
-        float timeTEST = clock.getElapsedTime().asMicroseconds();
-        timeTEST = timeTEST / 500;
-        clock.restart();
-    // Process events
-        sf::Event event;
-     while (windowTEST.pollEvent(event))
-     {
-        // Close window: exit
-        if (event.type == sf::Event::Closed)
-            windowTEST.close();
-    }
-    // Clear screen
-    windowTEST.clear(Color(255,255,255));
-    // Draw the sprite
-    //play();
-   // animTEST.set("stay");
-    //animFANG.set("stay");
-    ///animFANG.tick(timeTEST);
-   // animTEST.play();
-    animFANG2.set("stay");
-    animFANG2.tick(timeTEST);
-   // animTEST.tick(time);
-    //animFANG.draw(windowTEST, 100 , 100);
-    animFANG2.draw(windowTEST, 200, 200);
-    //animTEST.draw(windowTEST);
-    //animEasyEnemy.set("move");
-    //animEasyEnemy.tick(time);
-    //animEasyEnemy.draw(windowTEST);
-    //p.anim.tick(time);
-    //p.anim.play("stay");
-    //p.anim.draw(windowTEST);
-    anim.set("move");
-    anim.tick(timeTEST);
-    anim.draw(windowTEST, 100, 100);
-    // Update the window
-    windowTEST.display();
-    }*/
-
-    //Enemy easyEnemy(easyEnemyImage, "EasyEnemy", lvl, easyEnemyObject.rect.left, easyEnemyObject.rect.top, 200, 97);
 
     while (window.isOpen())
     {
@@ -149,7 +121,7 @@ bool startGame(int& numberLevel)
             if (event.type == Event::Closed)  window.close();
             if ((p.isShoot == true) && (p.canShoot == true))
             {
-                p.health -= 1; // !!!! FOR TEST !!!!
+                p.health -= 20; // !!!! FOR TEST !!!!
                 p.isShoot = false;
                 p.canShoot = false;
                 entities.push_back(new Bullet(animBullet, "Bullet", lvl, p.x, p.y+40, 16, 16, p.direction));
@@ -170,8 +142,9 @@ bool startGame(int& numberLevel)
         if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
         if (Keyboard::isKeyPressed(Keyboard::Escape)) { return false; }
 
+        // updates
         p.update(time);
-
+               
         for (it = entities.begin(); it != entities.end();)
         {
             (*it)->update(time);
@@ -182,11 +155,13 @@ bool startGame(int& numberLevel)
             else it++;
         }
 
+        // interactions
         for (it = entities.begin(); it != entities.end(); it++)//проходимся по эл-там списка
         {
             if ((*it)->getRect().intersects(p.getRect()))//если прямоугольник спрайта объекта пересекается с игроком
             {
-                if ((*it)->name == "EasyEnemy") //и при этом имя объекта EasyEnemy,то..
+                //if (((*it)->name == "EasyEnemy") || ((*it)->name == "Skelleton")) //и при этом имя объекта EasyEnemy,то..
+                if ((*it)->type == "enemy")  //и при этом имя объекта EasyEnemy,то..
                 {
                     if (p.dy > 0)
                     {
@@ -201,16 +176,19 @@ bool startGame(int& numberLevel)
             }
             for (it2 = entities.begin(); it2 != entities.end(); it2++) {
                 if ((*it)->getRect() != (*it2)->getRect())//different rectanglles
-                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and EasyEnemy
+                    //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
+                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->type == "enemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
                     {
                         (*it)->dx = 0;//stop enemy
                         (*it)->health = 0;// kill enemy
                         (*it2)->dx = 0;
                         (*it2)->life = false; // kill bullet
                     }
+                    
             }
         }
         
+        // win condition
         if (p.win) 
         { 
             p.win = false;  
@@ -218,6 +196,13 @@ bool startGame(int& numberLevel)
             numberLevel++;
             return true; 
         } // next level
+        // loose condition
+        if (!p.life)
+        {
+            numberLevel = 1;
+            return true;
+        }
+
 
         view.setCenter(p.x, p.y);
         window.setView(view);

@@ -18,6 +18,7 @@ public:
 	//Texture texture;
 	//Sprite sprite;
 	std::string name;
+	String type;
 
 	//Entity(Image& image, String Name, float X, float Y, int W, int H)
 	Entity(AnimationManager& A, std::string Name, float X, float Y, float W, float H)
@@ -215,13 +216,16 @@ class Enemy :public Entity
 {
 public:
 	bool onGround;
+	//String type;
+
 	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float W, float H) :Entity(A, Name, X, Y, W, H) {
 		obj = lvl.getObjectsByName("solid");
 		option(Name, 0.1, 1, "move");
 		anim.set("move");
-		if (name == "EasyEnemy") {
-			//sprite.setTextureRect(IntRect(0, 0, w, h));
-			dx = 0.1;
+		dx = 0.1;
+		if ((name == "EasyEnemy") || (name == "Skelleton"));
+		{
+			type = "enemy";
 		}
 	}
 
@@ -241,7 +245,7 @@ public:
 
 	void update(float time)
 	{
-		if (name == "EasyEnemy") {
+		//if (name == "EasyEnemy") {
 			//moveTimer += time;if (moveTimer>3000){ dx *= -1; moveTimer = 0; }
 			x += dx * time;
 			checkCollisionWithMap(dx, 0);
@@ -251,7 +255,7 @@ public:
 			if (health <= 0) { life = false; }
 			dy = dy + 0.0015 * time;
 			anim.tick(time);
-		}
+		//}
 	}
 };
 
