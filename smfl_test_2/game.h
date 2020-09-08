@@ -1,6 +1,12 @@
-﻿#include <SFML/Graphics.hpp>
-#include "creatures.h"
+﻿#ifndef GAME_H
+#define GAME_H
+
+#include <SFML/Graphics.hpp>
+#include "Entity.h"
 #include "level.h"
+#include "Bullet.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "animation.h"
 #include <vector>
 #include <list>
@@ -92,7 +98,10 @@ bool startGame(int& numberLevel)
     animEasyEnemy.create("move", easyEnemyImage, 0, 0, 32, 32, 1, 0.005);
 
     AnimationManager animSkelleton;
-    animSkelleton.create("move", SkeletonImage, 0, 0, 20, 33, 13, 0.005, 22);
+    animSkelleton.loadFromXML("images/skelleton.xml", SkeletonImage);
+
+    std::cout << "W " << animSkelleton.getW() << " H " << animSkelleton.getH() << std::endl;
+    //animSkelleton.create("move", SkeletonImage, 0, 0, 20, 33, 13, 0.005, 22);
 
     AnimationManager animBullet;
     animBullet.create("move", BulletImage, 0, 0, 16, 16, 1, 0, 0);
@@ -121,7 +130,7 @@ bool startGame(int& numberLevel)
             if (event.type == Event::Closed)  window.close();
             if ((p.isShoot == true) && (p.canShoot == true))
             {
-                p.health -= 20; // !!!! FOR TEST !!!!
+                p.health -= 5; // !!!! FOR TEST !!!!
                 p.isShoot = false;
                 p.canShoot = false;
                 entities.push_back(new Bullet(animBullet, "Bullet", lvl, p.x, p.y+40, 16, 16, p.direction));
@@ -242,3 +251,5 @@ void gameRunning(int& numberLevel)
         gameRunning(numberLevel);
     }
 }
+
+#endif GAME_H

@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include "SFML/Graphics.hpp"
+#include "tinyxml2.h"
 #include <vector>
 #include <list>
 #include <iostream>
@@ -70,9 +71,62 @@ public:
 		}
 		animList[name] = a;
 		currentAnim = name;
-
+		//std::cout << "animation " << name << " sucsesfully created!" << std::endl;
+		//std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << " count: " << count << " step: " << step << "loop: " << Loop << std::endl;
 
 	}
+
+	void loadFromXML(std::string fileName, Image& image)
+	{
+		tinyxml2::XMLDocument document;
+		texture.loadFromImage(image);
+		if (document.LoadFile(fileName.c_str()) != tinyxml2::XML_SUCCESS)
+		{
+			std::cout << "Loading file " << fileName << " failed..." << std::endl;
+			//return false;
+		}
+
+		//TiXmlDocument animFile(fileName.c_str());
+		
+		//animFile.LoadFile();
+
+		tinyxml2::XMLElement* head = document.FirstChildElement("sprites");
+		//TiXmlElement* head;
+		//head = animFile.FirstChildElement("sprites");
+		
+		tinyxml2::XMLElement* animElement = head->FirstChildElement("animation");
+		//TiXmlElement* animElement;
+		//animElement = head->FirstChildElement("animation");
+		while (animElement)
+		{
+			AnimationHelp anim;
+			currentAnim = animElement->Attribute("title");
+			std::cout << "currentAnim " << currentAnim << std::endl;
+			int delay = atoi(animElement->Attribute("delay"));
+			anim.speed = 1.0 / delay; anim.sprite.setTexture(texture);
+
+			tinyxml2::XMLElement* cut = animElement->FirstChildElement("cut");
+			//TiXmlElement* cut;
+			//cut = animElement->FirstChildElement("cut");
+			while (cut)
+			{
+				int x = atoi(cut->Attribute("x"));
+				int y = atoi(cut->Attribute("y"));
+				int w = atoi(cut->Attribute("w"));
+				int h = atoi(cut->Attribute("h"));
+
+				anim.frames.push_back(IntRect(x, y, w, h));
+				anim.frames_flip.push_back(IntRect(x + w, y, -w, h));
+				cut = cut->NextSiblingElement("cut");
+			}
+
+			anim.sprite.setOrigin(0, anim.frames[0].height);
+
+			animList[currentAnim] = anim;
+			animElement = animElement->NextSiblingElement("animation");
+		}
+	}
+
 	void draw(RenderWindow& window, int x = 0, int y = 0)
 	{
 		animList[currentAnim].sprite.setPosition(x, y);
