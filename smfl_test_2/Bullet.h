@@ -8,15 +8,14 @@ class Bullet :public Entity
 {
 public:
 	bool dir;// bullet dirrection
-	float speed;
-	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float W, float H, bool DIR) :Entity(A, Name, X, Y, W, H)
+	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, bool DIR) :Entity(A, Name, X, Y)
 	{
 		obj = lvl.getObjectsByName("solid");// find solid objects
 		x = X;
 		y = Y;
 		dir = DIR;
 		speed = 0.8;
-		w = h = 16;
+		damage = 10;
 		life = true;
 		option(Name, 0.8, 1, "move");
 	}
@@ -24,7 +23,7 @@ public:
 
 	void update(float time)
 	{
-		anim.tick(time);
+		
 		if (dir) dx = -speed;
 		else dx = +speed;
 
@@ -37,9 +36,18 @@ public:
 		for (int i = 0; i < obj.size(); i++) {//проход по объектам solid
 			if (getRect().intersects(obj[i].rect)) //если этот объект столкнулся с пулей,
 			{
-				life = false;// то пуля умирает
+
+				health = 0;
 			}
 		}
+		if (health <= 0) 
+		{
+			damage = 0;
+			anim.set("explode");
+			speed = 0;
+			if (anim.isPlaying() == false) life = false;
+		}
+		anim.tick(time);
 	}
 };
 

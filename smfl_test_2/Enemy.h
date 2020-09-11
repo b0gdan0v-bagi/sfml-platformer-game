@@ -10,9 +10,9 @@ public:
 	bool onGround;
 	//String type;
 
-	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float W, float H) :Entity(A, Name, X, Y, W, H) {
+	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y) :Entity(A, Name, X, Y) {
 		obj = lvl.getObjectsByName("solid");
-		option(Name, 0.1, 1, "move");
+		option(Name, 0.1, 10, "move");
 		anim.set("move");
 		dx = 0.1;
 		if ((name == "EasyEnemy") || (name == "Skelleton"));

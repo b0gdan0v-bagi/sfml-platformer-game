@@ -13,8 +13,11 @@
 #include "menu.h"
 #include <iostream>
 #include <sstream>
+#include "statBar.h"
 
 using namespace sf;
+
+
 
 void changeLevel(TileMap& lvl, int& numberLevel)
 {
@@ -22,8 +25,8 @@ void changeLevel(TileMap& lvl, int& numberLevel)
     {
 
     case 1:  lvl.load("map1.tmx"); break;
-    case 2:  lvl.load("map2.tmx"); break;
-    case 3:  lvl.load("map_test.tmx"); break;
+    case 2:  lvl.load("map1.tmx"); break;
+    case 3:  lvl.load("map_test2.tmx"); break;
     default: // в противном случае, возвращаем false
         break;
     }
@@ -32,10 +35,15 @@ void changeLevel(TileMap& lvl, int& numberLevel)
 //bool startGame(RenderWindow &window,int &numberLevel) 
 bool startGame(int& numberLevel)
 {
+    bool pvp = false;
     Vector2f resolution;
     resolution.x = VideoMode::getDesktopMode().width;
     resolution.y = VideoMode::getDesktopMode().height;
+    
+    resolution.x = 1280;
+    resolution.y = 720;
     RenderWindow window(VideoMode(resolution.x, resolution.y), "privet");
+
     window.setFramerateLimit(60);
 
     Font font;
@@ -43,8 +51,20 @@ bool startGame(int& numberLevel)
     if (numberLevel == 1) { menu(window, resolution, numberLevel, font); }
     window.setMouseCursorVisible(false);
     //menu(window);
-    //view.reset(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x/2, resolution.y/2));
-    View view (FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    if (numberLevel == 3) pvp = true;
+    View player2View(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    //View view (FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    View view(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    view.setSize(resolution.x, resolution.y);
+    player2View.setSize(resolution.x, resolution.y);
+    if (pvp)
+    {
+        player2View.setSize(resolution.x / 2, resolution.y);
+        view.setSize(resolution.x / 2, resolution.y);
+        view.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
+        player2View.setViewport(sf::FloatRect(0.5f, 0.f, 0.5f, 1.f));
+    }
+
     TileMap lvl;
 
     if (numberLevel != 0)
@@ -64,13 +84,11 @@ bool startGame(int& numberLevel)
     BulletImage.createMaskFromColor(Color(0, 0, 0));
 
     Object player = lvl.getObject("player");
+    Object player2 = lvl.getObject("player2");
     Object easyEnemyObject = lvl.getObject("easyEnemy");
     Object skelletonObject = lvl.getObject("skelleton");
     Clock clock;
 
-    RectangleShape polosa;
-    //std::ostringstream playerHealthString;
-    Text playerHealthText("", font, 30);
     heroImage.loadFromFile("images/volodya.png");
     heroImage.createMaskFromColor(Color(255, 255, 255));
     easyEnemyImage.loadFromFile("images/kvak.png");
@@ -100,23 +118,23 @@ bool startGame(int& numberLevel)
     AnimationManager animSkelleton;
     animSkelleton.loadFromXML("images/skelleton.xml", SkeletonImage);
 
-    std::cout << "W " << animSkelleton.getW() << " H " << animSkelleton.getH() << std::endl;
-    //animSkelleton.create("move", SkeletonImage, 0, 0, 20, 33, 13, 0.005, 22);
-
     AnimationManager animBullet;
-    animBullet.create("move", BulletImage, 0, 0, 16, 16, 1, 0, 0);
+    animBullet.create("move", BulletImage, 7, 10, 8, 8, 1, 0);
+    animBullet.create("explode", BulletImage, 27, 7, 18, 18, 4, 0.01, 29, false);
 
     for (int i = 0; i < e.size(); i++)
     {
-        entities.push_back(new Enemy(animEasyEnemy, "EasyEnemy", lvl, e[i].rect.left, e[i].rect.top, 32, 32));
+        entities.push_back(new Enemy(animEasyEnemy, "EasyEnemy", lvl, e[i].rect.left, e[i].rect.top));
     }
     for (int i = 0; i < skelleton.size(); i++)
     {
-        entities.push_back(new Enemy(animSkelleton, "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top, 20, 33));
+        entities.push_back(new Enemy(animSkelleton, "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top));
         std::cout << "skelleton number: " << i << " created!" << std::endl;
     }
 
-    Player p(anim, "Player1", lvl, player.rect.left, player.rect.top, 40, 80);
+    Player p(anim, "Player1", lvl, player.rect.left, player.rect.top);
+    Player p2(anim, "Player2", lvl, player2.rect.left, player2.rect.top);
+    statBar player1StatBar(font, 1), player2StatBar(font, 2);
 
     while (window.isOpen())
     {
@@ -128,12 +146,19 @@ bool startGame(int& numberLevel)
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)  window.close();
-            if ((p.isShoot == true) && (p.canShoot == true))
+            if ((p.isShoot == true) && (p.canShoot == true) && (p.ammo > 0))
             {
-                p.health -= 5; // !!!! FOR TEST !!!!
+                p.ammo -= 1; // !!!! FOR TEST !!!!
                 p.isShoot = false;
                 p.canShoot = false;
-                entities.push_back(new Bullet(animBullet, "Bullet", lvl, p.x, p.y+40, 16, 16, p.direction));
+                entities.push_back(new Bullet(animBullet, "Bullet", lvl, p.x, p.y + 50, p.direction));
+            }//if shoot - making bullet
+            if ((p2.isShoot == true) && (p2.canShoot == true) && (p2.ammo > 0))
+            {
+                p2.ammo -= 1; // !!!! FOR TEST !!!!
+                p2.isShoot = false;
+                p2.canShoot = false;
+                entities.push_back(new Bullet(animBullet, "Bullet", lvl, p2.x, p2.y + 50, p2.direction));
             }//if shoot - making bullet
         }
         if (Keyboard::isKeyPressed(Keyboard::U)) {
@@ -144,6 +169,11 @@ bool startGame(int& numberLevel)
         }
         if (Keyboard::isKeyPressed(Keyboard::A)) p.key["L"] = true;
         if (Keyboard::isKeyPressed(Keyboard::D)) p.key["R"] = true;
+        if (Keyboard::isKeyPressed(Keyboard::Left)) p2.key["L"] = true;
+        if (Keyboard::isKeyPressed(Keyboard::Right)) p2.key["R"] = true;
+        if (Keyboard::isKeyPressed(Keyboard::Up)) p2.key["Up"] = true;
+        if (Keyboard::isKeyPressed(Keyboard::Down)) p2.key["Down"] = true;
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) p2.key["Space"] = true;
         if (Keyboard::isKeyPressed(Keyboard::W)) p.key["Up"] = true;
         if (Keyboard::isKeyPressed(Keyboard::S)) p.key["Down"] = true;
         if (Keyboard::isKeyPressed(Keyboard::Space)) p.key["Space"] = true;
@@ -153,6 +183,7 @@ bool startGame(int& numberLevel)
 
         // updates
         p.update(time);
+        p2.update(time);
                
         for (it = entities.begin(); it != entities.end();)
         {
@@ -167,7 +198,7 @@ bool startGame(int& numberLevel)
         // interactions
         for (it = entities.begin(); it != entities.end(); it++)//проходимся по эл-там списка
         {
-            if ((*it)->getRect().intersects(p.getRect()))//если прямоугольник спрайта объекта пересекается с игроком
+            /*if ((*it)->getRect().intersects(p.getRect()))//если прямоугольник спрайта объекта пересекается с игроком
             {
                 //if (((*it)->name == "EasyEnemy") || ((*it)->name == "Skelleton")) //и при этом имя объекта EasyEnemy,то..
                 if ((*it)->type == "enemy")  //и при этом имя объекта EasyEnemy,то..
@@ -182,21 +213,26 @@ bool startGame(int& numberLevel)
                         //p.health -= 5;	//иначе враг подошел к нам сбоку и нанес урон
                     }
                 }
-            }
+            }*/
             for (it2 = entities.begin(); it2 != entities.end(); it2++) {
                 if ((*it)->getRect() != (*it2)->getRect())//different rectanglles
                     //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
-                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->type == "enemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
+                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->type == "enemy") && ((*it2)->name == "Bullet") && ((*it2)->damage != 0))// intersects of bullet and enemy
                     {
-                        (*it)->dx = 0;//stop enemy
-                        (*it)->health = 0;// kill enemy
-                        (*it2)->dx = 0;
-                        (*it2)->life = false; // kill bullet
+                        //(*it)->dx = 0;//stop enemy
+                        std::cout << (*it)->health << " " << (*it2)->damage << std::endl;
+                        (*it)->health -= (*it2)->damage;
+                        (*it2)->damage = 0;// kill enemy
+                        std::cout << (*it)->health << " " << (*it2)->damage << std::endl;
+                        (*it2)->health = 0; // kill bullet
                     }
                     
             }
         }
         
+        player1StatBar.update("Volodya" ,p.health, p.ammo);
+        player2StatBar.update("Volodya 2", p2.health, p2.ammo);
+
         // win condition
         if (p.win) 
         { 
@@ -206,16 +242,17 @@ bool startGame(int& numberLevel)
             return true; 
         } // next level
         // loose condition
-        if (!p.life)
+        /*if (!p.life)
         {
             numberLevel = 1;
             return true;
-        }
+        }*/
 
-
-        view.setCenter(p.x, p.y);
-        window.setView(view);
         window.clear(Color(77, 83, 140));
+        view.setCenter(p.x, p.y);
+       
+        window.setView(view);
+        
         window.draw(lvl);
 
         // draw all entites
@@ -223,19 +260,27 @@ bool startGame(int& numberLevel)
         {
             (*it)->draw(window);
         }
-
+        p2.draw(window);
         p.draw(window);
-        // make interface agreed with camera
-        polosa = RectangleShape(Vector2f(view.getSize().x, view.getSize().y / 10));
-        polosa.setFillColor(Color::Black);
-        polosa.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y + view.getSize().y / 2 - polosa.getSize().y);
-        std::ostringstream playerHealthString;
-        playerHealthString << p.health;
-        playerHealthText.setString("Volodya HP : " + playerHealthString.str());
-        playerHealthText.setPosition(polosa.getPosition().x - 100, view.getCenter().y + view.getSize().y / 2 - polosa.getSize().y);
-        playerHealthText.setFillColor(Color::White);
-        window.draw(polosa);
-        window.draw(playerHealthText);
+        player1StatBar.draw(window);
+                
+        if (pvp) // for split screen
+        {
+            player2View.setCenter(p2.x, p2.y);
+            window.setView(player2View);
+
+            window.draw(lvl);
+
+            // draw all entites
+            for (it = entities.begin(); it != entities.end(); it++)
+            {
+                (*it)->draw(window);
+            }
+            p2.draw(window);
+            p.draw(window);
+            player2StatBar.draw(window);
+        }
+
         window.display();
     }
 }
@@ -251,5 +296,7 @@ void gameRunning(int& numberLevel)
         gameRunning(numberLevel);
     }
 }
+
+
 
 #endif GAME_H

@@ -11,8 +11,9 @@ public:
 	std::map<std::string, bool> key;
 	bool isShoot, win, onLadder, hit, canShoot;
 	float shootTimer;
+	int ammo;
 
-	Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y, float W, float H) :Entity(A, Name, X, Y, W, H)
+	Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 	{
 		option(Name, 0, 100, "stay");
 		obj = lev.getAllObjects();
@@ -21,6 +22,7 @@ public:
 		hit = false;
 		shootTimer = 0;
 		canShoot = true;
+		ammo = 20;
 	}
 
 	void Keyboard()
@@ -28,14 +30,14 @@ public:
 		if (key["L"])
 		{
 			direction = true;
-			if (STATE != duck) dx = -0.15;
+			if (STATE != duck) dx = -0.25;
 			if (STATE == stay) STATE = walk;
 		}
 
 		if (key["R"])
 		{
 			direction = false;
-			if (STATE != duck) dx = 0.15;
+			if (STATE != duck) dx = 0.25;
 			if (STATE == stay) STATE = walk;
 		}
 

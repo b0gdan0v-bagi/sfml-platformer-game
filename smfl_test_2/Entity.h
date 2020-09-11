@@ -13,21 +13,22 @@ class Entity {
 public:
 	AnimationManager anim;
 	std::vector<Object> obj;
-	float dx, dy, x, y, w, h, timer;
+	float dx, dy, x, y, w, h, speed;
+	float damage, timer;
 	int health;
-	bool life, direction;
+	bool life, direction, onDie;
 	//Texture texture;
 	//Sprite sprite;
 	std::string name;
 	String type;
 
-	Entity(AnimationManager& A, std::string Name, float X, float Y, float W, float H)
+	Entity(AnimationManager& A, std::string Name, float X, float Y)
 	{
 		anim = A;
 		x = X;
 		y = Y;
-		w = W;
-		h = H;
+		//w = W;
+		//h = H;
 		name = Name;
 		health = 100;
 		dx = 0;

@@ -34,6 +34,11 @@ public:
 		if (currentFrame > frames.size())
 		{
 			currentFrame -= frames.size();
+			if (!loop) 
+			{ 
+				isPlaying = false;
+				return; 
+			}
 		}
 		//std::cout << "current Frame :" << currentFrame << std::endl;
 		int i = currentFrame;
@@ -86,17 +91,9 @@ public:
 			//return false;
 		}
 
-		//TiXmlDocument animFile(fileName.c_str());
-		
-		//animFile.LoadFile();
-
 		tinyxml2::XMLElement* head = document.FirstChildElement("sprites");
-		//TiXmlElement* head;
-		//head = animFile.FirstChildElement("sprites");
-		
 		tinyxml2::XMLElement* animElement = head->FirstChildElement("animation");
-		//TiXmlElement* animElement;
-		//animElement = head->FirstChildElement("animation");
+
 		while (animElement)
 		{
 			AnimationHelp anim;
@@ -106,8 +103,7 @@ public:
 			anim.speed = 1.0 / delay; anim.sprite.setTexture(texture);
 
 			tinyxml2::XMLElement* cut = animElement->FirstChildElement("cut");
-			//TiXmlElement* cut;
-			//cut = animElement->FirstChildElement("cut");
+
 			while (cut)
 			{
 				int x = atoi(cut->Attribute("x"));
@@ -154,6 +150,8 @@ public:
 		animList[currentAnim].isPlaying = true;
 	}
 	void play(std::string name) { animList[name].isPlaying = true; }
+
+	bool isPlaying() { return animList[currentAnim].isPlaying; }
 
 	float getH() { return animList[currentAnim].frames[0].height; }
 
