@@ -15,7 +15,7 @@ public:
 
 	Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 	{
-		option(Name, 0, 100, "stay");
+		option(Name, 0, 20, "stay");
 		obj = lev.getAllObjects();
 		STATE = stay;
 		win = false;
@@ -111,6 +111,15 @@ public:
 
 		//if (direction) anim.flip();
 		anim.flip(direction);
+		if (health <= 0)
+		{
+			anim.set("die");
+
+			if (anim.isPlaying() == false)
+			{
+				life = false;
+			}
+		}
 
 		anim.tick(time);
 	}
@@ -137,7 +146,7 @@ public:
 
 	void update(float time)
 	{
-		Keyboard();
+		if ( health > 0 ) Keyboard();
 		Animation(time);
 		if (STATE == climb) if (!onLadder) STATE = stay;
 		if (STATE != climb) dy += 0.0005 * time;
@@ -155,7 +164,7 @@ public:
 		checkCollisionWithMap(dx, 0);
 		y += dy * time;
 		checkCollisionWithMap(0, dy);
-		if (health <= 0) { life = false; }
+
 	}
 };
 

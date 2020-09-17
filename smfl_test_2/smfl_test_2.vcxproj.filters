@@ -53,5 +53,8 @@
     <ClInclude Include="statBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

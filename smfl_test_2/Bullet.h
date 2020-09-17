@@ -8,7 +8,7 @@ class Bullet :public Entity
 {
 public:
 	bool dir;// bullet dirrection
-	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, bool DIR) :Entity(A, Name, X, Y)
+	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, bool DIR, String TYPE = "player1") :Entity(A, Name, X, Y)
 	{
 		obj = lvl.getObjectsByName("solid");// find solid objects
 		x = X;
@@ -17,6 +17,7 @@ public:
 		speed = 0.8;
 		damage = 10;
 		life = true;
+		type = TYPE;
 		option(Name, 0.8, 1, "move");
 	}
 

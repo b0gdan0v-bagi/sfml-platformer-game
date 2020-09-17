@@ -1,113 +1,73 @@
-﻿#include <SFML/Graphics.hpp>
+﻿#ifndef MENU_H
+#define MENU_H
+
+#include <SFML/Graphics.hpp>
 #include <iostream>
+#include <sstream>
 using namespace sf; 
 
-void menu(RenderWindow& window, Vector2f resolution, int& numberLevel, Font& font) 
+class Menu 
 {
-	Text about("", font, 50), menu1("", font, 50), menu2("", font, 50), menu3("", font, 50), menu4("", font, 50);
-	Text lvl1("", font, 50), lvl2("", font, 50), back("", font, 50);
-	about.setString("Game from Andrusha \n ver 0.1 \n Press ESQ to main menu");
-	menu1.setString("New game : PVE");
-	menu2.setString("About");
-	menu3.setString("Exit");
-	menu4.setString("New game : PVP");
-	lvl1.setString("Level 1");
-	lvl2.setString("Level 2");
-	back.setString("Back to main menu");
-
-	about.setPosition(resolution.x / 2 - about.getLocalBounds().width / 2, resolution.y / 2 - about.getLocalBounds().height / 2);
-
-	Vector2f menu1Pos, menu2Pos, menu3Pos, menu4Pos;
-	Vector2f lvl1Pos, lvl2Pos, backPos;
-
-	bool isMenu = 1, levelMenu = false;
-	int menuNum = 0;
-
-	menu1Pos = Vector2f(resolution.x / 2 - menu1.getLocalBounds().width / 2, resolution.y / 2 - menu1.getLocalBounds().height / 2 - 300);
-	menu2Pos = Vector2f(resolution.x / 2 - menu2.getLocalBounds().width / 2, resolution.y / 2 - menu2.getLocalBounds().height / 2);
-	menu3Pos = Vector2f(resolution.x / 2 - menu3.getLocalBounds().width / 2, resolution.y / 2 - menu3.getLocalBounds().height / 2 + 150);
-	menu4Pos = Vector2f(resolution.x / 2 - menu4.getLocalBounds().width / 2, resolution.y / 2 - menu4.getLocalBounds().height / 2 - 150);
-	lvl1Pos = Vector2f(resolution.x / 2 - lvl1.getLocalBounds().width / 2, resolution.y / 2 - lvl1.getLocalBounds().height / 2 - 300);
-	lvl2Pos = Vector2f(resolution.x / 2 - lvl2.getLocalBounds().width / 2, lvl1Pos.y + lvl1.getLocalBounds().height + 100);
-	backPos = Vector2f(resolution.x / 2 - back.getLocalBounds().width / 2, lvl2Pos.y + lvl2.getLocalBounds().height + 100);
-
-	menu1.setPosition(menu1Pos);
-	menu2.setPosition(menu2Pos);
-	menu3.setPosition(menu3Pos);
-	menu4.setPosition(menu4Pos);
-	lvl1.setPosition(lvl1Pos);
-	lvl2.setPosition(lvl2Pos);
-	back.setPosition(backPos);
-
-	while (isMenu)
+public:
+	Font font;
+	View menuView;
+	
+	float fontSize;
+	Vector2f center, size; // for window.getView
+	Text text;
+	Menu(RenderWindow& window)
 	{
-		Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == Event::Closed)
-				window.close();
-		}
-		window.setMouseCursorVisible(true);
-		menu1.setFillColor(Color::White);
-		menu2.setFillColor(Color::White);
-		menu3.setFillColor(Color::White);
-		menu4.setFillColor(Color::White);
-		menuNum = 0;
-		window.clear(Color(129, 181, 221));
-		if (IntRect(menu1Pos.x, menu1Pos.y, menu1.getLocalBounds().width, menu1.getLocalBounds().height*2).contains(Mouse::getPosition(window))) 
-		{ 
-			menu1.setFillColor(Color::Blue);
-			menuNum = 1; 
-		}
-		if (IntRect(menu2Pos.x, menu2Pos.y, menu2.getLocalBounds().width, menu2.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
-		{ 
-			menu2.setFillColor(Color::Blue);
-			menuNum = 2; 
-		}
-		if (IntRect(menu3Pos.x, menu3Pos.y, menu3.getLocalBounds().width, menu3.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
-		{ 
-			menu3.setFillColor(Color::Blue);
-			menuNum = 3; 
-		}
-		if (IntRect(menu4Pos.x, menu4Pos.y, menu4.getLocalBounds().width, menu4.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
-		{
-			menu4.setFillColor(Color::Blue);
-			menuNum = 4;
+		font.loadFromFile("images/TimesNewRoman.ttf");
+		center = window.getView().getCenter();
+		size = window.getView().getSize();
+		fontSize = size.x / 20;
+	}
+
+	void setTextParam(Text& text, Text& prevText)
+	{
+		text.setFont(font);
+		text.setCharacterSize(fontSize);
+		text.setPosition(center.x - text.getGlobalBounds().width / 2,
+			fontSize + prevText.getGlobalBounds().height + prevText.getGlobalBounds().top);
+	}
+	void setTextParam(Text& text)
+	{
+		text.setFont(font); // start point at y axis
+		text.setCharacterSize(fontSize);
+		text.setPosition(center.x - text.getGlobalBounds().width / 2, fontSize);
+	}
+
+	bool mainMenu(RenderWindow& window, int& numberLevel, bool isGameRunning = false)
+	{
+		View view = window.getView();
+		view.setCenter(0, 0);
+		center = window.getView().getCenter();
+		size = window.getView().getSize();
+		view.setSize(size.x, size.y);
+		std::vector<Text> menuIcon;
+
+		menuIcon.push_back(text);
+		menuIcon[0].setString("New game : PVE"); // menuNum = 1
+		menuIcon.push_back(text);
+		menuIcon[1].setString("New game : PVP"); // menuNum = 2
+		menuIcon.push_back(text);
+		menuIcon[2].setString("About"); // menuNum = 3
+		menuIcon.push_back(text);
+		menuIcon[3].setString("Exit"); // menuNum = 4
+		if (isGameRunning) {
+			menuIcon.push_back(text);
+			menuIcon[4].setString("Continue"); // menuNum = 5
 		}
 
-		if (Mouse::isButtonPressed(Mouse::Left))
+		setTextParam(menuIcon[0]);
+		for (int i = 1; i < menuIcon.size(); i++)
 		{
-			if (menuNum == 1) 
-			{ 
-				levelMenu = true;
-				sleep(milliseconds(300));
-				//isMenu = false; 
-				//numberLevel = 1; 
-			}
-			if (menuNum == 2) 
-			{
-				window.draw(about);
-				window.display(); 
-				while (!Keyboard::isKeyPressed(Keyboard::Escape)); 
-				sleep(milliseconds(300));
-			}
-			if (menuNum == 3) 
-			{
-				numberLevel = 0;
-				window.close(); 
-				isMenu = false; 
-				sleep(milliseconds(300));
-			}
-			if (menuNum == 4) 
-			{ 
-				isMenu = false; 
-				numberLevel = 3; 
-				sleep(milliseconds(300));
-			}
-
+			setTextParam(menuIcon[i], menuIcon[i - 1]);
 		}
-
-		while (levelMenu)
+		bool isMenu = true;
+		int menuNum = 0;
+		while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+		while (isMenu)
 		{
 			Event event;
 			while (window.pollEvent(event))
@@ -115,61 +75,167 @@ void menu(RenderWindow& window, Vector2f resolution, int& numberLevel, Font& fon
 				if (event.type == Event::Closed)
 					window.close();
 			}
-			lvl1.setFillColor(Color::White);
-			lvl2.setFillColor(Color::White);
-			back.setFillColor(Color::White);
+			window.setMouseCursorVisible(true);
 			menuNum = 0;
 			window.clear(Color(129, 181, 221));
-			if (IntRect(lvl1Pos.x, lvl1Pos.y, lvl1.getLocalBounds().width, lvl1.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
+
+			for (int i = 0; i < menuIcon.size(); i++)
 			{
-				lvl1.setFillColor(Color::Blue);
-				menuNum = 1;
+				menuIcon[i].setFillColor(Color::White);
+				if (IntRect(menuIcon[i].getGlobalBounds()).contains(Mouse::getPosition(window))) {
+					menuIcon[i].setFillColor(Color::Blue);
+					menuNum = i+1;
+				}
 			}
-			if (IntRect(lvl2Pos.x, lvl2Pos.y, lvl2.getLocalBounds().width, lvl2.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
-			{
-				lvl2.setFillColor(Color::Blue);
-				menuNum = 2;
-			}
-			if (IntRect(backPos.x, backPos.y, back.getLocalBounds().width, back.getLocalBounds().height * 2).contains(Mouse::getPosition(window)))
-			{
-				back.setFillColor(Color::Blue);
-				menuNum = 3;
-			}
-			if (Keyboard::isKeyPressed(Keyboard::Escape)) { levelMenu = false; }
 			if (Mouse::isButtonPressed(Mouse::Left))
 			{
-				if (menuNum == 1)
+				switch (menuNum)
 				{
-					levelMenu = false;
-					isMenu = false; 
-					numberLevel = 1; 
-
-				}
-				if (menuNum == 2)
-				{
-					levelMenu = false;
+				case 1: {
+					if (levelMenu(window, numberLevel)) return true;
+					std::cout << "level menu ended!";
+					std::cout << "isMenu = " << isMenu << "\n";
+					//sleep(milliseconds(300)); 
+					break; }
+				case 2: {
 					isMenu = false;
-					numberLevel = 2;
-				}
-				if (menuNum == 3)
-				{
-					levelMenu = false;
-					isMenu = true;
+					numberLevel = 3;
 					sleep(milliseconds(300));
+					return true;
+					break;
+				}
+				case 3: {
+					aboutMenu(window);
+					break;
+				}
+				case 4: {
+					return false;
+					numberLevel = 0;
+					window.close();
+					isMenu = false;
+					sleep(milliseconds(300)); 
+					break; }
+				case 5: {
+					return true;
+					break; }
+				default:
+					break;
 				}
 			}
+						
+			for (int i = 0; i < menuIcon.size(); i++)
+			{
+				window.draw(menuIcon[i]);
+			}
 			
-			window.draw(lvl1);
-			window.draw(lvl2);
-			window.draw(back);
 			window.display();
 		}
-
-		window.draw(menu1);
-		window.draw(menu2);
-		window.draw(menu3);
-		window.draw(menu4);
-
-		window.display();
 	}
-}
+
+	bool levelMenu(RenderWindow& window, int& numberLevel)
+	{
+		std::vector<Text> menuIcon;
+		menuIcon.push_back(text);
+		menuIcon[0].setString("Choose your level"); 
+		setTextParam(menuIcon[0]);
+		for (int i = 1; i <= 4; i++)
+		{
+			std::ostringstream lvlNumber;
+			lvlNumber << i;
+			menuIcon.push_back(text);
+			menuIcon[i].setString("lvl " + lvlNumber.str()); 
+			setTextParam(menuIcon[i], menuIcon[i - 1]);
+			//std::string buffer = menuIcon[i].getString();
+			//std::cout << buffer << "\n";
+		}
+		bool isMenu = true;
+		while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */}
+		
+		int menuNum = 0;
+		while (isMenu)
+		{
+			Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == Event::Closed)
+					window.close();
+			}
+			window.setMouseCursorVisible(true);
+
+			menuNum = 0;
+			window.clear(Color(129, 181, 221));
+			menuIcon[0].setFillColor(Color::White);
+			for (int i = 1; i < menuIcon.size(); i++)
+			{
+				menuIcon[i].setFillColor(Color::White);
+				if (IntRect(menuIcon[i].getGlobalBounds()).contains(Mouse::getPosition(window))) {
+					menuIcon[i].setFillColor(Color::Blue);
+					menuNum = i;
+					//std::cout << menuNum << "\n";
+				}
+			}
+			if (Mouse::isButtonPressed(Mouse::Left))
+			{
+				numberLevel = 1; // FOR TEST!
+
+				if (menuNum != 0) return true;
+			}
+			if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
+			for (int i = 0; i < menuIcon.size(); i++)
+			{
+				window.draw(menuIcon[i]);
+			}
+			window.display();
+		}
+	}
+
+	bool aboutMenu(RenderWindow& window)
+	{
+		std::vector<Text> menuIcon;
+		menuIcon.push_back(text);
+		menuIcon[0].setString("Game by Andey Bogdanov \n ver 0.2 \n bagizara@gmail.com");
+		setTextParam(menuIcon[0]);
+		menuIcon.push_back(text);
+		menuIcon[1].setString("back");
+		setTextParam(menuIcon[1], menuIcon[0]);
+
+		bool isMenu = true;
+		while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+
+		//int menuNum = 0;
+		while (isMenu)
+		{
+			Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == Event::Closed)
+					window.close();
+			}
+			window.setMouseCursorVisible(true);
+
+			//menuNum = 0;
+			window.clear(Color(129, 181, 221));
+			menuIcon[0].setFillColor(Color::White);
+			menuIcon[1].setFillColor(Color::White);
+			if (IntRect(menuIcon[1].getGlobalBounds()).contains(Mouse::getPosition(window))) {
+				menuIcon[1].setFillColor(Color::Blue);
+				//menuNum = 1;
+				if (Mouse::isButtonPressed(Mouse::Left))
+				{
+					while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+					return false;
+				}
+			}
+
+			if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
+			for (int i = 0; i < menuIcon.size(); i++)
+			{
+				window.draw(menuIcon[i]);
+			}
+			window.display();
+		}
+	}
+};
+
+
+#endif MENU_H

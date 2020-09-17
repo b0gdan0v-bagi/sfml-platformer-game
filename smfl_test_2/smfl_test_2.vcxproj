@@ -154,6 +154,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GlobalData.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="Player.h" />

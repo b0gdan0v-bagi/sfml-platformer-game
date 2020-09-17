@@ -17,8 +17,6 @@
 
 using namespace sf;
 
-
-
 void changeLevel(TileMap& lvl, int& numberLevel)
 {
     switch (numberLevel)
@@ -42,26 +40,35 @@ bool startGame(int& numberLevel)
     
     resolution.x = 1280;
     resolution.y = 720;
+    //resolution.x = 1920;
+    //resolution.y = 1080;
     RenderWindow window(VideoMode(resolution.x, resolution.y), "privet");
 
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
 
     Font font;
     font.loadFromFile("images/TimesNewRoman.ttf");
-    if (numberLevel == 1) { menu(window, resolution, numberLevel, font); }
+    Menu menu(window);
+    //if (numberLevel == 1) menu.mainMenu(window, numberLevel); 
+    if (!menu.mainMenu(window, numberLevel)) return false;
     window.setMouseCursorVisible(false);
     //menu(window);
     if (numberLevel == 3) pvp = true;
-    View player2View(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    std::cout << numberLevel << "\n";
+    //View player2View(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
     //View view (FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
-    View view(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
-    view.setSize(resolution.x, resolution.y);
-    player2View.setSize(resolution.x, resolution.y);
+    //View view(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    View view, player1View, player2View;
+    view.setCenter(resolution.x / 2, resolution.y / 2);
+    view.setSize(resolution);
+    player1View.reset(FloatRect(-resolution.x / 2, -resolution.y / 2, resolution.x / 2, resolution.y / 2));
+    //view.setSize(resolution.x, resolution.y);
+    //player2View.setSize(resolution.x, resolution.y);
     if (pvp)
     {
         player2View.setSize(resolution.x / 2, resolution.y);
-        view.setSize(resolution.x / 2, resolution.y);
-        view.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
+        player1View.setSize(resolution.x / 2, resolution.y);
+        player1View.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
         player2View.setViewport(sf::FloatRect(0.5f, 0.f, 0.5f, 1.f));
     }
 
@@ -103,14 +110,16 @@ bool startGame(int& numberLevel)
 
     std::vector<Object> e = lvl.getObjectsByName("easyEnemy");
     std::vector<Object> skelleton = lvl.getObjectsByName("skelleton");
-    std::cout << "easy enemy numbers: " << e.size() << std::endl;
-    std::cout << "skelleton numbers: " << skelleton.size() << std::endl;
+    //std::cout << "easy enemy numbers: " << e.size() << std::endl;
+    //std::cout << "skelleton numbers: " << skelleton.size() << std::endl;
 
     AnimationManager anim;
     anim.create("walk", heroImage, 0, 0, 40, 80, 3, 0.01, 40);
     anim.create("stay", heroImage, 0, 0, 40, 80, 1, 0);
     anim.create("jump", heroImage, 0, 241, 40, 80, 1, 0);
     anim.create("duck", heroImage, 0, 161, 40, 80, 1, 0);
+    anim.create("die", heroImage, 0, 81, 40, 80, 3, 0.01, 40, false);
+
 
     AnimationManager animEasyEnemy;
     animEasyEnemy.create("move", easyEnemyImage, 0, 0, 32, 32, 1, 0.005);
@@ -129,7 +138,7 @@ bool startGame(int& numberLevel)
     for (int i = 0; i < skelleton.size(); i++)
     {
         entities.push_back(new Enemy(animSkelleton, "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top));
-        std::cout << "skelleton number: " << i << " created!" << std::endl;
+        //std::cout << "skelleton number: " << i << " created!" << std::endl;
     }
 
     Player p(anim, "Player1", lvl, player.rect.left, player.rect.top);
@@ -158,15 +167,11 @@ bool startGame(int& numberLevel)
                 p2.ammo -= 1; // !!!! FOR TEST !!!!
                 p2.isShoot = false;
                 p2.canShoot = false;
-                entities.push_back(new Bullet(animBullet, "Bullet", lvl, p2.x, p2.y + 50, p2.direction));
+                entities.push_back(new Bullet(animBullet, "Bullet", lvl, p2.x, p2.y + 50, p2.direction, "player2"));
             }//if shoot - making bullet
         }
-        if (Keyboard::isKeyPressed(Keyboard::U)) {
-            view.zoom(1.0040f); //масштабируем, уменьшение
-        }
-        if (Keyboard::isKeyPressed(Keyboard::P)) {
-            view.zoom(0.990f); //масштабируем, уменьшение
-        }
+        //if (Keyboard::isKeyPressed(Keyboard::U)) view.zoom(1.0040f); //масштабируем, уменьшение
+        //if (Keyboard::isKeyPressed(Keyboard::P)) view.zoom(0.990f); //масштабируем, уменьшение
         if (Keyboard::isKeyPressed(Keyboard::A)) p.key["L"] = true;
         if (Keyboard::isKeyPressed(Keyboard::D)) p.key["R"] = true;
         if (Keyboard::isKeyPressed(Keyboard::Left)) p2.key["L"] = true;
@@ -178,13 +183,21 @@ bool startGame(int& numberLevel)
         if (Keyboard::isKeyPressed(Keyboard::S)) p.key["Down"] = true;
         if (Keyboard::isKeyPressed(Keyboard::Space)) p.key["Space"] = true;
         if (Keyboard::isKeyPressed(Keyboard::Q)) { std::cout << numberLevel << " " << time << std::endl;}
-        if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
-        if (Keyboard::isKeyPressed(Keyboard::Escape)) { return false; }
+        //if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
+        if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+            window.setView(view);
+            Menu menu2(window);
+            if (!menu2.mainMenu(window, numberLevel, true)) {
+                std::cout << "current numberLevel = " << numberLevel << "\n";
+                return true;
+            }
+            }
 
         // updates
         p.update(time);
         p2.update(time);
-               
+        
+        // all entities update
         for (it = entities.begin(); it != entities.end();)
         {
             (*it)->update(time);
@@ -214,20 +227,43 @@ bool startGame(int& numberLevel)
                     }
                 }
             }*/
-            for (it2 = entities.begin(); it2 != entities.end(); it2++) {
-                if ((*it)->getRect() != (*it2)->getRect())//different rectanglles
+            for (it2 = entities.begin(); it2 != entities.end(); it2++)
+            {
+                if ((*it)->getRect() != (*it2)->getRect()) //different rectanglles
+                {
                     //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
                     if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->type == "enemy") && ((*it2)->name == "Bullet") && ((*it2)->damage != 0))// intersects of bullet and enemy
                     {
                         //(*it)->dx = 0;//stop enemy
-                        std::cout << (*it)->health << " " << (*it2)->damage << std::endl;
-                        (*it)->health -= (*it2)->damage;
-                        (*it2)->damage = 0;// kill enemy
-                        std::cout << (*it)->health << " " << (*it2)->damage << std::endl;
+                        (*it)->health -= (*it2)->damage; // damage enemy
+                        (*it2)->damage = 0;
                         (*it2)->health = 0; // kill bullet
                     }
-                    
+                }
+             
             }
+            if (pvp)
+            {
+                if ((*it)->getRect().intersects(p2.getRect()))
+                {
+                    if (((*it)->name == "Bullet") && ((*it)->type == "player1") && (p2.health > 0))
+                    {
+                        p2.health -= (*it)->damage;
+                        (*it)->damage = 0;
+                        (*it)->health = 0; // kill bullet
+                    }
+                }
+                if ((*it)->getRect().intersects(p.getRect()))
+                {
+                    if (((*it)->name == "Bullet") && ((*it)->type == "player2") && (p.health > 0))
+                    {
+                        p.health -= (*it)->damage;
+                        (*it)->damage = 0;
+                        (*it)->health = 0; // kill bullet
+                    }
+                }
+            }
+
         }
         
         player1StatBar.update("Volodya" ,p.health, p.ammo);
@@ -249,9 +285,9 @@ bool startGame(int& numberLevel)
         }*/
 
         window.clear(Color(77, 83, 140));
-        view.setCenter(p.x, p.y);
+        player1View.setCenter(p.x, p.y);
        
-        window.setView(view);
+        window.setView(player1View);
         
         window.draw(lvl);
 
@@ -288,7 +324,7 @@ bool startGame(int& numberLevel)
 void gameRunning(int& numberLevel)
 //void gameRunning(RenderWindow& window, int& numberLevel)
 {
-    //if (startGame(window, numberLevel))
+
     if (startGame(numberLevel))
     {
         //numberLevel++;
