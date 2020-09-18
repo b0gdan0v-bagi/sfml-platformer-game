@@ -149,15 +149,19 @@
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="draw.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="level.cpp" />
+    <ClCompile Include="Load.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="statBar.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="update.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />

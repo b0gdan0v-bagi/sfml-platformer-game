@@ -9,7 +9,7 @@ int main()
 {
     Engine engine;
 
-    engine.gameRunning(1);
+    engine.gameRunning();
 
     return 0;
 }
