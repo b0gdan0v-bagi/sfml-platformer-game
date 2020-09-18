@@ -1,178 +1,157 @@
-﻿#include "Player.h"
+#include "Player.h"
 
-/*
-Player::Player()
+using namespace sf;
+
+Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 {
-    // Speed
-    p_Speed = 400;
-    // Connect texture
-    p_Texture.loadFromFile("volodya.png");
-    p_Sprite.setTexture(p_Texture);
-
-    // start position
-    p_Position.x = 100;
-    p_Position.y = 100;
-    p_Velocity.x = 0.1;
-    p_Velocity.y = 0.1;
-    onGround = false;
-    p_rect = FloatRect(100, 100, 40, 80);
-    p_texture_rect = IntRect(0, 0, 40, 80);
-    //p_Sprite.setScale(1/p_rect.width, 1/p_rect.height);
-    p_Sprite.setTextureRect(IntRect(p_texture_rect));
-
+	option(Name, 0, 20, "stay");
+	obj = lev.getAllObjects();
+	STATE = stay;
+	win = false;
+	hit = false;
+	shootTimer = 0;
+	canShoot = true;
+	ammo = 20;
 }
 
-// make sprite aviliable for draw()
-Sprite Player::getSprite()
+void Player::Keyboard()
 {
-    return p_Sprite;
+	if (key["L"])
+	{
+		direction = true;
+		if (STATE != duck) dx = -0.25;
+		if (STATE == stay) STATE = walk;
+	}
+
+	if (key["R"])
+	{
+		direction = false;
+		if (STATE != duck) dx = 0.25;
+		if (STATE == stay) STATE = walk;
+	}
+
+	if (key["Up"])
+	{
+		if (onLadder) STATE = climb;
+		if (STATE == stay || STATE == walk) { dy = -0.37; STATE = jump; anim.play("stay"); }
+		if (STATE == climb) dy = -0.05;
+		if (STATE == climb) if (key["L"] || key["R"]) STATE = stay;
+	}
+
+	if (key["Down"])
+	{
+		if (STATE == stay || STATE == walk)
+		{
+			STATE = duck;
+			dx = 0;
+		}
+		if (STATE == climb) dy = 0.05;
+	}
+
+	if (key["Space"])
+	{
+		isShoot = true;
+	}
+
+	//if key unpressed
+	if (!(key["R"] || key["L"]))
+	{
+		dx = 0;
+		if (STATE == walk) STATE = stay;
+	}
+
+	if (!(key["Up"] || key["Down"]))
+	{
+		if (STATE == climb) dy = 0;
+	}
+
+	if (!key["Down"])
+	{
+		if (STATE == duck) { STATE = stay; }
+	}
+
+	if (!key["Space"])
+	{
+		isShoot = false;
+	}
+
+	key["R"] = key["L"] = key["Up"] = key["Down"] = key["Space"] = false;
 }
 
-void Player::moveLeft()
+void Player::Animation(float time)
 {
-    p_LeftPressed = true;
-    p_texture_rect.left += 40;
-    p_texture_rect.top = 81;
-    if (p_texture_rect.left > 80)
-    {
-        p_texture_rect.left = 0;
-    }
-    p_Sprite.setTextureRect(IntRect(p_texture_rect));
- 
+	if (STATE == stay) anim.set("stay");
+	if (STATE == walk) anim.set("walk");
+	if (STATE == jump) anim.set("jump");
+	if (STATE == duck) anim.set("duck");
+	if (STATE == climb) { anim.set("stay"); anim.pause(); if (dy != 0) anim.play(); }
+
+	if (isShoot) {
+		//anim.set("shoot");
+		anim.set("stay");
+		if (STATE == walk) anim.set("stay");
+	}
+
+	/*if (hit) {
+		timer += time;
+		if (timer > 1000) { hit = false; timer = 0; }
+		anim.set("hit");
+	}*/
+
+	//if (direction) anim.flip();
+	anim.flip(direction);
+	if (health <= 0)
+	{
+		anim.set("die");
+
+		if (anim.isPlaying() == false)
+		{
+			life = false;
+		}
+	}
+
+	anim.tick(time);
 }
 
-void Player::moveRight()
+void Player::checkCollisionWithMap(float Dx, float Dy)
 {
-    p_RightPressed = true;
-    p_texture_rect.left += 40;
-    p_texture_rect.top = 0;
-    if (p_texture_rect.left > 80)
-    {
-        p_texture_rect.left = 0;
-    }
-    p_Sprite.setTextureRect(IntRect(p_texture_rect));
-
-
+	for (int i = 0; i < obj.size(); i++)
+		if (getRect().intersects(obj[i].rect))
+		{
+			if (obj[i].name == "solid")
+			{
+				if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; STATE = stay; }
+				if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
+				if (Dx > 0) { x = obj[i].rect.left - w; }
+				if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; }
+			}
+			if (obj[i].name == "win")
+			{
+				win = true;
+			}
+			if (obj[i].name == "ladder") { onLadder = true; if (STATE == climb) x = obj[i].rect.left - 10; }
+		}
 }
 
-void Player::moveTop()
+void Player::update(float time)
 {
-    p_TopPressed = true;
-    p_texture_rect.left += 40;
-    p_texture_rect.top = 0;
-    if (p_texture_rect.left > 80)
-    {
-        p_texture_rect.left = 0;
-    }
-    p_Sprite.setTextureRect(IntRect(p_texture_rect));
-}
-
-void Player::moveBot()
-{
-    p_BotPressed = true;
-    p_texture_rect.left += 40;
-    p_texture_rect.top = 0;
-    if (p_texture_rect.left > 80)
-    {
-        p_texture_rect.left = 0;
-    }
-    p_Sprite.setTextureRect(IntRect(p_texture_rect));
-}
-
-void Player::stopLeft()
-{
-    p_LeftPressed = false;
-}
-
-void Player::stopRight()
-{
-    p_RightPressed = false;
-}
-
-void Player::stopTop()
-{
-    p_TopPressed = false;
-}
-
-void Player::stopBot()
-{
-    p_BotPressed = false;
-}
-
-// moving of Player
-void Player::update(float elapsedTime)
-{
-    if (p_RightPressed)
-    {
-        p_Velocity.x += p_Speed;
-    //    p_Direction.x = 1;
-    //    p_Direction.y = 0;
-    //    p_TopPressed = false;
-    //    p_BotPressed = false;
-    }
-
-    if (p_LeftPressed)
-    {
-        p_Velocity.x -= p_Speed;
-     //   p_Direction.x = -1;
-     //   p_Direction.y = 0;
-     //   p_TopPressed = false;
-     //   p_BotPressed = false;
-    }
-
-    if (p_TopPressed)
-    {
-        p_Velocity.y -= p_Speed;
-    //    p_Direction.y = -1;
-    //    p_Direction.x = 0;
-    //    p_RightPressed = false;
-    //    p_LeftPressed = false;
-    }
-
-    if (p_BotPressed)
-    {
-        p_Velocity.y += p_Speed;
-    //    p_Direction.y = 1;
-    //    p_Direction.x = 0;
-    //    p_RightPressed = false;
-    //    p_LeftPressed = false;
-    }
-
-    // gravity tests
-    
-  
-    // collisions
-    p_rect.left += p_Velocity.x * elapsedTime;
-    checkCollisionWithMap(p_Velocity.x, 0);
-  //  collision(0);
-
-        
-  //  onGround = false;
-    p_rect.top += p_Velocity.y * elapsedTime;
-    checkCollisionWithMap(0, p_Velocity.y);
-    p_Velocity.x = p_Velocity.y = 0;
-    onGround = false;
- //   collision(1);
-
-
-    // move sprite
-    p_Sprite.setPosition(p_rect.left, p_rect.top);
+	if (health > 0) Keyboard();
+	Animation(time);
+	if (STATE == climb) if (!onLadder) STATE = stay;
+	if (STATE != climb) dy += 0.0005 * time;
+	if (!canShoot) // for delay in shooting
+	{
+		shootTimer += time;
+		if (shootTimer > 600)
+		{
+			canShoot = true;
+			shootTimer = 0;
+		}
+	}
+	onLadder = false;
+	x += dx * time;
+	checkCollisionWithMap(dx, 0);
+	y += dy * time;
+	checkCollisionWithMap(0, dy);
 
 }
-
-void Player::checkCollisionWithMap(float Dx, float Dy)//ф ция проверки столкновений с картой
-{
-    for (int i = p_rect.top / 32; i < (p_rect.top + p_rect.height) / 32; i++)//проходимся по элементам карты
-        for (int j = p_rect.left / 32; j < (p_rect.left + p_rect.width) / 32; j++)
-        {
-            if (TileMapC[i][j] == 'B')//если элемент наш тайлик земли? то
-            {
-                if (Dy > 0) { p_rect.top = i * 32 - p_rect.height;  p_Velocity.y = 0; onGround = true; }//по Y вниз=>идем в пол(стоим на месте) или падаем. В этот момент надо вытолкнуть персонажа и поставить его на землю, при этом говорим что мы на земле тем самым снова можем прыгать
-                if (Dy < 0) { p_rect.top = i * 32 + 32;  p_Velocity.y = 0; }//столкновение с верхними краями карты(может и не пригодиться)
-                if (Dx > 0) { p_rect.left = j * 32 - p_rect.width; }//с правым краем карты
-                if (Dx < 0) { p_rect.left = j * 32 + 32; }// с левым краем карты
-            }
-        }
-}
-
-*/
