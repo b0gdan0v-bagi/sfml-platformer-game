@@ -46,7 +46,7 @@ public:
 
 	void play() { animList[currentAnim].isPlaying = true; }
 
-	void setLoop(std::string name) { animList[name].loop = true; }
+	void setLoop(std::string name) { animList[name].loop = false; }
 
 	void play(std::string name) { animList[name].isPlaying = true; }
 

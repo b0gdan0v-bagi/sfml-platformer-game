@@ -67,14 +67,13 @@ bool Engine::startGame()
     {
         entities.push_back(new Enemy(animationManagerList["skelleton"],
             "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top));
-
     }
 
     //players.push_back(new Player(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top));
     //players.push_back(new Player(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top));
     Player p(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top);
     Player p2(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top);
-    statBar player1StatBar(font, 1), player2StatBar(font, 2);
+    statBar player1StatBar(font, 1, true), player2StatBar(font, 2);
     //std::vector<Player*>::iterator itPlayer;
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
@@ -168,8 +167,8 @@ bool Engine::startGame()
 
         }
 
-        player1StatBar.update("Volodya", p.health, p.ammo);
-        player2StatBar.update("Volodya 2", p2.health, p2.ammo);
+        player1StatBar.update("Volodya", p.health, p.ammo, time);
+        player2StatBar.update("Volodya 2", p2.health, p2.ammo, time);
 
         // win condition
         if (p.win)

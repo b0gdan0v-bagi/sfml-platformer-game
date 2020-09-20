@@ -19,7 +19,7 @@ using namespace sf;
 
 class Engine
 {
-public:
+private:
     int numberLevel;
     RenderWindow window;
     Vector2f resolution;
@@ -30,10 +30,8 @@ public:
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
     std::list<Entity*> entities;
-
-    //std::vector<Player*> players;
-
-    Engine();
+    std::vector<Player*> player;
+        
     void changeLevel(TileMap& lvl);
     bool input(Player& p, Player& p2);
     bool loadImages();
@@ -41,6 +39,8 @@ public:
     void update(float time, Player& p, Player& p2);
     void draw(Player& p, Player& p2, TileMap& lvl, statBar& bar1, statBar& bar2);
     bool startGame();
+public:
+    Engine();
     void gameRunning();
 
 };
