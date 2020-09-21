@@ -6,7 +6,7 @@
 class Bullet :public Entity
 {
 public:
-	bool dir;// bullet dirrection
+
 	Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, bool DIR, String TYPE = "player1");
 	void update(float time);
 };

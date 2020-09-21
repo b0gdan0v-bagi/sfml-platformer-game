@@ -2,10 +2,10 @@
 
 using namespace sf;
 
-void Engine::draw(Player& p, Player& p2, TileMap& lvl, statBar& bar1, statBar& bar2)
+void Engine::draw(TileMap& lvl, statBar& bar1, statBar& bar2)
 {
     window.clear(Color(77, 83, 140));
-    player1View.setCenter(p.x, p.y);
+    player1View.setCenter(players[0]->getPos().x, players[0]->getPos().y);
 
     window.setView(player1View);
 
@@ -16,15 +16,16 @@ void Engine::draw(Player& p, Player& p2, TileMap& lvl, statBar& bar1, statBar& b
     {
         (*it)->draw(window);
     }
-    p2.draw(window);
-    p.draw(window);
-    //players[0]->update(time);
-    //players[0]->draw(window);
+
     bar1.draw(window);
+    for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
+    {
+        (*itPlayer)->draw(window);
+    }
 
     if (pvp) // for split screen
     {
-        player2View.setCenter(p2.x, p2.y);
+        player2View.setCenter(players[1]->getPos().x, players[1]->getPos().y);
         window.setView(player2View);
 
         window.draw(lvl);
@@ -34,10 +35,15 @@ void Engine::draw(Player& p, Player& p2, TileMap& lvl, statBar& bar1, statBar& b
         {
             (*it)->draw(window);
         }
-        p2.draw(window);
-        p.draw(window);
+
+        for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
+        {
+            (*itPlayer)->draw(window);
+        }
+
         bar2.draw(window);
     }
+
 
     window.display();
 }

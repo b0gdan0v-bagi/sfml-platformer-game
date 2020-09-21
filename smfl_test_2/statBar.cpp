@@ -22,8 +22,6 @@ void statBar::update(std::string name, int hp, int ammo, float time)
 	if (fpsBool) playerText.setString(name + " HP : " + playerHealthString.str() + "\n" + name + " ammo : " + playerAmmoString.str() 
 		+ "     FPS : " + fpsCounter.str());
 	else playerText.setString(name + " HP : " + playerHealthString.str() + "\n" + name + " ammo : " + playerAmmoString.str());
-	
-	
 }
 
 void statBar::draw(RenderWindow& window)

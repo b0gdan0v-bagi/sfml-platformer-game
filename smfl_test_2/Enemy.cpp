@@ -3,37 +3,37 @@
 using namespace sf;
 
 Enemy::Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y) :Entity(A, Name, X, Y) {
-	obj = lvl.getObjectsByName("solid");
+	m_obj = lvl.getObjectsByName("solid");
 	option(Name, 0.1, 10, "move");
-	anim.set("move");
-	dx = 0.1;
-	if ((name == "EasyEnemy") || (name == "Skelleton"));
+	m_anim.set("move");
+	m_d.x = 0.1;
+	if ((m_name == "EasyEnemy") || (m_name == "Skelleton"));
 	{
-		type = "enemy";
+		m_type = "enemy";
 	}
 }
 
 void Enemy::checkCollisionWithMap(float Dx, float Dy)
 {
-	for (int i = 0; i < obj.size(); i++) // walk through solid objects
-		if (getRect().intersects(obj[i].rect))//if this object collided with a enemy
+	for (int i = 0; i < m_obj.size(); i++) // walk through solid objects
+		if (getRect().intersects(m_obj[i].rect))//if this object collided with a enemy
 		{
-			if (obj[i].name == "solid") {
-				if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; onGround = true; }
-				if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
-				if (Dx > 0) { x = obj[i].rect.left - w;  dx = -0.1; anim.flip(true); }
-				if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; dx = 0.1; anim.flip(false);}
+			if (m_obj[i].name == "solid") {
+				if (Dy > 0) { m_rect.top = m_obj[i].rect.top - m_rect.height;  m_d.y = 0; m_onGround = true; }
+				if (Dy < 0) { m_rect.top = m_obj[i].rect.top + m_obj[i].rect.height;   m_d.y = 0; }
+				if (Dx > 0) { m_rect.left = m_obj[i].rect.left - m_rect.width;  m_d.x = -0.1; m_anim.flip(true); }
+				if (Dx < 0) { m_rect.left = m_obj[i].rect.left + m_obj[i].rect.width; m_d.x = 0.1; m_anim.flip(false);}
 			}
 		}
 }
 
 void Enemy::update(float time)
 {
-	x += dx * time;
-	checkCollisionWithMap(dx, 0);
-	y += dy * time;
-	checkCollisionWithMap(0, dy);
-	if (health <= 0) { life = false; }
-	dy = dy + 0.0015 * time;
-	anim.tick(time);
+	m_rect.left += m_d.x * time;
+	checkCollisionWithMap(m_d.x, 0);
+	m_rect.top += m_d.y * time;
+	checkCollisionWithMap(0, m_d.y);
+	if (m_health <= 0) { m_life = false; }
+	m_d.y = m_d.y + 0.0015 * time;
+	m_anim.tick(time);
 }

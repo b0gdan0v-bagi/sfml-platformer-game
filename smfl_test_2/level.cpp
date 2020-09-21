@@ -7,6 +7,7 @@ TileMap::~TileMap()
 {
 	if (texture)
 		delete texture;
+	//std::cout << "TileMap deconstructor works!\n";
 }
 
 bool TileMap::load(const std::string& tmx_file_path)

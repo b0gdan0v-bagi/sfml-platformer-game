@@ -30,14 +30,14 @@ private:
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
     std::list<Entity*> entities;
-    std::vector<Player*> player;
+    std::vector<Player*> players;
         
     void changeLevel(TileMap& lvl);
-    bool input(Player& p, Player& p2);
+    bool input();
     bool loadImages();
     bool loadAnimations();
-    void update(float time, Player& p, Player& p2);
-    void draw(Player& p, Player& p2, TileMap& lvl, statBar& bar1, statBar& bar2);
+    void update(float time);
+    void draw(TileMap& lvl, statBar& bar1, statBar& bar2);
     bool startGame();
 public:
     Engine();

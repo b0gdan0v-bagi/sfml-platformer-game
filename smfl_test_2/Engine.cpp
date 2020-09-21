@@ -69,12 +69,11 @@ bool Engine::startGame()
             "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top));
     }
 
-    //players.push_back(new Player(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top));
-    //players.push_back(new Player(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top));
-    Player p(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top);
-    Player p2(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top);
+    players.push_back(new Player(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top));
+    players.push_back(new Player(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top));
+
     statBar player1StatBar(font, 1, true), player2StatBar(font, 2);
-    //std::vector<Player*>::iterator itPlayer;
+    std::vector<Player*>::iterator itPlayer;
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";
@@ -89,42 +88,40 @@ bool Engine::startGame()
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)  window.close();
-            if ((p.isShoot == true) && (p.canShoot == true) && (p.ammo > 0))
+            for (itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
             {
-                p.ammo -= 1; // !!!! FOR TEST !!!!
-                p.isShoot = false;
-                p.canShoot = false;
-                entities.push_back(new Bullet(animationManagerList["bullet"], "Bullet", lvl, p.x, p.y + 50, p.direction));
-            }//if shoot - making bullet
-            if ((p2.isShoot == true) && (p2.canShoot == true) && (p2.ammo > 0))
-            {
-                p2.ammo -= 1; // !!!! FOR TEST !!!!
-                p2.isShoot = false;
-                p2.canShoot = false;
-                entities.push_back(new Bullet(animationManagerList["bullet"], "Bullet", lvl, p2.x, p2.y + 50, p2.direction, "player2"));
-            }//if shoot - making bullet
+                if (((*itPlayer)->isShoot == true) && ((*itPlayer)->canShoot == true) && ((*itPlayer)->ammo > 0))
+                {
+                    (*itPlayer)->ammo -= 1; // !!!! FOR TEST !!!!
+                    (*itPlayer)->isShoot = false;
+                    (*itPlayer)->canShoot = false;
+                    entities.push_back(new Bullet(
+                        animationManagerList["bullet"], "Bullet", lvl, (*itPlayer)->getPos().x, (*itPlayer)->getPos().y + 50,
+                        (*itPlayer)->getDir(), (*itPlayer)->getName()));
+                }//if shoot - making bullet
+            }
         }
         // inputs
-        if (input(p, p2)) return true;
+        if (input()) return true;
 
-        update(time, p, p2);
+        update(time);
 
         // interactions
         for (it = entities.begin(); it != entities.end(); it++)
         {
-            /*if ((*it)->getRect().intersects(p.getRect()))
+            /*if ((*it)->getRect().intersects(players[0]->getRect()))
             {
                 //if (((*it)->name == "EasyEnemy") || ((*it)->name == "Skelleton")) 
                 if ((*it)->type == "enemy")  
                 {
-                    if (p.dy > 0)
+                    if (players[0]->dy > 0)
                     {
                         (*it)->dx = 0;
-                        p.dy = -0.2;
+                        players[0]->dy = -0.2;
                         (*it)->health = 0;
                     }
                     else {
-                        //p.health -= 5;	
+                        //players[0]->health -= 5;	
                     }
                 }
             }*/
@@ -133,58 +130,56 @@ bool Engine::startGame()
                 if ((*it)->getRect() != (*it2)->getRect()) //different rectanglles
                 {
                     //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
-                    if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->type == "enemy") && ((*it2)->name == "Bullet") && ((*it2)->damage != 0))// intersects of bullet and enemy
+                    if (((*it)->getRect().intersects((*it2)->getRect())) &&
+                        ((*it)->getType() == "enemy") &&
+                        ((*it2)->getName() == "Bullet") &&
+                        ((*it2)->getDamage() != 0))// intersects of bullet and enemy
                     {
                         //(*it)->dx = 0;//stop enemy
-                        (*it)->health -= (*it2)->damage; // damage enemy
-                        (*it2)->damage = 0;
-                        (*it2)->health = 0; // kill bullet
+                        (*it)->takeDamage((*it2)->getDamage()); // damage enemy
+                        (*it2)->setDamage(0);
+                        (*it2)->setHealth(0); // kill bullet
                     }
                 }
 
             }
             if (pvp)
             {
-                if ((*it)->getRect().intersects(p2.getRect()))
+                for (itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
                 {
-                    if (((*it)->name == "Bullet") && ((*it)->type == "player1") && (p2.health > 0))
+                    if ((*it)->getRect().intersects((*itPlayer)->getRect()))
                     {
-                        p2.health -= (*it)->damage;
-                        (*it)->damage = 0;
-                        (*it)->health = 0; // kill bullet
-                    }
-                }
-                if ((*it)->getRect().intersects(p.getRect()))
-                {
-                    if (((*it)->name == "Bullet") && ((*it)->type == "player2") && (p.health > 0))
-                    {
-                        p.health -= (*it)->damage;
-                        (*it)->damage = 0;
-                        (*it)->health = 0; // kill bullet
+                        if (((*it)->getName() == "Bullet") && ((*it)->getType() != (*itPlayer)->getName()) && ((*itPlayer)->getHealth() > 0))
+                        {
+                            (*itPlayer)->takeDamage((*it)->getDamage());
+                            (*it)->setDamage(0);
+                            (*it)->setHealth(0); // kill bullet
+                        }
                     }
                 }
             }
 
         }
 
-        player1StatBar.update("Volodya", p.health, p.ammo, time);
-        player2StatBar.update("Volodya 2", p2.health, p2.ammo, time);
+        player1StatBar.update("Volodya", players[0]->getHealth(), players[0]->ammo, time);
+        player2StatBar.update("Volodya 2", players[1]->getHealth(), players[1]->ammo, time);
 
         // win condition
-        if (p.win)
+        if (players[0]->win)
         {
-            p.win = false;
+            players[0]->win = false;
             sleep(milliseconds(50));
             numberLevel++;
             return true;
         } // next level
         // loose condition
-        /*if (!p.life)
+        /*if (!players[0]->life)
         {
             numberLevel = 1;
             return true;
         }*/
-        draw(p, p2, lvl, player1StatBar, player2StatBar);
+        draw(lvl, player1StatBar, player2StatBar);
+
 
     }
 }
@@ -206,10 +201,10 @@ void Engine::gameRunning()
     else
     {
         player1View.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-        player1View.setSize(resolution.x / 2, resolution.y / 2);
+        player1View.setSize(resolution.x, resolution.y);
     }
     entities.clear();
-    //players.clear();
+    players.clear();
 
     if (startGame())
     {

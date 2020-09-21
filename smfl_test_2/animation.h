@@ -9,9 +9,8 @@
 //#include "level.h"
 using namespace sf;
 
-class AnimationHelp
+struct AnimationHelp
 {
-public:
 	std::vector<IntRect> frames, frames_flip;
 	float currentFrame, speed;
 	bool flip, isPlaying, loop;
@@ -22,12 +21,14 @@ public:
 
 class AnimationManager
 {
-public:
 
+private:
 	std::string currentAnim;
 	Texture texture;
 
 	std::map<String, AnimationHelp> animList;
+
+public:
 	AnimationManager();
 
 	void create(std::string name, Image& image, int x, int y, int w, int h, int count, float speed, int step = 0, bool Loop = true);

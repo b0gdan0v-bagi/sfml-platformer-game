@@ -5,11 +5,14 @@
 
 class Player :public Entity
 {
+private:
+	enum { stay, walk, duck, jump, climb, swim } m_STATE;
+	std::map<std::string, bool> m_key;
+	bool m_onLadder, m_hit;
+	float m_shootTimer;
+	
 public:
-	enum { stay, walk, duck, jump, climb, swim } STATE;
-	std::map<std::string, bool> key;
-	bool isShoot, win, onLadder, hit, canShoot;
-	float shootTimer;
+	bool isShoot, canShoot, win;
 	int ammo;
 
 	Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y);
@@ -17,6 +20,7 @@ public:
 	void Animation(float time);
 	void checkCollisionWithMap(float Dx, float Dy);
 	void update(float time);
+	void setKey(std::string keyNAME, bool BOOL = true) { m_key[keyNAME] = BOOL; }
 };
 
 #endif PLAYER_H

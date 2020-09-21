@@ -5,153 +5,153 @@ using namespace sf;
 Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 {
 	option(Name, 0, 20, "stay");
-	obj = lev.getAllObjects();
-	STATE = stay;
+	m_obj = lev.getAllObjects();
+	m_STATE = stay;
 	win = false;
-	hit = false;
-	shootTimer = 0;
+	m_hit = false;
+	m_shootTimer = 0;
 	canShoot = true;
 	ammo = 20;
 }
 
 void Player::Keyboard()
 {
-	if (key["L"])
+	if (m_key["L"])
 	{
-		direction = true;
-		if (STATE != duck) dx = -0.25;
-		if (STATE == stay) STATE = walk;
+		m_direction = true;
+		if (m_STATE != duck) m_d.x = -0.25;
+		if (m_STATE == stay) m_STATE = walk;
 	}
 
-	if (key["R"])
+	if (m_key["R"])
 	{
-		direction = false;
-		if (STATE != duck) dx = 0.25;
-		if (STATE == stay) STATE = walk;
+		m_direction = false;
+		if (m_STATE != duck) m_d.x = 0.25;
+		if (m_STATE == stay) m_STATE = walk;
 	}
 
-	if (key["Up"])
+	if (m_key["Up"])
 	{
-		if (onLadder) STATE = climb;
-		if (STATE == stay || STATE == walk) { dy = -0.37; STATE = jump; anim.play("stay"); }
-		if (STATE == climb) dy = -0.05;
-		if (STATE == climb) if (key["L"] || key["R"]) STATE = stay;
+		if (m_onLadder) m_STATE = climb;
+		if (m_STATE == stay || m_STATE == walk) { m_d.y = -0.37; m_STATE = jump; m_anim.play("stay"); }
+		if (m_STATE == climb) m_d.y = -0.05;
+		if (m_STATE == climb) if (m_key["L"] || m_key["R"]) m_STATE = stay;
 	}
 
-	if (key["Down"])
+	if (m_key["Down"])
 	{
-		if (STATE == stay || STATE == walk)
+		if (m_STATE == stay || m_STATE == walk)
 		{
-			STATE = duck;
-			dx = 0;
+			m_STATE = duck;
+			m_d.x = 0;
 		}
-		if (STATE == climb) dy = 0.05;
+		if (m_STATE == climb) m_d.y = 0.05;
 	}
 
-	if (key["Space"])
+	if (m_key["Space"])
 	{
 		isShoot = true;
 	}
 
 	//if key unpressed
-	if (!(key["R"] || key["L"]))
+	if (!(m_key["R"] || m_key["L"]))
 	{
-		dx = 0;
-		if (STATE == walk) STATE = stay;
+		m_d.x = 0;
+		if (m_STATE == walk) m_STATE = stay;
 	}
 
-	if (!(key["Up"] || key["Down"]))
+	if (!(m_key["Up"] || m_key["Down"]))
 	{
-		if (STATE == climb) dy = 0;
+		if (m_STATE == climb) m_d.y = 0;
 	}
 
-	if (!key["Down"])
+	if (!m_key["Down"])
 	{
-		if (STATE == duck) { STATE = stay; }
+		if (m_STATE == duck) { m_STATE = stay; }
 	}
 
-	if (!key["Space"])
+	if (!m_key["Space"])
 	{
 		isShoot = false;
 	}
 
-	key["R"] = key["L"] = key["Up"] = key["Down"] = key["Space"] = false;
+	m_key["R"] = m_key["L"] = m_key["Up"] = m_key["Down"] = m_key["Space"] = false;
 }
 
 void Player::Animation(float time)
 {
-	if (STATE == stay) anim.set("stay");
-	if (STATE == walk) anim.set("walk");
-	if (STATE == jump) anim.set("jump");
-	if (STATE == duck) anim.set("duck");
-	if (STATE == climb) { anim.set("stay"); anim.pause(); if (dy != 0) anim.play(); }
+	if (m_STATE == stay) m_anim.set("stay");
+	if (m_STATE == walk) m_anim.set("walk");
+	if (m_STATE == jump) m_anim.set("jump");
+	if (m_STATE == duck) m_anim.set("duck");
+	if (m_STATE == climb) { m_anim.set("stay"); m_anim.pause(); if (m_d.y != 0) m_anim.play(); }
 
 	if (isShoot) {
-		//anim.set("shoot");
-		anim.set("stay");
-		if (STATE == walk) anim.set("stay");
+		//m_anim.set("shoot");
+		m_anim.set("stay");
+		if (m_STATE == walk) m_anim.set("stay");
 	}
 
 	/*if (hit) {
 		timer += time;
 		if (timer > 1000) { hit = false; timer = 0; }
-		anim.set("hit");
+		m_anim.set("hit");
 	}*/
 
-	//if (direction) anim.flip();
-	anim.flip(direction);
-	if (health <= 0)
+	//if (direction) m_anim.flip();
+	m_anim.flip(m_direction);
+	if (m_health <= 0)
 	{
-		anim.set("die");
+		m_anim.set("die");
 
-		if (anim.isPlaying() == false)
+		if (m_anim.isPlaying() == false)
 		{
-			life = false;
+			m_life = false;
 		}
 	}
 
-	anim.tick(time);
+	m_anim.tick(time);
 }
 
 void Player::checkCollisionWithMap(float Dx, float Dy)
 {
-	for (int i = 0; i < obj.size(); i++)
-		if (getRect().intersects(obj[i].rect))
+	for (int i = 0; i < m_obj.size(); i++)
+		if (getRect().intersects(m_obj[i].rect))
 		{
-			if (obj[i].name == "solid")
+			if (m_obj[i].name == "solid")
 			{
-				if (Dy > 0) { y = obj[i].rect.top - h;  dy = 0; STATE = stay; }
-				if (Dy < 0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
-				if (Dx > 0) { x = obj[i].rect.left - w; }
-				if (Dx < 0) { x = obj[i].rect.left + obj[i].rect.width; }
+				if (Dy > 0) { m_rect.top = m_obj[i].rect.top - m_rect.height;  m_d.y = 0; m_STATE = stay; }
+				if (Dy < 0) { m_rect.top = m_obj[i].rect.top + m_obj[i].rect.height;   m_d.y = 0; }
+				if (Dx > 0) { m_rect.left = m_obj[i].rect.left - m_rect.width; }
+				if (Dx < 0) { m_rect.left = m_obj[i].rect.left + m_obj[i].rect.width; }
 			}
-			if (obj[i].name == "win")
+			if (m_obj[i].name == "win")
 			{
 				win = true;
 			}
-			if (obj[i].name == "ladder") { onLadder = true; if (STATE == climb) x = obj[i].rect.left - 10; }
+			if (m_obj[i].name == "ladder") { m_onLadder = true; if (m_STATE == climb) m_rect.left = m_obj[i].rect.left - 10; }
 		}
 }
 
 void Player::update(float time)
 {
-	if (health > 0) Keyboard();
+	if (m_health > 0) Keyboard();
 	Animation(time);
-	if (STATE == climb) if (!onLadder) STATE = stay;
-	if (STATE != climb) dy += 0.0005 * time;
+	if (m_STATE == climb) if (!m_onLadder) m_STATE = stay;
+	if (m_STATE != climb) m_d.y += 0.0005 * time;
 	if (!canShoot) // for delay in shooting
 	{
-		shootTimer += time;
-		if (shootTimer > 600)
+		m_shootTimer += time;
+		if (m_shootTimer > 600)
 		{
 			canShoot = true;
-			shootTimer = 0;
+			m_shootTimer = 0;
 		}
 	}
-	onLadder = false;
-	x += dx * time;
-	checkCollisionWithMap(dx, 0);
-	y += dy * time;
-	checkCollisionWithMap(0, dy);
+	m_onLadder = false;
+	m_rect.left += m_d.x * time;
+	checkCollisionWithMap(m_d.x, 0);
+	m_rect.top += m_d.y * time;
+	checkCollisionWithMap(0, m_d.y);
 
 }

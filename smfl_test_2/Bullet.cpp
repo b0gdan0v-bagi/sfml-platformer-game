@@ -4,38 +4,38 @@ using namespace sf;
 
 Bullet::Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, bool DIR, String TYPE) :Entity(A, Name, X, Y)
 {
-	obj = lvl.getObjectsByName("solid");// find solid objects
-	x = X;
-	y = Y;
-	dir = DIR;
-	speed = 0.8;
-	damage = 10;
-	life = true;
-	type = TYPE;
+	m_obj = lvl.getObjectsByName("solid");// find solid objects
+	m_rect.left = X;
+	m_rect.height = Y;
+	m_direction = DIR;
+	m_speed = 0.8;
+	m_damage = 10;
+	m_life = true;
+	m_type = TYPE;
 	option(Name, 0.8, 1, "move");
 }
 
 void Bullet::update(float time)
 {
-	if (dir) dx = -speed;
-	else dx = +speed;
+	if (m_direction) m_d.x = -m_speed;
+	else m_d.x = +m_speed;
 
-	x += dx * time;//x moving
-	y += dy * time;//y moving
+	m_rect.left += m_d.x * time;//x moving
+	m_rect.height += m_d.y * time;//y moving
 
-	if (x <= 0) x = 1;// check for mistakes for out of map
-	if (y <= 0) y = 1;
+	if (m_rect.left <= 0) m_rect.left = 1;// check for mistakes for out of map
+	if (m_rect.height <= 0) m_rect.height = 1;
 
-	for (int i = 0; i < obj.size(); i++) {//walk through solid objects
-		if (getRect().intersects(obj[i].rect)) health = 0;//if this object collided with a bullet,
-
+	for (int i = 0; i < m_obj.size(); i++)
+	{//walk through solid objects
+		if (getRect().intersects(m_obj[i].rect)) m_health = 0;//if this object collided with a bullet
 	}
-	if (health <= 0)
+	if (m_health <= 0)
 	{
-		damage = 0;
-		anim.set("explode");
-		speed = 0;
-		if (anim.isPlaying() == false) life = false;
+		m_damage = 0;
+		m_anim.set("explode");
+		m_speed = 0;
+		if (m_anim.isPlaying() == false) m_life = false;
 	}
-	anim.tick(time);
+	m_anim.tick(time);
 }

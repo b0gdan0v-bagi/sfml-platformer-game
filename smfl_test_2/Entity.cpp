@@ -4,30 +4,28 @@ using namespace sf;
 
 Entity::Entity(AnimationManager& A, std::string Name, float X, float Y)
 {
-	anim = A;
-	x = X;
-	y = Y;
-	//w = W;
-	//h = H;
-	name = Name;
-	health = 100;
-	dx = 0;
-	dy = 0;
-	life = true;
-	direction = false;
+	m_anim = A;
+	m_rect.left = X;
+	m_rect.top = Y;
+	m_name = Name;
+	m_health = 100;
+	m_d.x = 0;
+	m_d.y = 0;
+	m_life = true;
+	m_direction = false;
 }
 
 void Entity::draw(RenderWindow& window)
 {
-	anim.draw(window, x, y + h);
+	m_anim.draw(window, m_rect.left, m_rect.top + m_rect.height);
 }
 
 void Entity::option(std::string NAME, float SPEED, int HEALTH, std::string FIRST_ANIM)
 {
-	name = NAME;
-	if (FIRST_ANIM != "") anim.set(FIRST_ANIM);
-	w = anim.getW();
-	h = anim.getH();
-	dx = SPEED;
-	health = HEALTH;
+	m_name = NAME;
+	if (FIRST_ANIM != "") m_anim.set(FIRST_ANIM);
+	m_rect.width = m_anim.getW();
+	m_rect.height = m_anim.getH();
+	m_d.x = SPEED;
+	m_health = HEALTH;
 }

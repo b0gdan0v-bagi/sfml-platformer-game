@@ -6,9 +6,10 @@
 
 class Enemy :public Entity
 {
-public:
-	bool onGround;
+private:
+	bool m_onGround;
 
+public:
 	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y);
 
 	void checkCollisionWithMap(float Dx, float Dy);

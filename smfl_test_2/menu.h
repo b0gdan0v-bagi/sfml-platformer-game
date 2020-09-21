@@ -8,13 +8,14 @@ using namespace sf;
 
 class Menu 
 {
-public:
+private:
 	Font font;
 	View menuView;
 	
 	float fontSize;
 	Vector2f center, size; // for window.getView
 	Text text;
+public:
 	Menu() {}
 
 	void setTextParam(Text& text, Text& prevText);

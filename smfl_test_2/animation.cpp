@@ -67,7 +67,6 @@ void AnimationManager::loadFromXML(std::string fileName, Image& image)
 	{
 		AnimationHelp anim;
 		currentAnim = animElement->Attribute("title");
-		//std::cout << "currentAnim " << currentAnim << std::endl;
 		int delay = atoi(animElement->Attribute("delay"));
 		anim.speed = 1.0 / delay; anim.sprite.setTexture(texture);
 
