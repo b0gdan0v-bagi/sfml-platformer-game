@@ -14,6 +14,7 @@
 #include <sstream>
 #include "statBar.h"
 #include "GlobalData.h"
+#include "interface.h"
 
 using namespace sf;
 
@@ -25,6 +26,7 @@ private:
     Vector2f resolution;
     Font font;
     Menu menu;
+    GameInterface gameInterface;
     bool pvp;
     View view; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
@@ -33,19 +35,21 @@ private:
     std::list<Entity*> entities;
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;
-
+    std::vector<TileMap*> lvl; //its a vector for expansion for multiple levels 
+                               //(for example if split screen or future network),
+                               //now it have only 1 lvl in storage
  
         
-    void changeLevel(TileMap& lvl);
+    void changeLevel();
     bool input();
     bool loadImages();
     bool loadAnimations();
     void update(float time);
-    void draw(TileMap& lvl);
-    void drawSplitHelp(TileMap& lvl, int viewId);
+    void draw();
+    void drawSplitHelp(int viewId);
     void viewChanges(); // take view ports if screen splited or not
-    void playersShooting(TileMap& lvl);
-    void entitiesInteractions(TileMap& lvl);
+    void playersShooting();
+    void entitiesInteractions();
     bool checkWin();
     bool checkDefeat();
     bool startGame();

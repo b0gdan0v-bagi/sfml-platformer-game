@@ -23,9 +23,7 @@ bool Engine::input()
     //if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
     if (Keyboard::isKeyPressed(Keyboard::Escape)) {
         window.setView(view);
-        //Menu menu2(window);
-        //if (!menu2.mainMenu(window, numberLevel, true)) {
-        std::cout << "current numberLevel = " << numberLevel << "\n";
-        return true;
+        return true;       
     }
+    return false;
 }

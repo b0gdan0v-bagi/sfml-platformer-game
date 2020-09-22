@@ -2,21 +2,22 @@
 
 using namespace sf;
 
-void Engine::draw(TileMap& lvl)
+void Engine::draw()
 {
     window.clear(Color(77, 83, 140));
-    drawSplitHelp(lvl, 0);
+    drawSplitHelp(0);
     // for split screen
-    if (pvp) drawSplitHelp(lvl, 1); 
+    if (pvp) drawSplitHelp(1); 
+    gameInterface.draw(window);
     window.display();
 }
 
-void Engine::drawSplitHelp(TileMap& lvl, int viewId)
+void Engine::drawSplitHelp(int viewId)
 {
     playerViews[viewId]->setCenter(players[viewId]->getPos());
 
     window.setView(*playerViews[viewId]);
-    window.draw(lvl);
+    window.draw(*lvl[0]);
 
     // draw all entites
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
@@ -24,12 +25,12 @@ void Engine::drawSplitHelp(TileMap& lvl, int viewId)
         (*it)->draw(window);
     }
 
-    playerBars[viewId]->draw(window);
-
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->draw(window);
     }
+
+    playerBars[viewId]->draw(window);
 }
 
 void Engine::viewChanges()

@@ -6,21 +6,18 @@ Engine::Engine()
 {
     GlobalData data;
     numberLevel = data.numberLevel;
-    resolution.x = VideoMode::getDesktopMode().width;
-    resolution.y = VideoMode::getDesktopMode().height;
-    resolution.x = 1280;
-    resolution.y = 720;
-    //resolution.x = 1920;
-    //resolution.y = 1080;
-    window.create(VideoMode(resolution.x, resolution.y), "privet");
+    resolution = data.resolution;
+    window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("images/TimesNewRoman.ttf");
-    menu.setFont(font);
+    menu.create(window, font, data);
+    //menu.setAboutVer(data.version, data.email);
     view.setCenter(resolution.x / 2, resolution.y / 2);
     view.setSize(resolution);
     playerViews.push_back(new View); //creating 2 view for split screen
     playerViews.push_back(new View); // in future add "for" for number of split screens and logic if needed
     if (loadImages()) std::cout << "All images succsesfully loaded!\n";
     if (loadAnimations()) std::cout << "All animations succsesfully loaded!\n";
+    gameInterface.create(window, font);
 }
 
 
@@ -28,32 +25,33 @@ bool Engine::startGame()
 {
     window.setMouseCursorVisible(false);
 
-    TileMap lvl;
+    //TileMap lvl;
+    lvl.push_back(new TileMap);
 
-    if (numberLevel != 0) changeLevel(lvl);
+    if (numberLevel != 0) changeLevel();
     else return false;
 
-    Object player = lvl.getObject("player");
-    Object player2 = lvl.getObject("player2");
+    Object player = lvl[0]->getObject("player");
+    Object player2 = lvl[0]->getObject("player2");
 
     Clock clock;
 
-    std::vector<Object> easyEnemy = lvl.getObjectsByName("easyEnemy");
-    std::vector<Object> skelleton = lvl.getObjectsByName("skelleton");
+    std::vector<Object> easyEnemy = lvl[0]->getObjectsByName("easyEnemy");
+    std::vector<Object> skelleton = lvl[0]->getObjectsByName("skelleton");
 
     for (int i = 0; i < easyEnemy.size(); i++)
     {
         entities.push_back(new Enemy(animationManagerList["easyEnemy"],
-            "EasyEnemy", lvl, easyEnemy[i].rect.left, easyEnemy[i].rect.top));
+            "EasyEnemy", *lvl[0], easyEnemy[i].rect.left, easyEnemy[i].rect.top));
     }
     for (int i = 0; i < skelleton.size(); i++)
     {
         entities.push_back(new Enemy(animationManagerList["skelleton"],
-            "Skelleton", lvl, skelleton[i].rect.left, skelleton[i].rect.top));
+            "Skelleton", *lvl[0], skelleton[i].rect.left, skelleton[i].rect.top));
     }
 
-    players.push_back(new Player(animationManagerList["player"], "Player1", lvl, player.rect.left, player.rect.top));
-    players.push_back(new Player(animationManagerList["player"], "Player2", lvl, player2.rect.left, player2.rect.top));
+    players.push_back(new Player(animationManagerList["player"], "Player1", *lvl[0], player.rect.left, player.rect.top));
+    players.push_back(new Player(animationManagerList["player"], "Player2", *lvl[0], player2.rect.left, player2.rect.top));
 
     playerBars.push_back(new statBar(font, 1, true));
     playerBars.push_back(new statBar(font, 2));
@@ -71,15 +69,20 @@ bool Engine::startGame()
         while (window.pollEvent(event))
         {
             if (event.type == Event::Closed)  window.close();
-            playersShooting(lvl); // in event while
+            playersShooting(); // in event while
         }
 
         if (input()) return true; // to end if menu = true
         update(time);
-        entitiesInteractions(lvl); // interaction of all things
+       // gameInterface.setOrigin(gameInterface.getSize().x, gameInterface.getSize().y);
+       // gameInterface.setPosition(players[0]->getPos());
+        gameInterface.update(window);
+        
+        
+        entitiesInteractions(); // interaction of all things
         if (checkWin()) return true;
         if (checkDefeat()) return true;
-        draw(lvl); // draw all things
+        draw(); // draw all things
 
     }
 }

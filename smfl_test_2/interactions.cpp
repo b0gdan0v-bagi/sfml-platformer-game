@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-void Engine::playersShooting(TileMap &lvl)
+void Engine::playersShooting()
 {
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
@@ -12,13 +12,13 @@ void Engine::playersShooting(TileMap &lvl)
             (*itPlayer)->isShoot = false;
             (*itPlayer)->canShoot = false;
             entities.push_back(new Bullet(
-                animationManagerList["bullet"], "Bullet", lvl, (*itPlayer)->getPos().x, (*itPlayer)->getPos().y + 50,
+                animationManagerList["bullet"], "Bullet", *lvl[0], (*itPlayer)->getPos().x, (*itPlayer)->getPos().y + 50,
                 (*itPlayer)->getDir(), (*itPlayer)->getName()));
         }//if shoot - making bullet
     }
 }
 
-void Engine::entitiesInteractions(TileMap& lvl)
+void Engine::entitiesInteractions()
 {
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
     {

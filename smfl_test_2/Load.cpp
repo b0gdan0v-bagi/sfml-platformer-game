@@ -46,19 +46,20 @@ void Engine::gameRunning()
     entities.clear();
     players.clear();
     playerBars.clear();
+    lvl.clear();
     if (startGame())
     {
         gameRunning();
     }
 }
 
-void Engine::changeLevel(TileMap& lvl)
+void Engine::changeLevel()
 {
     switch (numberLevel)
     {
-    case 1:  lvl.load("map1.tmx"); break;
-    case 2:  lvl.load("map1.tmx"); break;
-    case 3:  lvl.load("map_test2.tmx"); break;
+    case 1:  lvl[0]->load("map1.tmx"); break;
+    case 2:  lvl[0]->load("map1.tmx"); break;
+    case 3:  lvl[0]->load("map_test2.tmx"); break;
     default:
         break;
     }

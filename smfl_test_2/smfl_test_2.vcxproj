@@ -153,8 +153,10 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="interactions.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="main.cpp" />
@@ -171,6 +173,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="GlobalData.h" />
+    <ClInclude Include="interface.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="Player.h" />
