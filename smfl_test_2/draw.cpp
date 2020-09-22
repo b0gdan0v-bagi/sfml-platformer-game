@@ -5,10 +5,17 @@ using namespace sf;
 void Engine::draw(TileMap& lvl)
 {
     window.clear(Color(77, 83, 140));
-    player1View.setCenter(players[0]->getPos().x, players[0]->getPos().y);
+    drawSplitHelp(lvl, 0);
+    // for split screen
+    if (pvp) drawSplitHelp(lvl, 1); 
+    window.display();
+}
 
-    window.setView(player1View);
+void Engine::drawSplitHelp(TileMap& lvl, int viewId)
+{
+    playerViews[viewId]->setCenter(players[viewId]->getPos());
 
+    window.setView(*playerViews[viewId]);
     window.draw(lvl);
 
     // draw all entites
@@ -17,34 +24,26 @@ void Engine::draw(TileMap& lvl)
         (*it)->draw(window);
     }
 
-    playerBars[0]->draw(window);
+    playerBars[viewId]->draw(window);
 
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->draw(window);
     }
+}
 
-    if (pvp) // for split screen
+void Engine::viewChanges()
+{
+    if (pvp)
     {
-        player2View.setCenter(players[1]->getPos().x, players[1]->getPos().y);
-        window.setView(player2View);
-
-        window.draw(lvl);
-
-        // draw all entites
-        for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
-        {
-            (*it)->draw(window);
-        }
-
-        for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
-        {
-            (*itPlayer)->draw(window);
-        }
-
-        playerBars[1]->draw(window);
+        playerViews[0]->setSize(resolution.x / 2, resolution.y);
+        playerViews[1]->setSize(resolution.x / 2, resolution.y);
+        playerViews[0]->setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
+        playerViews[1]->setViewport(sf::FloatRect(0.5f, 0.f, 0.5f, 1.f));
     }
-
-
-    window.display();
+    else
+    {
+        playerViews[0]->setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
+        playerViews[0]->setSize(resolution.x, resolution.y);
+    }
 }

@@ -26,12 +26,15 @@ private:
     Font font;
     Menu menu;
     bool pvp;
-    View view, player1View, player2View;
+    View view; // special view for menu
+    std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
     std::list<Entity*> entities;
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;
+
+ 
         
     void changeLevel(TileMap& lvl);
     bool input();
@@ -39,6 +42,8 @@ private:
     bool loadAnimations();
     void update(float time);
     void draw(TileMap& lvl);
+    void drawSplitHelp(TileMap& lvl, int viewId);
+    void viewChanges(); // take view ports if screen splited or not
     void playersShooting(TileMap& lvl);
     void entitiesInteractions(TileMap& lvl);
     bool checkWin();

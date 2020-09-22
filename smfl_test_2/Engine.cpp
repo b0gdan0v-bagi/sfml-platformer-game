@@ -17,13 +17,10 @@ Engine::Engine()
     menu.setFont(font);
     view.setCenter(resolution.x / 2, resolution.y / 2);
     view.setSize(resolution);
-    player1View.reset(FloatRect(-resolution.x / 2, -resolution.y / 2,
-        resolution.x / 2, resolution.y / 2));
-    player2View.reset(FloatRect(-resolution.x / 2, -resolution.y / 2,
-        resolution.x / 2, resolution.y / 2));
+    playerViews.push_back(new View); //creating 2 view for split screen
+    playerViews.push_back(new View); // in future add "for" for number of split screens and logic if needed
     if (loadImages()) std::cout << "All images succsesfully loaded!\n";
     if (loadAnimations()) std::cout << "All animations succsesfully loaded!\n";
-
 }
 
 

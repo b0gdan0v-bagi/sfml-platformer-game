@@ -42,25 +42,12 @@ void Engine::gameRunning()
     if (!menu.mainMenu(window, numberLevel)) return;
     if (numberLevel == 3) pvp = true;
     else pvp = false;
-    if (pvp)
-    {
-        player2View.setSize(resolution.x / 2, resolution.y);
-        player1View.setSize(resolution.x / 2, resolution.y);
-        player1View.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
-        player2View.setViewport(sf::FloatRect(0.5f, 0.f, 0.5f, 1.f));
-    }
-    else
-    {
-        player1View.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-        player1View.setSize(resolution.x, resolution.y);
-    }
+    viewChanges(); // take view ports if screen splited or not
     entities.clear();
     players.clear();
     playerBars.clear();
     if (startGame())
     {
-        //numberLevel++;
-        //gameRunning(window, numberLevel);
         gameRunning();
     }
 }
