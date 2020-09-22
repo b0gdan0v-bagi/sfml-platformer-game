@@ -31,13 +31,18 @@ private:
     std::map<String, AnimationManager> animationManagerList;
     std::list<Entity*> entities;
     std::vector<Player*> players;
+    std::vector<statBar*> playerBars;
         
     void changeLevel(TileMap& lvl);
     bool input();
     bool loadImages();
     bool loadAnimations();
     void update(float time);
-    void draw(TileMap& lvl, statBar& bar1, statBar& bar2);
+    void draw(TileMap& lvl);
+    void playersShooting(TileMap& lvl);
+    void entitiesInteractions(TileMap& lvl);
+    bool checkWin();
+    bool checkDefeat();
     bool startGame();
 public:
     Engine();

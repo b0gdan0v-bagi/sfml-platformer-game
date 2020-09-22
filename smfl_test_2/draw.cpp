@@ -2,7 +2,7 @@
 
 using namespace sf;
 
-void Engine::draw(TileMap& lvl, statBar& bar1, statBar& bar2)
+void Engine::draw(TileMap& lvl)
 {
     window.clear(Color(77, 83, 140));
     player1View.setCenter(players[0]->getPos().x, players[0]->getPos().y);
@@ -17,7 +17,8 @@ void Engine::draw(TileMap& lvl, statBar& bar1, statBar& bar2)
         (*it)->draw(window);
     }
 
-    bar1.draw(window);
+    playerBars[0]->draw(window);
+
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->draw(window);
@@ -41,7 +42,7 @@ void Engine::draw(TileMap& lvl, statBar& bar1, statBar& bar2)
             (*itPlayer)->draw(window);
         }
 
-        bar2.draw(window);
+        playerBars[1]->draw(window);
     }
 
 

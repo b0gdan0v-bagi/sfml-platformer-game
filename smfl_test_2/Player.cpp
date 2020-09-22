@@ -4,6 +4,9 @@ using namespace sf;
 
 Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 {
+	m_rectDuck.width = m_anim.getW("duck");
+	m_rectDuck.height = m_anim.getH("duck");
+	
 	option(Name, 0, 20, "stay");
 	m_obj = lev.getAllObjects();
 	m_STATE = stay;
@@ -12,6 +15,7 @@ Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y)
 	m_shootTimer = 0;
 	canShoot = true;
 	ammo = 20;
+	//std::cout << "duck size" << m_duckSize.x << " " << m_duckSize.y << "\nNormal size" << m_rect.width << " " << m_rect.height << "\n";
 }
 
 void Player::Keyboard()
@@ -135,10 +139,19 @@ void Player::checkCollisionWithMap(float Dx, float Dy)
 
 void Player::update(float time)
 {
+	ifDuck();
 	if (m_health > 0) Keyboard();
 	Animation(time);
 	if (m_STATE == climb) if (!m_onLadder) m_STATE = stay;
 	if (m_STATE != climb) m_d.y += 0.0005 * time;
+	
+	/*if (m_STATE != duck) m_StayPos = Vector2f(m_rect.left, m_rect.top);
+	else 
+	{ 
+		m_rect.left = m_StayPos.x + m_duckDiff.x;
+		m_rect.top = m_StayPos.y + m_duckDiff.y;
+	}*/
+	
 	if (!canShoot) // for delay in shooting
 	{
 		m_shootTimer += time;
@@ -153,5 +166,14 @@ void Player::update(float time)
 	checkCollisionWithMap(m_d.x, 0);
 	m_rect.top += m_d.y * time;
 	checkCollisionWithMap(0, m_d.y);
+	m_rectDuck.left = m_rect.left;
+	m_rectDuck.top = m_rectDuck.top + m_rect.height - m_rectDuck.height;
+	ifDuck();
+	
+}
 
+bool Player::ifDuck() 
+{ 
+	if (m_anim.get() == "duck") return true;
+	else return false;
 }

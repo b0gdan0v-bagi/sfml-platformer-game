@@ -10,6 +10,8 @@ private:
 	std::map<std::string, bool> m_key;
 	bool m_onLadder, m_hit;
 	float m_shootTimer;
+	Vector2f m_duckDiff, m_StayPos;
+	FloatRect m_rectDuck;
 	
 public:
 	bool isShoot, canShoot, win;
@@ -21,6 +23,8 @@ public:
 	void checkCollisionWithMap(float Dx, float Dy);
 	void update(float time);
 	void setKey(std::string keyNAME, bool BOOL = true) { m_key[keyNAME] = BOOL; }
+	bool ifDuck(); // for checking intersects with bullet and no conflicts with collisions
+	FloatRect getDuckRect() { return m_rectDuck; }
 };
 
 #endif PLAYER_H
