@@ -11,7 +11,7 @@ Engine::Engine()
     inGameKeyInputs = true;
     levelUpper = false; // we dont want up level at initialise
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
-    font.loadFromFile("images/TimesNewRoman.ttf");
+    font.loadFromFile("resourses/TimesNewRoman.ttf");
     menu.create(window, font, data);
     //menu.setAboutVer(data.version, data.email);
     view.setCenter(resolution.x / 2, resolution.y / 2);

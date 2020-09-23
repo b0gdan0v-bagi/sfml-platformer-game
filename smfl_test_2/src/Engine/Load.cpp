@@ -7,7 +7,7 @@ bool Engine::loadImages()
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
-        if (!imageList[*IMAGE].loadFromFile("images/" + *IMAGE + ".png"))
+        if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
         {
             std::cout << "Cannot load " + *IMAGE + " image!";
             return false;
@@ -29,7 +29,7 @@ bool Engine::loadAnimations()
     animationManagerList["player"].create("die", imageList["player"], 0, 81, 40, 80, 3, 0.01, 40);
     animationManagerList["player"].setLoop("die");
     animationManagerList["easyEnemy"].create("move", imageList["easyEnemy"], 0, 0, 32, 32, 1, 0.005);
-    animationManagerList["skelleton"].loadFromXML("images/skelleton.xml", imageList["skelletonEnemy"]);
+    animationManagerList["skelleton"].loadFromXML("resourses/images/skelleton.xml", imageList["skelletonEnemy"]);
     animationManagerList["bullet"].create("move", imageList["bullet"], 7, 10, 8, 8, 1, 0);
     animationManagerList["bullet"].create("explode", imageList["bullet"], 27, 7, 18, 18, 4, 0.01, 29, false);
     return true;
@@ -66,9 +66,9 @@ void Engine::loadLevel()
     lvl.push_back(new TileMap);
     switch (numberLevel)
     {
-    case 1:  lvl[0]->load("map1.tmx"); break;
-    case 2:  lvl[0]->load("map1.tmx"); break;
-    case 3:  lvl[0]->load("map_test2.tmx"); break;
+    case 1:  lvl[0]->load("resourses/maps/map1.tmx"); break;
+    case 2:  lvl[0]->load("resourses/maps/map1.tmx"); break;
+    case 3:  lvl[0]->load("resourses/maps/map_test2.tmx"); break;
     default:
         break;
     }

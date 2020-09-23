@@ -2,7 +2,7 @@
 #define LEVEL_H
 
 #include <SFML/Graphics.hpp>
-#include "tinyxml2.h"
+#include "TinyXML/tinyxml2.h"
 #include <iostream>
 #include <cctype>
 

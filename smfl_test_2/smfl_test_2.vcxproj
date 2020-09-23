@@ -116,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\bagiz\source\repos\smfl_test_2\smfl_test_2\include;C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -134,8 +134,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\bagiz\source\repos\smfl_test_2\smfl_test_2\include;C:\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,38 +148,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="animation.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="draw.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="engine.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="GlobalData.cpp" />
-    <ClCompile Include="input.cpp" />
-    <ClCompile Include="interactions.cpp" />
-    <ClCompile Include="interface.cpp" />
-    <ClCompile Include="level.cpp" />
-    <ClCompile Include="Load.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="menu.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="statBar.cpp" />
-    <ClCompile Include="tinyxml2.cpp" />
-    <ClCompile Include="update.cpp" />
+    <ClInclude Include="include\animation.h" />
+    <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\engine.h" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\GlobalData.h" />
+    <ClInclude Include="include\interface.h" />
+    <ClInclude Include="include\level.h" />
+    <ClInclude Include="include\menu.h" />
+    <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\statBar.h" />
+    <ClInclude Include="include\TinyXML\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="animation.h" />
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="GlobalData.h" />
-    <ClInclude Include="interface.h" />
-    <ClInclude Include="level.h" />
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="statBar.h" />
-    <ClInclude Include="tinyxml2.h" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\animation.cpp" />
+    <ClCompile Include="src\Engine\draw.cpp" />
+    <ClCompile Include="src\Engine\engine.cpp" />
+    <ClCompile Include="src\Engine\input.cpp" />
+    <ClCompile Include="src\Engine\interactions.cpp" />
+    <ClCompile Include="src\Engine\Load.cpp" />
+    <ClCompile Include="src\Engine\update.cpp" />
+    <ClCompile Include="src\Entity\Bullet.cpp" />
+    <ClCompile Include="src\Entity\Enemy.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Entity\Player.cpp" />
+    <ClCompile Include="src\GlobalData.cpp" />
+    <ClCompile Include="src\Interface\interface.cpp" />
+    <ClCompile Include="src\Interface\menu.cpp" />
+    <ClCompile Include="src\level.cpp" />
+    <ClCompile Include="src\statBar.cpp" />
+    <ClCompile Include="src\tinyxml2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

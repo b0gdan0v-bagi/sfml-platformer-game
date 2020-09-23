@@ -2,11 +2,11 @@
 #define ANIMATION_H
 
 #include "SFML/Graphics.hpp"
-#include "tinyxml2.h"
+#include "TinyXML/tinyxml2.h"
 #include <vector>
 #include <list>
 #include <iostream>
-//#include "level.h"
+
 using namespace sf;
 
 struct AnimationHelp

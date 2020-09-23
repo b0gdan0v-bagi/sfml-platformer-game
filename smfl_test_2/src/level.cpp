@@ -35,6 +35,7 @@ bool TileMap::load(const std::string& tmx_file_path)
 		path.erase(0, 1);          // remove all unnecessary characters at the beginning of the line (../) to avoid a load failure
 
 	texture = new sf::Texture();
+	path = "resourses/maps/" + path;
 
 	if (!texture->loadFromFile(path))
 		return false;
