@@ -47,6 +47,8 @@ void Engine::gameRunning()
     players.clear();
     playerBars.clear();
     lvl.clear();
+    inGameKeyInputs = true;
+    returnToMainMenu = false;
     if (startGame())
     {
         gameRunning();

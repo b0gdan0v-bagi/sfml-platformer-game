@@ -8,7 +8,8 @@ void Engine::draw()
     drawSplitHelp(0);
     // for split screen
     if (pvp) drawSplitHelp(1); 
-    gameInterface.draw(window);
+    window.setView(view);
+    gameInterface.draw(window, returnToMainMenu);
     window.display();
 }
 
@@ -18,7 +19,7 @@ void Engine::drawSplitHelp(int viewId)
 
     window.setView(*playerViews[viewId]);
     window.draw(*lvl[0]);
-
+    
     // draw all entites
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
     {
@@ -31,6 +32,7 @@ void Engine::drawSplitHelp(int viewId)
     }
 
     playerBars[viewId]->draw(window);
+    
 }
 
 void Engine::viewChanges()

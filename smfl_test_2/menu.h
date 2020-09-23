@@ -26,10 +26,7 @@ public:
 	void draw(RenderWindow& window, std::vector<Text*> BUTTON);
 	void update(RenderWindow& window, int& MENUNUM, std::vector<Text*> BUTTON);
 	bool mainMenu(RenderWindow& window, int& numberLevel);
-	bool inGameMenu(RenderWindow& window, int& numberLevel);
-	
 	bool levelMenu(RenderWindow& window, int& numberLevel);
-
 	bool aboutMenu(RenderWindow& window);
 };
 

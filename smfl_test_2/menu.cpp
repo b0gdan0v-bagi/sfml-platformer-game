@@ -62,11 +62,11 @@ void Menu::update(RenderWindow& window, int& MENUNUM, std::vector<Text*> BUTTON)
 	MENUNUM = 0;
 	window.clear(Color(129, 181, 221));
 
-	for (int i = 0; i < mainMenuBut.size(); i++)
+	for (int i = 0; i < BUTTON.size(); i++)
 	{
-		mainMenuBut[i]->setFillColor(Color::White);
-		if (IntRect(mainMenuBut[i]->getGlobalBounds()).contains(Mouse::getPosition(window))) {
-			mainMenuBut[i]->setFillColor(Color::Blue);
+		BUTTON[i]->setFillColor(Color::White);
+		if (IntRect(BUTTON[i]->getGlobalBounds()).contains(Mouse::getPosition(window))) {
+			BUTTON[i]->setFillColor(Color::Blue);
 			MENUNUM = i + 1;
 		}
 	}
@@ -113,35 +113,6 @@ bool Menu::mainMenu(RenderWindow& window, int& numberLevel)
 			}
 		}
 		draw(window, mainMenuBut);
-	}
-}
-
-bool Menu::inGameMenu(RenderWindow& window, int& numberLevel)
-{
-	bool isMenu = true;
-	int menuNum = 0;
-	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
-	while (isMenu)
-	{
-		update(window, menuNum, inGameMenuBut);
-		if (Mouse::isButtonPressed(Mouse::Left))
-		{
-			switch (menuNum)
-			{
-			case 1: {
-				return true;
-				break; }
-			case 2: {
-				//inGameMenuBut.clear();
-				//return false;
-				isMenu = false;
-				break;
-			}
-			default:
-				break;
-			}
-		}
-		draw(window, inGameMenuBut);
 	}
 }
 

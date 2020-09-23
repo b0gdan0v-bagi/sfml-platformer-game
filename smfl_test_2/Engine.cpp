@@ -7,6 +7,7 @@ Engine::Engine()
     GlobalData data;
     numberLevel = data.numberLevel;
     resolution = data.resolution;
+    inGameKeyInputs = true;
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("images/TimesNewRoman.ttf");
     menu.create(window, font, data);
@@ -72,14 +73,16 @@ bool Engine::startGame()
             playersShooting(); // in event while
         }
 
-        if (input()) return true; // to end if menu = true
+        input();
+        if (returnToMainMenu) return true;
+        if (!gameInterface.getActive()) inGameKeyInputs = true;
         update(time);
-       // gameInterface.setOrigin(gameInterface.getSize().x, gameInterface.getSize().y);
-       // gameInterface.setPosition(players[0]->getPos());
-        gameInterface.update(window);
+
+        //gameInterface.update(window);
         
         
         entitiesInteractions(); // interaction of all things
+        if (returnToMainMenu) return true;
         if (checkWin()) return true;
         if (checkDefeat()) return true;
         draw(); // draw all things

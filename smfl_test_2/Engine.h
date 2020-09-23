@@ -27,7 +27,7 @@ private:
     Font font;
     Menu menu;
     GameInterface gameInterface;
-    bool pvp;
+    bool pvp, inGameKeyInputs, returnToMainMenu;
     View view; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
@@ -41,7 +41,7 @@ private:
  
         
     void changeLevel();
-    bool input();
+    void input();
     bool loadImages();
     bool loadAnimations();
     void update(float time);
