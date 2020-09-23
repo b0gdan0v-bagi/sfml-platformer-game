@@ -10,21 +10,15 @@
 
 using namespace sf;
 
-class GlobalData
+struct GlobalData
 {
- private:
-    std::ifstream config;
-    std::string line, var1, var2;
-    bool correctResolution = false; //check standart resolutions! dont want to have parser
-public:
+
 	int numberLevel, numberLevelMax;
     Vector2f resolution;
     std::string version, email, name;
 
-    GlobalData();
+    void loadGlobalData();
 
 };
-
-
 
 #endif GLOBAL_DATA_H

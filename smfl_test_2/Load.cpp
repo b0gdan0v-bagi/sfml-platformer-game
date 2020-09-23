@@ -99,3 +99,55 @@ void Engine::loadLevel()
     std::cout << "=========================\n";
 }
 
+void Engine::readConfig()
+{
+    std::ifstream config;
+    std::string line, var1, var2;
+    bool correctResolution = false; //check standart resolutions! dont want to have parser
+    config.open("config.cfg");
+    if (!config.is_open())
+    {
+        std::cout << "Cannot open config.cfg\nUsing standart variables!\n";
+        resolution.x = 1280;
+        resolution.y = 720;
+        std::ofstream configWrite("config.cfg");
+        if (configWrite.is_open())
+        {
+            configWrite << "resolution " << resolution.x << "x" << resolution.y;
+            configWrite.close();
+            std::cout << "Standart config created!\n";
+        }
+        else std::cout << "Unable to create config.cfg file\n";
+        return;
+    }
+    while (std::getline(config, line))
+    {
+        std::istringstream iss(line);
+        if (!(iss >> var1 >> var2)) { break; } // end
+        if ((var1 == "resolution"))
+        {
+            correctResolution = false;
+            if (var2 == "1280x720") {
+                resolution.x = 1280; resolution.y = 720;  correctResolution = true;
+            }
+            if (var2 == "1920x1080") {
+                resolution.x = 1920; resolution.y = 1080;  correctResolution = true;
+            }
+            if (var2 == "3440x1440") {
+                resolution.x = 3440; resolution.y = 1440;  correctResolution = true;
+            }
+            if (var2 == "1280x1024") {
+                resolution.x = 1280; resolution.y = 1024;  correctResolution = true;
+            }
+            if (!correctResolution) {
+                resolution.x = 1280;
+                resolution.y = 720;
+                std::cout << "Cannot find correct resolution\n";
+            }
+            std::cout << "Resolution set to " << resolution.x << "x" << resolution.y << "\n";
+        }
+    }
+    std::cout << "Config readed!\n";
+    config.close();
+}
+

@@ -12,6 +12,7 @@
 #include "menu.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "statBar.h"
 #include "GlobalData.h"
 #include "interface.h"
@@ -21,6 +22,7 @@ using namespace sf;
 class Engine
 {
 private:
+    GlobalData data;
     int numberLevel, numberLevelMax;
     RenderWindow window;
     Vector2f resolution;
@@ -44,6 +46,7 @@ private:
         
     void loadLevel();
     void input();
+    void readConfig();
     bool loadImages();
     bool loadAnimations();
     void update(float time);

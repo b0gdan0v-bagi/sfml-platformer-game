@@ -4,10 +4,10 @@ using namespace sf;
 
 Engine::Engine()
 {
-    GlobalData data;
+    data.loadGlobalData();
     numberLevel = data.numberLevel;
     numberLevelMax = data.numberLevelMax;
-    resolution = data.resolution;
+    readConfig();
     inGameKeyInputs = true;
     levelUpper = false; // we dont want up level at initialise
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
