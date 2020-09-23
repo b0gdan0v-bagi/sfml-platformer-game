@@ -34,6 +34,9 @@ public:
 	std::string getName() { return m_name; }
 	bool getLife() { return m_life; }
 	float getDamage() { return m_damage; }
+	Vector2f getSpeed() { return m_d; }
+	void setSpeedX(float dX) { m_d.x = dX; }
+	void setSpeedY(float dY) { m_d.y = dY; }
 	void setDamage(float damage) { m_damage = damage; }
 	void setDamage() { m_damage = 0.f; }
 	int getHealth() { return m_health; }

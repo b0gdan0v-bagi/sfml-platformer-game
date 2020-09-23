@@ -22,4 +22,5 @@ void Engine::update(float time)
 
     playerBars[0]->update("Volodya", players[0]->getHealth(), players[0]->ammo, time);
     playerBars[1]->update("Volodya 2", players[1]->getHealth(), players[1]->ammo, time);
+    if (!gameInterface.getActive()) window.setMouseCursorVisible(false);
 }

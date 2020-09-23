@@ -6,8 +6,10 @@ Engine::Engine()
 {
     GlobalData data;
     numberLevel = data.numberLevel;
+    numberLevelMax = data.numberLevelMax;
     resolution = data.resolution;
     inGameKeyInputs = true;
+    levelUpper = false; // we dont want up level at initialise
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("images/TimesNewRoman.ttf");
     menu.create(window, font, data);
@@ -24,41 +26,9 @@ Engine::Engine()
 
 bool Engine::startGame()
 {
-    window.setMouseCursorVisible(false);
-
-    //TileMap lvl;
-    lvl.push_back(new TileMap);
-
-    if (numberLevel != 0) changeLevel();
-    else return false;
-
-    Object player = lvl[0]->getObject("player");
-    Object player2 = lvl[0]->getObject("player2");
+    loadLevel(); // this will load all things to containers
 
     Clock clock;
-
-    std::vector<Object> easyEnemy = lvl[0]->getObjectsByName("easyEnemy");
-    std::vector<Object> skelleton = lvl[0]->getObjectsByName("skelleton");
-
-    for (int i = 0; i < easyEnemy.size(); i++)
-    {
-        entities.push_back(new Enemy(animationManagerList["easyEnemy"],
-            "EasyEnemy", *lvl[0], easyEnemy[i].rect.left, easyEnemy[i].rect.top));
-    }
-    for (int i = 0; i < skelleton.size(); i++)
-    {
-        entities.push_back(new Enemy(animationManagerList["skelleton"],
-            "Skelleton", *lvl[0], skelleton[i].rect.left, skelleton[i].rect.top));
-    }
-
-    players.push_back(new Player(animationManagerList["player"], "Player1", *lvl[0], player.rect.left, player.rect.top));
-    players.push_back(new Player(animationManagerList["player"], "Player2", *lvl[0], player2.rect.left, player2.rect.top));
-
-    playerBars.push_back(new statBar(font, 1, true));
-    playerBars.push_back(new statBar(font, 2));
-    std::cout << "\n=========================\n";
-    std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
-    std::cout << "=========================\n";
 
     while (window.isOpen())
     {
@@ -74,8 +44,6 @@ bool Engine::startGame()
         }
 
         input();
-        if (returnToMainMenu) return true;
-        if (!gameInterface.getActive()) inGameKeyInputs = true;
         update(time);
 
         //gameInterface.update(window);
@@ -84,7 +52,7 @@ bool Engine::startGame()
         entitiesInteractions(); // interaction of all things
         if (returnToMainMenu) return true;
         if (checkWin()) return true;
-        if (checkDefeat()) return true;
+        checkDefeat();
         draw(); // draw all things
 
     }

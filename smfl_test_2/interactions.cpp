@@ -22,22 +22,26 @@ void Engine::entitiesInteractions()
 {
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
     {
-        /*if ((*it)->getRect().intersects(players[0]->getRect()))
+        if ((*it)->getRect().intersects(players[0]->getRect()))
         {
-            //if (((*it)->name == "EasyEnemy") || ((*it)->name == "Skelleton"))
-            if ((*it)->type == "enemy")
+            if (((*it)->getType() == "enemy") && (players[0]->getLife() ))
             {
-                if (players[0]->dy > 0)
+                /*if (players[0]->getSpeed().y > 0)
                 {
-                    (*it)->dx = 0;
-                    players[0]->dy = -0.2;
-                    (*it)->health = 0;
+                    //(*it)->dx = 0;
+                    players[0]->setSpeedY(-0.2);
+                    (*it)->setHealth(0);
                 }
-                else {
-                    //players[0]->health -= 5;
-                }
+                else {*/
+                    players[0]->setSpeedX((*it)->getSpeed().x*3);
+                    players[0]->setSpeedY(-0.1);
+                    players[0]->takeDamage(5);
+                    if (players[0]->getHealth() == 0) players[0]->setSpeedX(0.f);
+                    (*it)->setHealth(0);
+                    (*it)->setDamage(0);
+                //}
             }
-        }*/
+        }
         for (std::list<Entity*>::iterator it2 = entities.begin(); it2 != entities.end(); it2++)
         {
             if ((*it)->getRect() != (*it2)->getRect()) //different rectanglles
@@ -89,16 +93,27 @@ void Engine::entitiesInteractions()
 
 bool Engine::checkWin()
 {
-    if (players[0]->win)
+    if ((players[0]->win) && (players[0]->getLife()))
     {
         players[0]->win = false;
         sleep(milliseconds(50));
-        numberLevel++;
+        if (numberLevel < numberLevelMax)
+        {
+            numberLevel++;
+            levelUpper = true;
+        }
         return true;
     }
 }
 
-bool Engine::checkDefeat()
+void Engine::checkDefeat()
 {
-    return false;
+    if ((!pvp) && (!players[0]->getLife()))
+    {
+        inGameKeyInputs = false;
+        gameInterface.setDefeatTextVisible(true);
+        gameInterface.callInGameMenu();
+        //returnToMainMenu = true;
+    }
+
 }

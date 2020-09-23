@@ -15,6 +15,8 @@ private:
 	bool m_active;
 	int m_menuNum;
 	RectangleShape m_Shape;
+	Text m_defeatText;
+	bool m_defeatTextVisible;
 public:
 	
 	void create(RenderWindow& window, Font& FONT);
@@ -23,6 +25,7 @@ public:
 	void draw(RenderWindow& window, bool& EXIT);
 	void callInGameMenu();
 	bool getActive() { return m_active; }
+	void setDefeatTextVisible(bool VISIBLE) { m_defeatTextVisible = VISIBLE; }
 };
 
 #endif INTERFACE_H

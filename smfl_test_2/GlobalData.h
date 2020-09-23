@@ -17,7 +17,7 @@ class GlobalData
     std::string line, var1, var2;
     bool correctResolution = false; //check standart resolutions! dont want to have parser
 public:
-	int numberLevel;
+	int numberLevel, numberLevelMax;
     Vector2f resolution;
     std::string version, email, name;
 

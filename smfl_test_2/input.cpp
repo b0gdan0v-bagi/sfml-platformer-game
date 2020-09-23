@@ -4,6 +4,7 @@ using namespace sf;
 
 void Engine::input()
 {
+    if (!gameInterface.getActive()) inGameKeyInputs = true;
     if (inGameKeyInputs)
     {
         if (Keyboard::isKeyPressed(Keyboard::A)) players[0]->setKey("L");
@@ -25,10 +26,8 @@ void Engine::input()
         //if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
         if (Keyboard::isKeyPressed(Keyboard::Escape)) 
         {
-            //window.setView(view);
             inGameKeyInputs = false;
             gameInterface.callInGameMenu();
-
         }
     }
 

@@ -21,13 +21,14 @@ using namespace sf;
 class Engine
 {
 private:
-    int numberLevel;
+    int numberLevel, numberLevelMax;
     RenderWindow window;
     Vector2f resolution;
     Font font;
     Menu menu;
     GameInterface gameInterface;
     bool pvp, inGameKeyInputs, returnToMainMenu;
+    bool levelUpper;
     View view; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
@@ -35,12 +36,13 @@ private:
     std::list<Entity*> entities;
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;
+    //std::map<String, std::vector<Object>*> loadObjects;
     std::vector<TileMap*> lvl; //its a vector for expansion for multiple levels 
                                //(for example if split screen or future network),
                                //now it have only 1 lvl in storage
  
         
-    void changeLevel();
+    void loadLevel();
     void input();
     bool loadImages();
     bool loadAnimations();
@@ -51,7 +53,7 @@ private:
     void playersShooting();
     void entitiesInteractions();
     bool checkWin();
-    bool checkDefeat();
+    void checkDefeat();
     bool startGame();
 public:
     Engine();
