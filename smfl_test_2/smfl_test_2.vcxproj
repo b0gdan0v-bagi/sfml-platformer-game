@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="include\animation.h" />
     <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\engine.h" />
     <ClInclude Include="include\Entity.h" />

@@ -100,7 +100,7 @@ bool Engine::checkWin()
         if (numberLevel < numberLevelMax)
         {
             numberLevel++;
-            levelUpper = true;
+            levelChanger = true;
         }
         return true;
     }
@@ -113,6 +113,7 @@ void Engine::checkDefeat()
         inGameKeyInputs = false;
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();
+        levelChanger = true;
         //returnToMainMenu = true;
     }
 

@@ -9,7 +9,7 @@ Engine::Engine()
     numberLevelMax = data.numberLevelMax;
     readConfig();
     inGameKeyInputs = true;
-    levelUpper = false; // we dont want up level at initialise
+    levelChanger = false; // we dont want up level at initialise
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("resourses/TimesNewRoman.ttf");
     menu.create(window, font, data);

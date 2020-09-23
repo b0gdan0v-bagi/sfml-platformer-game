@@ -39,7 +39,7 @@ void Engine::gameRunning()
 
 {
     window.setView(view);
-    if (!levelUpper)
+    if (!levelChanger)
     {
         if (!menu.mainMenu(window, numberLevel)) return;
     }
@@ -47,17 +47,16 @@ void Engine::gameRunning()
     if (numberLevel == 3) pvp = true;
     else pvp = false;
     viewChanges(); // take view ports if screen splited or not
-    entities.clear();
+    entities.clear(); // delete memory for global vectors
     players.clear();
     playerBars.clear();
-    lvl.clear();
-    inGameKeyInputs = true;
-    returnToMainMenu = false;
-    if (levelUpper) levelUpper = false;
-    if (startGame())
+    lvl.clear(); 
+    inGameKeyInputs = true; //make sure that keybord for players is working
+    returnToMainMenu = false; //break bool for main cycle
+    if (levelChanger) levelChanger = false; //level changer works once
+    if (startGame()) // main cycle of game 
     {
-        
-        gameRunning();
+        gameRunning(); //loop game runs
     }
 }
 

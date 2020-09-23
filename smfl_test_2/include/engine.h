@@ -30,7 +30,7 @@ private:
     Menu menu;
     GameInterface gameInterface;
     bool pvp, inGameKeyInputs, returnToMainMenu;
-    bool levelUpper;
+    bool levelChanger;
     View view; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;

@@ -9,7 +9,7 @@ void Engine::draw()
     // for split screen
     if (pvp) drawSplitHelp(1); 
     window.setView(view);
-    gameInterface.draw(window, returnToMainMenu);
+    gameInterface.update(window, returnToMainMenu);
     window.display();
 }
 
