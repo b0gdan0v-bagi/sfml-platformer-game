@@ -8,10 +8,12 @@ Engine::Engine()
     numberLevel = data.numberLevel;
     numberLevelMax = data.numberLevelMax;
     readConfig();
-    inGameKeyInputs = true;
+    inGameKeyInputs = true; // make sure that keyboard will work
     levelChanger = false; // we dont want up level at initialise
+    //std::cout << 10 / 100 << "\n" << 101 / 100 << "\n";
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("resourses/TimesNewRoman.ttf");
+    fpsbar.setFont(font);
     menu.create(window, font, data);
     //menu.setAboutVer(data.version, data.email);
     view.setCenter(resolution.x / 2, resolution.y / 2);

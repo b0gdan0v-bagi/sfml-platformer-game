@@ -44,7 +44,7 @@ void Engine::gameRunning()
         if (!menu.mainMenu(window, numberLevel)) return;
     }
     
-    if (numberLevel == 3) pvp = true;
+    if (numberLevel / 100 != 0) pvp = true;
     else pvp = false;
     viewChanges(); // take view ports if screen splited or not
     entities.clear(); // delete memory for global vectors
@@ -63,16 +63,13 @@ void Engine::gameRunning()
 void Engine::loadLevel()
 {
     lvl.push_back(new TileMap);
-    switch (numberLevel)
-    {
-    case 1:  lvl[0]->load("resourses/maps/map1.tmx"); break;
-    case 2:  lvl[0]->load("resourses/maps/map1.tmx"); break;
-    case 3:  lvl[0]->load("resourses/maps/map_test2.tmx"); break;
-    default:
-        break;
-    }
-    Object player = lvl[0]->getObject("player");
-    Object player2 = lvl[0]->getObject("player2");
+    std::ostringstream numberLevelStream;
+    numberLevelStream << numberLevel;
+    // lvls for pvp have id > 100
+    lvl[0]->load("resourses/maps/map" + numberLevelStream.str() + ".tmx");
+    //Object player = lvl[0]->getObject("player1");
+    //Object player2 = lvl[0]->getObject("player2");
+
 
     std::vector<Object> easyEnemy = lvl[0]->getObjectsByName("easyEnemy");
     std::vector<Object> skelleton = lvl[0]->getObjectsByName("skelleton");
@@ -87,12 +84,27 @@ void Engine::loadLevel()
         entities.push_back(new Enemy(animationManagerList["skelleton"],
             "Skelleton", *lvl[0], skelleton[i].rect.left, skelleton[i].rect.top));
     }
+    int numberOfPlayersToAdd;
+    if (pvp) numberOfPlayersToAdd = 2;
+    else numberOfPlayersToAdd = data.playersPVE;
+    for (int i = 1; i <= numberOfPlayersToAdd; ++i)
+    {
+        std::ostringstream playerN;
+        playerN << i;
+        Object player = lvl[0]->getObject("player" + playerN.str());
+        players.push_back(new Player(animationManagerList["player"], "Player" + playerN.str(), *lvl[0], player.rect.left, player.rect.top));
+        std::cout << "player" + playerN.str() << " added!\n";
+        playerBars.push_back(new statBar(font, pvp, i));
+        //data.showFps = false; // we want fps counter only for 1st
+    }
+    std::cout << "players size = " << players.size() << "\n";
+    std::cout << "players BAR size = " << playerBars.size() << "\n";
+    //players.push_back(new Player(animationManagerList["player"], "Player1", *lvl[0], player.rect.left, player.rect.top));
+    //players.push_back(new Player(animationManagerList["player"], "Player2", *lvl[0], player2.rect.left, player2.rect.top));
 
-    players.push_back(new Player(animationManagerList["player"], "Player1", *lvl[0], player.rect.left, player.rect.top));
-    players.push_back(new Player(animationManagerList["player"], "Player2", *lvl[0], player2.rect.left, player2.rect.top));
+    //playerBars.push_back(new statBar(font, pvp, 1, data.showFps));
+    //playerBars.push_back(new statBar(font, pvp, 2));
 
-    playerBars.push_back(new statBar(font, 1, true));
-    playerBars.push_back(new statBar(font, 2));
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";
@@ -103,16 +115,22 @@ void Engine::readConfig()
     std::ifstream config;
     std::string line, var1, var2;
     bool correctResolution = false; //check standart resolutions! dont want to have parser
+    std::vector<String> AvaliableResolutions = { "1280x720","1920x1080","3440x1440","1280x1024" };
     config.open("config.cfg");
     if (!config.is_open())
     {
         std::cout << "Cannot open config.cfg\nUsing standart variables!\n";
         resolution.x = 1280;
         resolution.y = 720;
+        data.playersPVE = 1;
+        data.showFps = true;
         std::ofstream configWrite("config.cfg");
         if (configWrite.is_open())
         {
-            configWrite << "resolution " << resolution.x << "x" << resolution.y;
+            configWrite << "//Availiable resolutions = {1280x720,1920x1080,3440x1440,1280x1024}\n";
+            configWrite << "resolution " << resolution.x << "x" << resolution.y << "\n";
+            configWrite << "showFps " << data.showFps << "\n";
+            configWrite << "PlayersPVE " << data.playersPVE << "\n";
             configWrite.close();
             std::cout << "Standart config created!\n";
         }
@@ -144,6 +162,25 @@ void Engine::readConfig()
                 std::cout << "Cannot find correct resolution\n";
             }
             std::cout << "Resolution set to " << resolution.x << "x" << resolution.y << "\n";
+        }
+        if ((var1 == "showFps"))
+        {
+            if ((var2 == "1") || (var2 == "true")) {
+                data.showFps = true;
+            }
+            else data.showFps = false;
+            std::cout << "showFps set to " << data.showFps << "\n";
+        }
+        if ((var1 == "PlayersPVE"))
+        {
+            if (var2 == "1") {
+                data.playersPVE = 1;
+            }
+            if (var2 == "2") {
+                data.playersPVE = 2;
+            }
+            if (data.playersPVE > data.maxPlayersPVE) data.playersPVE = data.maxPlayersPVE;
+            std::cout << "Number of PVE players set to " << data.playersPVE << "\n";
         }
     }
     std::cout << "Config readed!\n";

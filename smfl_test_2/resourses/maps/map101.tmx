@@ -108,7 +108,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="collisions">
-  <object id="1" name="player" x="744.204" y="783.124" width="40" height="80"/>
+  <object id="1" name="player1" x="744.204" y="783.124" width="40" height="80"/>
   <object id="2" name="solid" x="449.333" y="925.65" width="896" height="411.227"/>
   <object id="3" name="win" x="461" y="845.627" width="30" height="64"/>
   <object id="4" name="easyEnemy" x="577.333" y="889.627" width="32" height="32"/>

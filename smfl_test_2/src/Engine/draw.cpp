@@ -10,6 +10,7 @@ void Engine::draw()
     if (pvp) drawSplitHelp(1); 
     window.setView(view);
     gameInterface.update(window, returnToMainMenu);
+    if (data.showFps) fpsbar.draw(window);
     window.display();
 }
 
@@ -30,8 +31,13 @@ void Engine::drawSplitHelp(int viewId)
     {
         (*itPlayer)->draw(window);
     }
+    
+    for (int i = 0; i < playerBars.size(); ++i)
+    {
+        playerBars[i]->draw(window);
+    }
 
-    playerBars[viewId]->draw(window);
+    //playerBars[viewId]->draw(window);
     
 }
 

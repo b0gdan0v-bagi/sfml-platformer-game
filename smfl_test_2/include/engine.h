@@ -35,6 +35,7 @@ private:
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
+    FpsBar fpsbar;
     std::list<Entity*> entities;
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;

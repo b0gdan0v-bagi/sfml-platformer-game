@@ -12,19 +12,31 @@ class statBar
 {
 private:
 
-	RectangleShape horisontalStrip, verticalStrip;
-	Text playerText;
-	int playerNo;
-	float fps;
-	bool fpsBool;
-
+	RectangleShape m_horisontalStrip, m_verticalStrip;
+	Text m_playerText;
+	int m_playerNo;
+	bool m_pvp;
 
 public:
 
-	statBar(Font& font, int PLAYER_NUMBER = 0, bool FPSBOOL = false);
+	statBar(Font& font, bool PVP, int PLAYER_NUMBER);
 
 	void update(std::string name, int hp, int ammo, float time);
+	void draw(RenderWindow& window);
 
+};
+
+class FpsBar
+{
+private:
+
+	Text m_fpsText;
+	float m_fps;
+
+public:
+
+	void setFont(Font& font) { m_fpsText.setFont(font); }
+	void update(float time);
 	void draw(RenderWindow& window);
 
 };

@@ -12,10 +12,17 @@ using namespace sf;
 
 struct GlobalData
 {
-
-	int numberLevel, numberLevelMax;
+    int numberLevel;
+    int const numberLevelMax = 3;
+    int playersPVE;
+    int const maxPlayersPVE = 2; // here is number of total supported players
     Vector2f resolution;
     std::string version, email, name;
+    bool showFps;
+    int const defaultHP = 100;
+    int const defaultAMMO = 20;
+    std::vector<int> playersHP = { defaultHP,defaultHP };
+    std::vector<int> playersAMMO = { defaultAMMO,defaultAMMO };
 
     void loadGlobalData();
 

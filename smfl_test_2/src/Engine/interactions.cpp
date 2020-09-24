@@ -116,5 +116,4 @@ void Engine::checkDefeat()
         levelChanger = true;
         //returnToMainMenu = true;
     }
-
 }

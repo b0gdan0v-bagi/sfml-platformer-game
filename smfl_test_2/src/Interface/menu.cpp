@@ -22,7 +22,7 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	inGameMenuBut.push_back(new Text("Continue", m_font, m_fontSize));    // menuNum = 2
 	composeButtons(inGameMenuBut);
 	lvlMenuBut.push_back(new Text("Choose your level", m_font, m_fontSize));// menuNum = 1
-	for (int i = 1; i <= 4; i++)
+	for (int i = 1; i <= DATA.numberLevelMax; i++)
 	{
 		std::ostringstream lvlNumber;
 		lvlNumber << i;
@@ -92,7 +92,7 @@ bool Menu::mainMenu(RenderWindow& window, int& numberLevel)
 				break; }
 			case 2: {
 				isMenu = false;
-				numberLevel = 3;
+				numberLevel = 101;
 				//sleep(milliseconds(300));
 				return true;
 				break;
@@ -146,7 +146,7 @@ bool Menu::levelMenu(RenderWindow& window, int& numberLevel)
 		}
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			numberLevel = 1; // FOR TEST!
+			numberLevel = menuNum; // FOR TEST!
 
 			if (menuNum != 0) return true;
 		}
