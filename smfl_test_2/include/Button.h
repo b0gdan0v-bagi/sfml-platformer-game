@@ -18,12 +18,17 @@ public:
 	{
 		canPressed = true;
 		viewable = true;
+		//Drawable abs;
 	}
 	Vector2f getSize() 
 	{ 
 		m_size.x = getGlobalBounds().width; 
 		m_size.y = getGlobalBounds().height; 
 		return m_size; 
+	}
+	void draw(RenderWindow& window)
+	{
+
 	}
 };
 #endif BUTTON_H

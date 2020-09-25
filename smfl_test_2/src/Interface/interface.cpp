@@ -79,19 +79,19 @@ void GameInterface::update(RenderWindow& window, bool& EXIT)
 		{
 			switch (m_menuNum)
 			{
-			case 0: {
+			case 0: { // to main menu
 				m_defeatTextVisible = false;
 				m_active = false;
 				EXIT = true;
 				break; 
 			}
-			case 1: {
+			case 1: { // continue
 				m_active = false;
 				window.setMouseCursorVisible(false);
 				//return false;
 				break;
 			}
-			case 3: {
+			case 3: { // restart
 				m_defeatTextVisible = false;
 				m_active = false;
 				window.setMouseCursorVisible(false);

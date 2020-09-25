@@ -13,4 +13,5 @@ void GlobalData::loadGlobalData()
     name = "Platformer";
     showFps = true;
     playersPVE = 1;
+    fpsBarId = 1;
 }

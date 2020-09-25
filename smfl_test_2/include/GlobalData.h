@@ -19,10 +19,11 @@ struct GlobalData
     Vector2f resolution;
     std::string version, email, name;
     bool showFps;
-    int const defaultHP = 100;
+    int fpsBarId;
+    int const defaultHP = 20;
     int const defaultAMMO = 20;
-    std::vector<int> playersHP = { defaultHP,defaultHP };
-    std::vector<int> playersAMMO = { defaultAMMO,defaultAMMO };
+    std::vector<int> playersHP = { defaultHP, defaultHP };
+    std::vector<int> playersAMMO = { defaultAMMO, defaultAMMO };
 
     void loadGlobalData();
 

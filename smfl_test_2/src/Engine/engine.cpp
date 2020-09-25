@@ -47,10 +47,6 @@ bool Engine::startGame()
 
         input();
         update(time);
-
-        //gameInterface.update(window);
-        
-        
         entitiesInteractions(); // interaction of all things
         if (returnToMainMenu) return true;
         if (checkWin()) return true;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="120">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="123">
  <tileset firstgid="1" name="text2" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="images/text2.png" width="512" height="512"/>
  </tileset>
@@ -313,5 +313,8 @@
   <object id="117" name="easyEnemy" x="7864" y="2198" width="32" height="32"/>
   <object id="118" name="easyEnemy" x="7962" y="2196" width="32" height="32"/>
   <object id="119" name="easyEnemy" x="8960" y="2514" width="32" height="32"/>
+  <object id="120" name="easyEnemy" x="1436" y="2295.34" width="32" height="32"/>
+  <object id="121" name="easyEnemy" x="1583" y="2292.49" width="32" height="32"/>
+  <object id="122" name="easyEnemy" x="1852" y="2256.66" width="32" height="32"/>
  </objectgroup>
 </map>

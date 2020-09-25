@@ -63,12 +63,14 @@ void statBar::draw(RenderWindow& window)
 }
 
 
-void FpsBar::update(float time)
+void FpsBar::update(float time, int ID)
 {
-	std::ostringstream fpsCounter;
+	std::ostringstream fpsCounter, frameTime;
 	m_fps = 1000.f / time;
 	fpsCounter << m_fps;
-	m_fpsText.setString("FPS : " + fpsCounter.str());
+	frameTime << time;
+	if (ID == 0) m_fpsText.setString("FPS : " + fpsCounter.str());
+	if (ID == 1) m_fpsText.setString("FPS : " + fpsCounter.str() + "\nFrame time : " + frameTime.str());
 }
 
 void FpsBar::draw(RenderWindow& window)

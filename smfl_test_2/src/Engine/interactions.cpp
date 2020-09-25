@@ -101,6 +101,11 @@ bool Engine::checkWin()
         {
             numberLevel++;
             levelChanger = true;
+            for (int i = 0; i < players.size(); ++i)
+            {
+                data.playersAMMO[i] = players[i]->ammo;
+                data.playersHP[i] = players[i]->getHealth();
+            }
         }
         return true;
     }
@@ -114,6 +119,5 @@ void Engine::checkDefeat()
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();
         levelChanger = true;
-        //returnToMainMenu = true;
     }
 }

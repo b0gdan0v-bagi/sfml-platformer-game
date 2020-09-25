@@ -31,12 +31,12 @@ class FpsBar
 private:
 
 	Text m_fpsText;
-	float m_fps;
+	int m_fps;
 
 public:
 
 	void setFont(Font& font) { m_fpsText.setFont(font); }
-	void update(float time);
+	void update(float time, int ID);
 	void draw(RenderWindow& window);
 
 };
