@@ -15,6 +15,7 @@ Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y)
 	m_shootTimer = 0;
 	canShoot = true;
 	ammo = 20;
+	m_doorKey = false;
 	//std::cout << "duck size" << m_duckSize.x << " " << m_duckSize.y << "\nNormal size" << m_rect.width << " " << m_rect.height << "\n";
 }
 
@@ -122,7 +123,7 @@ void Player::checkCollisionWithMap(float Dx, float Dy)
 	for (int i = 0; i < m_obj.size(); i++)
 		if (getRect().intersects(m_obj[i].rect))
 		{
-			if (m_obj[i].name == "solid")
+			if ((m_obj[i].name == "solid") || ((m_obj[i].name == "door") && (!m_doorKey)))
 			{
 				if (Dy > 0) { m_rect.top = m_obj[i].rect.top - m_rect.height;  m_d.y = 0; m_STATE = stay; }
 				if (Dy < 0) { m_rect.top = m_obj[i].rect.top + m_obj[i].rect.height;   m_d.y = 0; }

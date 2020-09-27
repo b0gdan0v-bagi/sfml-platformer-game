@@ -161,6 +161,7 @@
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\statBar.h" />
     <ClInclude Include="include\TinyXML\tinyxml2.h" />
+    <ClInclude Include="include\Trigger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="src\Entity\Enemy.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\Player.cpp" />
+    <ClCompile Include="src\Entity\Trigger.cpp" />
     <ClCompile Include="src\GlobalData.cpp" />
     <ClCompile Include="src\Interface\interface.cpp" />
     <ClCompile Include="src\Interface\menu.cpp" />

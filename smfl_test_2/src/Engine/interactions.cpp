@@ -24,23 +24,7 @@ void Engine::entitiesInteractions()
     {
         if ((*it)->getRect().intersects(players[0]->getRect()))
         {
-            if (((*it)->getType() == "enemy") && (players[0]->getLife() ))
-            {
-                /*if (players[0]->getSpeed().y > 0)
-                {
-                    //(*it)->dx = 0;
-                    players[0]->setSpeedY(-0.2);
-                    (*it)->setHealth(0);
-                }
-                else {*/
-                    players[0]->setSpeedX((*it)->getSpeed().x*3);
-                    players[0]->setSpeedY(-0.1);
-                    players[0]->takeDamage(5);
-                    if (players[0]->getHealth() == 0) players[0]->setSpeedX(0.f);
-                    (*it)->setHealth(0);
-                    (*it)->setDamage(0);
-                //}
-            }
+
         }
         for (std::list<Entity*>::iterator it2 = entities.begin(); it2 != entities.end(); it2++)
         {
@@ -60,9 +44,9 @@ void Engine::entitiesInteractions()
             }
 
         }
-        if (pvp)
+        for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
         {
-            for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
+            if ((*it)->getRect().intersects((*itPlayer)->getRect()))
             {
                 /*if (((*itPlayer)->ifDuck()) && ((*it)->getRect().intersects((*itPlayer)->getDuckRect())))
                 {
@@ -75,7 +59,7 @@ void Engine::entitiesInteractions()
                     }
                 }*/
                 //if ((!(*itPlayer)->ifDuck()) && (*it)->getRect().intersects((*itPlayer)->getRect()))
-                if ((*it)->getRect().intersects((*itPlayer)->getRect()))
+                if (pvp)
                 {
                     if (((*it)->getName() == "Bullet") && ((*it)->getType() != (*itPlayer)->getName()) && ((*itPlayer)->getHealth() > 0))
                     {
@@ -84,8 +68,42 @@ void Engine::entitiesInteractions()
                         (*it)->setHealth(0); // kill bullet
                     }
                 }
-
+                if (((*it)->getType() == "enemy") && ((*itPlayer)->getLife()))
+                {
+                    (*itPlayer)->setSpeedX((*it)->getSpeed().x * 3);
+                    (*itPlayer)->setSpeedY(-0.1);
+                    (*itPlayer)->takeDamage(5);
+                    if ((*itPlayer)->getHealth() == 0) (*itPlayer)->setSpeedX(0.f);
+                    (*it)->setHealth(0);
+                    (*it)->setDamage(0);
+                }
+                if (((*it)->getName() == "vodka") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
+                {
+                    if ((*itPlayer)->getSpeed().y > 0)
+                    {
+                        (*itPlayer)->takeHP(10);
+                        (*itPlayer)->ammo += 10;
+                        (*it)->kill();
+                    }
+                }
+                if (((*it)->getName() == "key") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
+                {
+                    {// all players get key
+                        for (std::vector<Player*>::iterator itPlayer2 = players.begin(); itPlayer2 != players.end(); ++itPlayer2)
+                        {
+                            (*itPlayer2)->setDoorKey(true);
+                        }
+                        (*it)->kill(); // kill key
+                    }
+                }
+                if (((*it)->getName() == "door") && ((*itPlayer)->getLife()) && ((*it)->getLife()) && ((*itPlayer)->getDoorKey()))
+                { //destroy the door if we have key
+                    {
+                        (*it)->kill();
+                    }
+                }
             }
+
         }
 
     }

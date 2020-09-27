@@ -4,7 +4,8 @@ using namespace sf;
 
 bool Engine::loadImages()
 {
-    std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy" };
+    std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
+        "door", "key" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -17,6 +18,8 @@ bool Engine::loadImages()
     imageList["skelletonEnemy"].createMaskFromColor(Color(255, 255, 255));
     imageList["easyEnemy"].createMaskFromColor(Color(0, 0, 0));
     imageList["player"].createMaskFromColor(Color(255, 255, 255));
+    imageList["vodka"].createMaskFromColor(Color(255, 255, 255));
+    imageList["key"].createMaskFromColor(Color(255, 255, 255));
     return true;
 }
 bool Engine::loadAnimations()
@@ -32,6 +35,9 @@ bool Engine::loadAnimations()
     animationManagerList["skelleton"].loadFromXML("resourses/images/skelleton.xml", imageList["skelletonEnemy"]);
     animationManagerList["bullet"].create("move", imageList["bullet"], 7, 10, 8, 8, 1, 0);
     animationManagerList["bullet"].create("explode", imageList["bullet"], 27, 7, 18, 18, 4, 0.01, 29, false);
+    animationManagerList["vodka"].create("stay", imageList["vodka"], 0, 0, 17, 37, 1, 0.005);
+    animationManagerList["door"].create("stay", imageList["door"], 0, 0, 32, 64, 1, 0.005);
+    animationManagerList["key"].create("stay", imageList["key"], 0, 0, 22, 13, 1, 0.005);
     return true;
 }
 
@@ -77,19 +83,28 @@ void Engine::loadLevel()
     // lvls for pvp have id > 100
     lvl[0]->load("resourses/maps/map" + numberLevelStream.str() + ".tmx");
 
-    std::vector<Object> easyEnemy = lvl[0]->getObjectsByName("easyEnemy");
-    std::vector<Object> skelleton = lvl[0]->getObjectsByName("skelleton");
+    std::vector<std::string> vObjEnemy = { "easyEnemy", "skelleton",};
+    for (std::vector<std::string>::iterator itObj = vObjEnemy.begin(); itObj != vObjEnemy.end(); ++itObj)
+    {
+        std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
+        for (int i = 0; i < load.size(); i++)
+        {
+            entities.push_back(new Enemy(animationManagerList[*itObj],
+                *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
+            
+        }
+    }
+    std::vector<std::string> vObjTrig = {"vodka", "door", "key"};
+    for (std::vector<std::string>::iterator itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
+    {
+        std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
+        for (int i = 0; i < load.size(); i++)
+        {
+            entities.push_back(new Trigger(animationManagerList[*itObj],
+                *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
+        }
+    }
 
-    for (int i = 0; i < easyEnemy.size(); i++)
-    {
-        entities.push_back(new Enemy(animationManagerList["easyEnemy"],
-            "EasyEnemy", *lvl[0], easyEnemy[i].rect.left, easyEnemy[i].rect.top));
-    }
-    for (int i = 0; i < skelleton.size(); i++)
-    {
-        entities.push_back(new Enemy(animationManagerList["skelleton"],
-            "Skelleton", *lvl[0], skelleton[i].rect.left, skelleton[i].rect.top));
-    }
     int numberOfPlayersToAdd;
     if (pvp) numberOfPlayersToAdd = 2;
     else numberOfPlayersToAdd = data.playersPVE;

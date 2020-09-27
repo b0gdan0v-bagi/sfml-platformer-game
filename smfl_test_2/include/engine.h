@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Trigger.h"
 #include "animation.h"
 #include <vector>
 #include <list>

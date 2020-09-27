@@ -43,6 +43,7 @@ public:
 	void setHealth(int health) { m_health = health; }
 	void takeDamage(int damage) { m_health -= damage; }
 	void takeHP(int hp) { m_health += hp; }
+	void kill() { m_life = false; }
 
 	bool getDir() { return m_direction; }
 

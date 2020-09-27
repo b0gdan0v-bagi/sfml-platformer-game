@@ -72,6 +72,9 @@
     <ClInclude Include="include\Button.h">
       <Filter>Header Files\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="include\Trigger.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="src\Engine\update.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Trigger.cpp">
+      <Filter>Source Files\entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
