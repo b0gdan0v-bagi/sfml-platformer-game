@@ -105,6 +105,14 @@ void Engine::entitiesInteractions()
                         newMessage("Door is opened!", std::distance(players.begin(), itPlayer));
                     }
                 }
+                if (((*it)->getName() == "trigger") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
+                { 
+                    {
+                        newMessage((*it)->getType(), std::distance(players.begin(), itPlayer));
+                        (*it)->kill();
+                        
+                    }
+                }
             }
 
         }

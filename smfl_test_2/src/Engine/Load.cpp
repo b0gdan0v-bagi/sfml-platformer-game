@@ -5,7 +5,7 @@ using namespace sf;
 bool Engine::loadImages()
 {
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
-        "door", "key", "message" };
+        "door", "key", "trigger" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -20,6 +20,7 @@ bool Engine::loadImages()
     imageList["player"].createMaskFromColor(Color(255, 255, 255));
     imageList["vodka"].createMaskFromColor(Color(255, 255, 255));
     imageList["key"].createMaskFromColor(Color(255, 255, 255));
+    imageList["trigger"].createMaskFromColor(Color(0, 0, 0));
     return true;
 }
 bool Engine::loadAnimations()
@@ -37,7 +38,8 @@ bool Engine::loadAnimations()
     animationManagerList["vodka"].create("stay", imageList["vodka"], 0, 0, 17, 37, 1, 0.005);
     animationManagerList["door"].create("stay", imageList["door"], 0, 0, 32, 64, 1, 0.005);
     animationManagerList["key"].create("stay", imageList["key"], 0, 0, 22, 13, 1, 0.005);
-    animationManagerList["message"].create("stay", imageList["message"], 0, 0, 1, 1, 1, 0.005); //virtual
+    animationManagerList["trigger"].create("stay", imageList["trigger"], 0, 0, 1, 400, 1, 0.005); //virtual
+
     return true;
 }
 
@@ -105,6 +107,14 @@ void Engine::loadLevel()
                 *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
         }
     }
+    std::vector<Object> load = lvl[0]->getObjectsByName("trigger");
+    for (int i = 0; i < load.size(); i++)
+    {
+        entities.push_back(new Trigger(animationManagerList["trigger"],
+            "trigger", *lvl[0], load[i].rect.left, load[i].rect.top,
+            load[i].GetPropertyString("text")));
+    }
+
 
     int numberOfPlayersToAdd;
     if (pvp) numberOfPlayersToAdd = 2;
