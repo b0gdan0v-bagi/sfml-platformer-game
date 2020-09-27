@@ -22,7 +22,10 @@ void Engine::input()
             if (Keyboard::isKeyPressed(Keyboard::Enter)) players[1]->setKey("Space");
         }
 
-        if (Keyboard::isKeyPressed(Keyboard::Q)) { std::cout << numberLevel << " " << time << std::endl; }
+        if (Keyboard::isKeyPressed(Keyboard::Q)) 
+        { 
+            
+        }
         //if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
         if (Keyboard::isKeyPressed(Keyboard::Escape)) 
         {

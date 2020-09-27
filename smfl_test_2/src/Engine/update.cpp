@@ -25,9 +25,17 @@ void Engine::update(float time)
         playerBars[i]->update("Volodya", players[i]->getHealth(), players[i]->ammo, time);
     }
 
-    //playerBars[0]->update("Volodya", players[0]->getHealth(), players[0]->ammo, time);
-    //if (pvp) playerBars[1]->update("Volodya 2", players[1]->getHealth(), players[1]->ammo, time);
-    //gameInterface.update(window, returnToMainMenu);
+    for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end();)
+    {
+        int pN = (*itM)->getPlayerN();
+        (*itM)->update(time, players[pN]->getRect().left + players[pN]->getRect().width, players[pN]->getRect().top - 20);
+        if ((*itM)->getLife() == false)
+        {
+            itM = messages.erase(itM);
+        }
+        else ++itM;
+    }
+
     if (data.showFps) fpsbar.update(time, data.fpsBarId);
     if (!gameInterface.getActive()) window.setMouseCursorVisible(false);
 }

@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Trigger.h"
+#include "Message.h"
 #include "animation.h"
 #include <vector>
 #include <list>
@@ -40,6 +41,7 @@ private:
     std::list<Entity*> entities;
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;
+    std::vector<Message*> messages;
     //std::map<String, std::vector<Object>*> loadObjects;
     std::vector<TileMap*> lvl; //its a vector for expansion for multiple levels 
                                //(for example if split screen or future network),
@@ -59,6 +61,7 @@ private:
     void entitiesInteractions();
     bool checkWin();
     void checkDefeat();
+    void newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER = 3000);
     bool startGame();
 public:
     Engine();

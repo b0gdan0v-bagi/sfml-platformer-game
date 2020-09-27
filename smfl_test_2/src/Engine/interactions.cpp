@@ -83,6 +83,7 @@ void Engine::entitiesInteractions()
                     {
                         (*itPlayer)->takeHP(10);
                         (*itPlayer)->ammo += 10;
+                        newMessage("I got health and ammo!", std::distance(players.begin(), itPlayer));
                         (*it)->kill();
                     }
                 }
@@ -94,12 +95,14 @@ void Engine::entitiesInteractions()
                             (*itPlayer2)->setDoorKey(true);
                         }
                         (*it)->kill(); // kill key
+                        newMessage("I got key!", std::distance(players.begin(), itPlayer));
                     }
                 }
                 if (((*it)->getName() == "door") && ((*itPlayer)->getLife()) && ((*it)->getLife()) && ((*itPlayer)->getDoorKey()))
                 { //destroy the door if we have key
                     {
                         (*it)->kill();
+                        newMessage("Door is opened!", std::distance(players.begin(), itPlayer));
                     }
                 }
             }
@@ -138,4 +141,15 @@ void Engine::checkDefeat()
         gameInterface.callInGameMenu();
         levelChanger = true;
     }
+}
+
+void Engine::newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER)
+{
+    // delete previvous messages
+    for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end();itM++)
+    {
+        if ((*itM)->getPlayerN() == PLAYER_N) (*itM)->setLife(false);
+    }
+    // create new
+    messages.push_back(new Message(MESSAGE, MESSAGE_TIMER, font, window, PLAYER_N));
 }

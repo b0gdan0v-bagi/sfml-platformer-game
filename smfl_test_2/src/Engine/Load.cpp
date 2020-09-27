@@ -5,7 +5,7 @@ using namespace sf;
 bool Engine::loadImages()
 {
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
-        "door", "key" };
+        "door", "key", "message" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -27,7 +27,6 @@ bool Engine::loadAnimations()
     animationManagerList["player"].create("walk", imageList["player"], 0, 0, 40, 80, 3, 0.01, 40);
     animationManagerList["player"].create("stay", imageList["player"], 0, 0, 40, 80, 1, 0);
     animationManagerList["player"].create("jump", imageList["player"], 0, 241, 40, 80, 1, 0);
-    //animationManagerList["player"].create("duck", imageList["player"], 0, 161, 40, 80, 1, 0);
     animationManagerList["player"].create("duck", imageList["player"], 0, 0, 40, 40, 1, 0);
     animationManagerList["player"].create("die", imageList["player"], 0, 81, 40, 80, 3, 0.01, 40);
     animationManagerList["player"].setLoop("die");
@@ -38,6 +37,7 @@ bool Engine::loadAnimations()
     animationManagerList["vodka"].create("stay", imageList["vodka"], 0, 0, 17, 37, 1, 0.005);
     animationManagerList["door"].create("stay", imageList["door"], 0, 0, 32, 64, 1, 0.005);
     animationManagerList["key"].create("stay", imageList["key"], 0, 0, 22, 13, 1, 0.005);
+    animationManagerList["message"].create("stay", imageList["message"], 0, 0, 1, 1, 1, 0.005); //virtual
     return true;
 }
 
@@ -66,6 +66,7 @@ void Engine::gameRunning()
     players.clear();
     playerBars.clear();
     lvl.clear(); 
+    messages.clear();
     inGameKeyInputs = true; //make sure that keybord for players is working
     returnToMainMenu = false; //break bool for main cycle
     

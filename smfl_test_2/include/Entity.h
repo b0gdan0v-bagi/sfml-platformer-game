@@ -50,6 +50,7 @@ public:
 
 
 	virtual void update(float time) = 0;
+
 	void draw(RenderWindow& window);
 	void option(std::string NAME, float SPEED = 0, int HEALTH = 100, std::string FIRST_ANIM = "");
 };

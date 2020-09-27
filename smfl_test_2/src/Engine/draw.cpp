@@ -37,6 +37,11 @@ void Engine::drawSplitHelp(int viewId)
         playerBars[i]->draw(window);
     }
 
+    for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end(); ++itM)
+    {
+        (*itM)->draw(window);
+    }
+
     //playerBars[viewId]->draw(window);
     
 }
