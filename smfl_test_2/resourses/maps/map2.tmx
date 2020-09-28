@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="139">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="148">
  <tileset firstgid="1" name="text2" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="images/text2.png" width="512" height="512"/>
  </tileset>
@@ -243,7 +243,7 @@
   <object id="39" name="solid" x="2912.23" y="2271.92" width="127.542" height="33.1667"/>
   <object id="40" name="easyEnemy" x="3103.17" y="2279.42" width="32" height="32"/>
   <object id="41" name="easyEnemy" x="3250.17" y="2276.58" width="32" height="32"/>
-  <object id="42" name="easyEnemy" x="3304.83" y="2275.25" width="32" height="32"/>
+  <object id="42" name="easyEnemy1" x="3304.83" y="2275.25" width="32" height="32"/>
   <object id="43" name="skelleton" x="3180.83" y="2224.58" width="20" height="33"/>
   <object id="44" name="easyEnemy" x="3519.17" y="2240.75" width="32" height="32"/>
   <object id="45" name="easyEnemy" x="3666.17" y="2237.92" width="32" height="32"/>
@@ -298,9 +298,9 @@
   <object id="100" name="solid" x="8830.81" y="2400.17" width="65.042" height="162.333"/>
   <object id="101" name="solid" x="9120.65" y="2336.08" width="58.3753" height="76.083"/>
   <object id="102" name="solid" x="10176.1" y="1272.17" width="33.042" height="1106.33"/>
-  <object id="103" name="ladder" x="9220.17" y="1565.05" width="29" height="219.227"/>
-  <object id="104" name="ladder" x="9510.17" y="1789.72" width="29" height="313.894"/>
-  <object id="105" name="ladder" x="9667.5" y="2109.05" width="29" height="219.227"/>
+  <object id="103" name="ladder" x="9229.84" y="1564.05" width="29" height="219.227"/>
+  <object id="104" name="ladder" x="9518.17" y="1789.72" width="29" height="313.894"/>
+  <object id="105" name="ladder" x="9678.17" y="2106.38" width="29" height="219.227"/>
   <object id="107" name="ladder" x="8779.25" y="2396.39" width="40" height="94.5603"/>
   <object id="108" name="easyEnemy" x="5912.5" y="1851.42" width="32" height="32"/>
   <object id="109" name="easyEnemy" x="6059.5" y="1848.58" width="32" height="32"/>
@@ -345,5 +345,14 @@
    </properties>
   </object>
   <object id="138" name="key" x="8747.45" y="1425.59" width="22" height="13"/>
+  <object id="139" name="easyEnemy1" x="4672" y="2228.25" width="32" height="32"/>
+  <object id="140" name="skelleton1" x="4674" y="2131.75" width="20" height="33"/>
+  <object id="141" name="easyEnemy1" x="7376.67" y="1968.92" width="32" height="32"/>
+  <object id="142" name="skelleton1" x="7378.67" y="1872.42" width="20" height="33"/>
+  <object id="143" name="easyEnemy1" x="6734" y="1869.58" width="32" height="32"/>
+  <object id="144" name="skelleton1" x="6736" y="1773.08" width="20" height="33"/>
+  <object id="145" name="skelleton1" x="7471.33" y="1961.5" width="20" height="33"/>
+  <object id="146" name="skelleton1" x="6122" y="1864.83" width="20" height="33"/>
+  <object id="147" name="skelleton1" x="3376.67" y="2274.83" width="20" height="33"/>
  </objectgroup>
 </map>

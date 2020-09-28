@@ -93,17 +93,7 @@ void Engine::loadLevel()
     // lvls for pvp have id > 100
     lvl[0]->load("resourses/maps/map" + numberLevelStream.str() + ".tmx");
 
-    std::vector<std::string> vObjEnemy = { "easyEnemy", "skelleton",};
-    for (std::vector<std::string>::iterator itObj = vObjEnemy.begin(); itObj != vObjEnemy.end(); ++itObj)
-    {
-        std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
-        for (int i = 0; i < load.size(); i++)
-        {
-            entities.push_back(new Enemy(animationManagerList[*itObj],
-                *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
-            
-        }
-    }
+    loadEnemyWave(0);
     std::vector<std::string> vObjTrig = {"vodka", "door", "key"};
     for (std::vector<std::string>::iterator itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
     {
@@ -150,6 +140,25 @@ void Engine::loadLevel()
     std::cout << "=========================\n";
 }
 
+void Engine::loadEnemyWave(int waveN)
+{
+    std::ostringstream waveNstream;
+    waveNstream << waveN;
+    std::vector<std::string> vObjEnemy;
+    vObjEnemy = { "easyEnemy", "skelleton", };
+    for (std::vector<std::string>::iterator itObj = vObjEnemy.begin(); itObj != vObjEnemy.end(); ++itObj)
+    {
+        std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
+        if (waveN != 0) load = lvl[0]->getObjectsByName(*itObj + waveNstream.str());
+        for (int i = 0; i < load.size(); i++)
+        {
+            entities.push_back(new Enemy(animationManagerList[*itObj],
+                *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
+        }
+    }
+    addNewWave = false;
+}
+
 void Engine::readConfig()
 {
     std::ifstream config;
@@ -164,18 +173,7 @@ void Engine::readConfig()
         data.playersPVE = 1;
         data.showFps = true;
         data.fpsBarId = 1;
-        std::ofstream configWrite("config.cfg");
-        if (configWrite.is_open())
-        {
-            configWrite << "//Availiable resolutions = {1280x720,1920x1080,3440x1440,1280x1024}\n";
-            configWrite << "resolution " << resolution.x << "x" << resolution.y << "\n";
-            configWrite << "showFps " << data.showFps << "\n";
-            configWrite << "PlayersPVE " << data.playersPVE << "\n";
-            configWrite << "ShowFpsType " << data.fpsBarId << "\n";
-            configWrite.close();
-            std::cout << "Standart config created!\n";
-        }
-        else std::cout << "Unable to create config.cfg file\n";
+        writeConfig();
         return;
     }
     while (std::getline(config, line))
@@ -227,5 +225,21 @@ void Engine::readConfig()
     }
     std::cout << "Config readed!\n";
     config.close();
+}
+
+void Engine::writeConfig()
+{
+    std::ofstream configWrite("config.cfg");
+    if (configWrite.is_open())
+    {
+        configWrite << "//Availiable resolutions = {1280x720,1920x1080,3440x1440,1280x1024}\n";
+        configWrite << "resolution " << resolution.x << "x" << resolution.y << "\n";
+        configWrite << "showFps " << data.showFps << "\n";
+        configWrite << "PlayersPVE " << data.playersPVE << "\n";
+        configWrite << "ShowFpsType " << data.fpsBarId << "\n";
+        configWrite.close();
+        std::cout << "Standart config created!\n";
+    }
+    else std::cout << "Unable to create config.cfg file\n";
 }
 

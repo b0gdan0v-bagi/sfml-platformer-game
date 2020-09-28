@@ -31,7 +31,7 @@ private:
     Font font;
     Menu menu;
     GameInterface gameInterface;
-    bool pvp, inGameKeyInputs, returnToMainMenu;
+    bool pvp, inGameKeyInputs, returnToMainMenu, addNewWave;
     bool levelChanger;
     std::string task;
     int gameSTATE = { 0 };
@@ -51,8 +51,10 @@ private:
  
         
     void loadLevel();
+    void loadEnemyWave(int waveN);
     void input();
     void readConfig();
+    void writeConfig();
     bool loadImages();
     bool loadAnimations();
     void update(float time);

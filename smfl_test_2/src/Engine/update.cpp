@@ -4,6 +4,8 @@ using namespace sf;
 
 void Engine::update(float time)
 {
+    if (addNewWave) loadEnemyWave(1);
+
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->update(time);
