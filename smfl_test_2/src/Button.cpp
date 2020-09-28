@@ -7,7 +7,8 @@ Button::Button(const String& string, const Font& font, RenderWindow& WINDOW, boo
 {
 	canPressed = true;
 	viewable = true;
-	m_backGroundDraw = back_show;
+	//m_backGroundDraw = back_show;
+	m_backGroundDraw = false;
 	m_indent = textSize;
 	m_text.setFont(font);
 	m_text.setFillColor(TextColor);
@@ -34,6 +35,7 @@ void Button::draw(RenderWindow& window)
 	if (viewable) 
 	{
 		if (m_backGroundDraw) window.draw(m_backGround);
+		//if (!canPressed) m_text.setFillColor(Color::Magenta);
 		window.draw(m_text);
 	}
 }
@@ -48,12 +50,21 @@ void Button::draw(RenderWindow& window)
 	m_backGround.setFillColor(Color::Black);
 }*/
 
+ButtonList::ButtonList()
+{
+	m_lineIndent = 5;
+	m_backGroundShow = false;
+	maxButtonSizeId_X = 0;
+	m_viewable = false;
+}
+
 void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)
 {
 	m_lineIndent = WINDOW.getView().getSize().y / textSize;
+	m_backGroundShow = back_show;
 	for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); name++)
 	{
-		buttons.push_back(new Button(*name, font, WINDOW, back_show, textSize));
+		buttons.push_back(new Button(*name, font, WINDOW, false, textSize));
 	}
 	m_backGround.setFillColor(Color::Black);
 }
@@ -97,11 +108,65 @@ void ButtonList::composeYcenterXCenter(RenderWindow& WINDOW)
 {
 }
 
+void ButtonList::composeY(RenderWindow& WINDOW, float X, float Y)
+{
+	butPos.clear();
+	while (butPos.size() != buttons.size()) butPos.push_back(Vector2f(0.f, 0.f));
+	float offset = 1;
+	float rectSizeY = 5.f;
+	float rectSizeX = 0.f;
+	for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++)
+	{
+		if ((*but)->viewable)
+		{
+			butPos.at(std::distance(buttons.begin(), but)).x = X - (*but)->getSize().x / 2;
+			butPos.at(std::distance(buttons.begin(), but)).y = Y + ((*but)->getSize().y + 5) * offset;
+			offset++;
+			if (rectSizeX <= (*but)->getSize().x)
+			{
+				rectSizeX = (*but)->getSize().x;
+				maxButtonSizeId_X = std::distance(buttons.begin(), but);
+			}
+			rectSizeY += (*but)->getSize().y + 5;
+		}
+	}
+	m_backGround.setSize(Vector2f(rectSizeX + 10, rectSizeY));
+	m_backGround.setPosition(Vector2f(butPos[maxButtonSizeId_X].x - 5, butPos[0].y - m_lineIndent));
+	update();
+}
+
+void ButtonList::composeX(RenderWindow& WINDOW, float X, float Y)
+{
+	butPos.clear();
+	while (butPos.size() != buttons.size()) butPos.push_back(Vector2f(0.f, 0.f));
+	float offset = 1;
+	float rectSizeY = 5.f;
+	float rectSizeX = 0.f;
+	for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++)
+	{
+		if ((*but)->viewable)
+		{
+			butPos.at(std::distance(buttons.begin(), but)).x = X - (*but)->getSize().x / 2;
+			butPos.at(std::distance(buttons.begin(), but)).y = Y + ((*but)->getSize().y + 5) * offset;
+			offset++;
+			if (rectSizeX <= (*but)->getSize().x)
+			{
+				rectSizeX = (*but)->getSize().x;
+				maxButtonSizeId_X = std::distance(buttons.begin(), but);
+			}
+			rectSizeY += (*but)->getSize().y + 5;
+		}
+	}
+	m_backGround.setSize(Vector2f(rectSizeX + 10, rectSizeY));
+	m_backGround.setPosition(Vector2f(butPos[maxButtonSizeId_X].x - 5, butPos[0].y - m_lineIndent));
+	update();
+}
+
 void ButtonList::draw(RenderWindow& window)
 {
 	if (m_viewable) 
 	{
-		window.draw(m_backGround);
+		if (m_backGroundShow) window.draw(m_backGround);
 		for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++)
 		{
 			(*but)->draw(window);
@@ -156,6 +221,6 @@ void ButtonList::checkMouseIntersects(int& ID, RenderWindow &window, Color TRUEc
 
 bool ButtonList::checkID(int ID)
 {
-	if ((ID > 0) && (ID < buttons.size())) return true;
+	if ((ID >= 0) && (ID < buttons.size())) return true;
 	return false;
 }

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "GlobalData.h"
+#include "Button.h"
 #include <iostream>
 #include <sstream>
 using namespace sf; 
@@ -10,21 +11,17 @@ using namespace sf;
 class Menu 
 {
 private:
-	Font m_font;
 	View m_menuView;
-	
-	float m_fontSize;
-	Vector2f m_center, m_size; // for window.getView
+	int m_menuNum;
 	Text m_text;
-	std::vector<Text*> mainMenuBut, lvlMenuBut, aboutMenuBut, inGameMenuBut;
+	ButtonList about, mainBut, lvl;
 	std::string m_progVer, m_mailInfo;
+
 public:
 
-
 	void create(RenderWindow& window, Font& FONT, GlobalData& data);
-	void composeButtons(std::vector<Text*> BUTTON);
-	void draw(RenderWindow& window, std::vector<Text*> BUTTON);
-	void update(RenderWindow& window, int& MENUNUM, std::vector<Text*> BUTTON);
+	void draw(RenderWindow& window, ButtonList & butList);
+	void update(RenderWindow& window, ButtonList& butList);
 	bool mainMenu(RenderWindow& window, int& numberLevel);
 	bool levelMenu(RenderWindow& window, int& numberLevel);
 	bool aboutMenu(RenderWindow& window);

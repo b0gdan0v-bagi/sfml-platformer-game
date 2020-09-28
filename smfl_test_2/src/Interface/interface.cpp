@@ -21,7 +21,8 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 		buttList.setViewable(m_active);
 		buttList.setPressable(1, !m_defeatTextVisible); // if dont show continue button if dead
 		buttList.setViewable(1, !m_defeatTextVisible);
-		buttList.composeYcenterXtop(window);
+		//buttList.composeYcenterXtop(window);
+		buttList.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
 		window.setMouseCursorVisible(true);
 		m_menuNum = -1;
 		buttList.checkMouseIntersects(m_menuNum, window, Color::Blue, Color::White);

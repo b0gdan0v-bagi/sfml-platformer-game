@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 #include "SFML/Graphics.hpp";
+#include <iostream>
 
 using namespace sf;
 
@@ -41,7 +42,7 @@ private:
 public:
 	std::vector<Vector2f> butPos;
 	std::vector<Button*> buttons;
-	ButtonList() {}
+	ButtonList();
 	//ButtonList(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show = false
 	//	, int textSize = 25);
 	
@@ -50,6 +51,8 @@ public:
 	void update();
 	void composeYcenterXtop(RenderWindow& WINDOW);
 	void composeYcenterXCenter(RenderWindow& WINDOW);
+	void composeY(RenderWindow& WINDOW, float X, float Y);
+	void composeX(RenderWindow& WINDOW, float X, float Y);
 	void draw(RenderWindow& window);
 	void setTextFillColor(int ID, Color COLOR);
 	void setViewable(bool viewable) { m_viewable = viewable; }
@@ -59,6 +62,7 @@ public:
 	bool getPressable(int ID, bool pressable);
 	void checkMouseIntersects(int& ID,RenderWindow &window, Color TRUEcolor, Color FALSEcolor);
 	bool checkID(int ID);
+	void setLineIndent(float INDENT) { m_lineIndent = INDENT; }
 };
 
 #endif BUTTON_H
