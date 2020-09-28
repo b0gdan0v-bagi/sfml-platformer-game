@@ -15,6 +15,7 @@ void Engine::update(float time)
         (*it)->update(time);
         if ((*it)->getLife() == false)
         {
+            delete* it;
             it = entities.erase(it);
         }
         else it++;
@@ -31,6 +32,7 @@ void Engine::update(float time)
         (*itM)->update(time, players[pN]->getRect().left + players[pN]->getRect().width, players[pN]->getRect().top - 20);
         if ((*itM)->getLife() == false)
         {
+            delete *itM;
             itM = messages.erase(itM);
         }
         else ++itM;

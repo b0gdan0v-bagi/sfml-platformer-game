@@ -64,10 +64,16 @@ void Engine::gameRunning()
             data.playersHP[i] = data.defaultHP;
         }
     }
-    entities.clear(); // delete memory for global engine vectors
+    // delete memory for global engine vectors
+    for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) delete *it;
+    entities.clear(); 
+    for (std::vector<Player*>::iterator it = players.begin(); it != players.end(); ++it) delete* it;
     players.clear();
+    for (std::vector<statBar*>::iterator it = playerBars.begin(); it != playerBars.end(); ++it) delete* it;
     playerBars.clear();
+    for (std::vector<TileMap*>::iterator it = lvl.begin(); it != lvl.end(); ++it) delete* it;
     lvl.clear(); 
+    for (std::vector<Message*>::iterator it = messages.begin(); it != messages.end(); ++it) delete* it;
     messages.clear();
     gameSTATE = 0;
     inGameKeyInputs = true; //make sure that keybord for players is working

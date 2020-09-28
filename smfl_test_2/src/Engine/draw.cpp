@@ -33,10 +33,15 @@ void Engine::drawSplitHelp(int viewId)
         (*itPlayer)->draw(window);
     }
     
-    for (int i = 0; i < playerBars.size(); ++i)
+    if (pvp) playerBars[viewId]->draw(window);
+    else
     {
-        playerBars[i]->draw(window);
+        for (int i = 0; i < playerBars.size(); ++i)
+        {
+            playerBars[i]->draw(window);
+        }
     }
+    
 
     for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end(); ++itM)
     {

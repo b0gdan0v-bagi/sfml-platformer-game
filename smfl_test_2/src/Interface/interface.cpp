@@ -23,6 +23,7 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 		buttList.setViewable(1, !m_defeatTextVisible);
 		buttList.composeYcenterXtop(window);
 		window.setMouseCursorVisible(true);
+		m_menuNum = -1;
 		buttList.checkMouseIntersects(m_menuNum, window, Color::Blue, Color::White);
 
 		if (Mouse::isButtonPressed(Mouse::Left))
