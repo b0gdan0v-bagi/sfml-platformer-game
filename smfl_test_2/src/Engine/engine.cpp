@@ -10,7 +10,6 @@ Engine::Engine()
     readConfig();
     inGameKeyInputs = true; // make sure that keyboard will work
     levelChanger = false; // we dont want up level at initialise
-    //std::cout << 10 / 100 << "\n" << 101 / 100 << "\n";
     window.create(VideoMode(resolution.x, resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("resourses/TimesNewRoman.ttf");
     fpsbar.setFont(font);
@@ -48,7 +47,7 @@ bool Engine::startGame()
         input();
         update(time);
         entitiesInteractions(); // interaction of all things
-        if (returnToMainMenu) return true;
+        if (checkSTATE()) return true;
         if (checkWin()) return true;
         checkDefeat();
         draw(); // draw all things

@@ -38,4 +38,27 @@ void Engine::update(float time)
 
     if (data.showFps) fpsbar.update(time, data.fpsBarId);
     if (!gameInterface.getActive()) window.setMouseCursorVisible(false);
+    gameInterface.update(window, gameSTATE);
+}
+
+bool Engine::checkSTATE()
+{
+    switch (gameSTATE)
+    {
+    case 0: {
+        return false;
+        break;
+    }
+    case 1: {
+        return true;
+        break;
+    }
+    case 2: {
+        levelChanger = true;
+        return true;
+    }
+    default:
+        break;
+    }
+    return false;
 }

@@ -95,20 +95,22 @@ void Engine::entitiesInteractions()
                             (*itPlayer2)->setDoorKey(true);
                         }
                         (*it)->kill(); // kill key
-                        newMessage("I got key!", std::distance(players.begin(), itPlayer));
+                        newMessage("I got key!\n Go back to the door!", std::distance(players.begin(), itPlayer));
                     }
                 }
                 if (((*it)->getName() == "door") && ((*itPlayer)->getLife()) && ((*it)->getLife()) && ((*itPlayer)->getDoorKey()))
                 { //destroy the door if we have key
                     {
+                        task = "Door is opened!";
+                        newMessage(task, std::distance(players.begin(), itPlayer));
                         (*it)->kill();
-                        newMessage("Door is opened!", std::distance(players.begin(), itPlayer));
                     }
                 }
                 if (((*it)->getName() == "trigger") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
                 { 
                     {
-                        newMessage((*it)->getType(), std::distance(players.begin(), itPlayer));
+                        task = (*it)->getType(); // change output message for help
+                        newMessage(task, std::distance(players.begin(), itPlayer));
                         (*it)->kill();
                         
                     }
@@ -144,6 +146,7 @@ void Engine::checkDefeat()
 {
     if ((!pvp) && (!players[0]->getLife()))
     {
+        newMessage("WASTED", 0);
         inGameKeyInputs = false;
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();
@@ -151,13 +154,4 @@ void Engine::checkDefeat()
     }
 }
 
-void Engine::newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER)
-{
-    // delete previvous messages
-    for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end();itM++)
-    {
-        if ((*itM)->getPlayerN() == PLAYER_N) (*itM)->setLife(false);
-    }
-    // create new
-    messages.push_back(new Message(MESSAGE, MESSAGE_TIMER, font, window, PLAYER_N));
-}
+

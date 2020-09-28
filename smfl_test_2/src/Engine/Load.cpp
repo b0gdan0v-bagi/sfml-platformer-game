@@ -69,6 +69,7 @@ void Engine::gameRunning()
     playerBars.clear();
     lvl.clear(); 
     messages.clear();
+    gameSTATE = 0;
     inGameKeyInputs = true; //make sure that keybord for players is working
     returnToMainMenu = false; //break bool for main cycle
     
@@ -112,7 +113,7 @@ void Engine::loadLevel()
     {
         entities.push_back(new Trigger(animationManagerList["trigger"],
             "trigger", *lvl[0], load[i].rect.left, load[i].rect.top,
-            load[i].GetPropertyString("text")));
+            load[i].GetPropertyString("text"))); //in text we have new messages!
     }
 
 
@@ -127,7 +128,6 @@ void Engine::loadLevel()
         players.push_back(new Player(animationManagerList["player"], "Player" + playerN.str(), *lvl[0], player.rect.left, player.rect.top));
         std::cout << "player" + playerN.str() << " added!\n";
         playerBars.push_back(new statBar(font, pvp, i));
-        //data.showFps = false; // we want fps counter only for 1st
     }
     // size of vectors for reloads must be equal to number of added players!
     while (data.playersAMMO.size() < numberOfPlayersToAdd) data.playersAMMO.push_back(data.defaultAMMO);
@@ -138,7 +138,7 @@ void Engine::loadLevel()
         players[i]->ammo = data.playersAMMO[i];
         players[i]->setHealth(data.playersHP[i]);
     }
-
+    if (!pvp) task = "Go forward!";
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";

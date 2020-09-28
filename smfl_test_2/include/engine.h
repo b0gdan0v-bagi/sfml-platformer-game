@@ -33,6 +33,8 @@ private:
     GameInterface gameInterface;
     bool pvp, inGameKeyInputs, returnToMainMenu;
     bool levelChanger;
+    std::string task;
+    int gameSTATE = { 0 };
     View view; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
@@ -63,6 +65,7 @@ private:
     void checkDefeat();
     void newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER = 3000);
     bool startGame();
+    bool checkSTATE();
 public:
     Engine();
     void gameRunning();

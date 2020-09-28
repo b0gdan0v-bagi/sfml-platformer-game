@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="135">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="1000" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="139">
  <tileset firstgid="1" name="text2" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="images/text2.png" width="512" height="512"/>
  </tileset>
@@ -292,7 +292,7 @@
   <object id="94" name="solid" x="8318.81" y="2432.5" width="33.042" height="45.0001"/>
   <object id="95" name="solid" x="8348.15" y="2463.5" width="67.3753" height="39.6668"/>
   <object id="96" name="solid" x="8576.15" y="1440.17" width="192.375" height="959"/>
-  <object id="97" name="solid" x="8764.81" y="1440.83" width="129.709" height="862.333"/>
+  <object id="97" name="solid" x="8764.81" y="1440.1" width="129.709" height="863.06"/>
   <object id="98" name="solid" x="8891.48" y="1569.5" width="321.042" height="94.3334"/>
   <object id="99" name="solid" x="9119.48" y="1790.83" width="382.375" height="98.3334"/>
   <object id="100" name="solid" x="8830.81" y="2400.17" width="65.042" height="162.333"/>
@@ -324,11 +324,26 @@
   <object id="129" name="vodka" x="10130.2" y="2294.83" width="17" height="37"/>
   <object id="130" name="vodka" x="8914.17" y="2518.83" width="17" height="37"/>
   <object id="131" name="door" x="2686.67" y="2270.67" width="32" height="64"/>
-  <object id="133" name="key" x="2223" y="2193.71" width="22" height="13"/>
   <object id="134" name="trigger" type="hello" x="1250" y="1856" width="24" height="400">
    <properties>
-    <property name="text" value="BRABO"/>
+    <property name="text" value="I need to go to the cave"/>
    </properties>
   </object>
+  <object id="135" name="trigger" type="hello" x="2662" y="1704" width="24" height="400">
+   <properties>
+    <property name="text" value="Ohh, door! I need key!"/>
+   </properties>
+  </object>
+  <object id="136" name="trigger" type="hello" x="5799.33" y="1453.33" width="24" height="400">
+   <properties>
+    <property name="text" value="A long way through the wasteland, I still need a key!"/>
+   </properties>
+  </object>
+  <object id="137" name="trigger" type="hello" x="8098.52" y="1838.61" width="24" height="400">
+   <properties>
+    <property name="text" value="Water .. I'll get wet, but what can't you do for the key!"/>
+   </properties>
+  </object>
+  <object id="138" name="key" x="8747.45" y="1425.59" width="22" height="13"/>
  </objectgroup>
 </map>

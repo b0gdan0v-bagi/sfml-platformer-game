@@ -24,7 +24,7 @@ void Engine::input()
 
         if (Keyboard::isKeyPressed(Keyboard::Q)) 
         { 
-            
+            newMessage(task, 0);
         }
         //if (Keyboard::isKeyPressed(Keyboard::Tab)) { return true; }
         if (Keyboard::isKeyPressed(Keyboard::Escape)) 

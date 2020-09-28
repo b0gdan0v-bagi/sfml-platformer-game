@@ -9,7 +9,7 @@ class Message
 {
 private:
 	Text m_text; //message text
-	RectangleShape m_shape; // background
+	RectangleShape m_backGround; // background
 	float m_timer, m_endTimer;
 	float m_indent;
 	int m_playerN;

@@ -140,5 +140,8 @@
     <ClCompile Include="src\Message.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\Button.cpp">
+      <Filter>Source Files\interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

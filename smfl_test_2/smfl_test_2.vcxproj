@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\animation.cpp" />
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Engine\draw.cpp" />
     <ClCompile Include="src\Engine\engine.cpp" />
     <ClCompile Include="src\Engine\input.cpp" />

@@ -9,7 +9,8 @@ void Engine::draw()
     // for split screen
     if (pvp) drawSplitHelp(1); 
     window.setView(view);
-    gameInterface.update(window, returnToMainMenu);
+    //gameInterface.update(window, returnToMainMenu);
+    gameInterface.draw(window);
     if (data.showFps) fpsbar.draw(window);
     window.display();
 }
@@ -41,8 +42,6 @@ void Engine::drawSplitHelp(int viewId)
     {
         (*itM)->draw(window);
     }
-
-    //playerBars[viewId]->draw(window);
     
 }
 
@@ -60,4 +59,15 @@ void Engine::viewChanges()
         playerViews[0]->setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
         playerViews[0]->setSize(resolution.x, resolution.y);
     }
+}
+
+void Engine::newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER)
+{
+    // delete previvous messages
+    for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end(); itM++)
+    {
+        if ((*itM)->getPlayerN() == PLAYER_N) (*itM)->setLife(false);
+    }
+    // create new
+    messages.push_back(new Message(MESSAGE, MESSAGE_TIMER, font, window, PLAYER_N));
 }
