@@ -119,9 +119,11 @@ void ButtonList::composeY(RenderWindow& WINDOW, float X, float Y)
 	{
 		if ((*but)->viewable)
 		{
+			offset += (*but)->getSize().y + m_lineIndent;
 			butPos.at(std::distance(buttons.begin(), but)).x = X - (*but)->getSize().x / 2;
-			butPos.at(std::distance(buttons.begin(), but)).y = Y + ((*but)->getSize().y + 5) * offset;
-			offset++;
+			//butPos.at(std::distance(buttons.begin(), but)).y = Y + ((*but)->getSize().y + 5) * offset;
+			butPos.at(std::distance(buttons.begin(), but)).y = Y + offset;
+			//offset++;
 			if (rectSizeX <= (*but)->getSize().x)
 			{
 				rectSizeX = (*but)->getSize().x;
@@ -146,9 +148,9 @@ void ButtonList::composeX(RenderWindow& WINDOW, float X, float Y)
 	{
 		if ((*but)->viewable)
 		{
-			butPos.at(std::distance(buttons.begin(), but)).x = X - (*but)->getSize().x / 2;
-			butPos.at(std::distance(buttons.begin(), but)).y = Y + ((*but)->getSize().y + 5) * offset;
-			offset++;
+			offset += (*but)->getSize().x + m_lineIndent;
+			butPos.at(std::distance(buttons.begin(), but)).x = X + offset;
+			butPos.at(std::distance(buttons.begin(), but)).y = Y;
 			if (rectSizeX <= (*but)->getSize().x)
 			{
 				rectSizeX = (*but)->getSize().x;

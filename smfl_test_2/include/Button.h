@@ -63,6 +63,12 @@ public:
 	void checkMouseIntersects(int& ID,RenderWindow &window, Color TRUEcolor, Color FALSEcolor);
 	bool checkID(int ID);
 	void setLineIndent(float INDENT) { m_lineIndent = INDENT; }
+
+	~ButtonList()
+	{
+		for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++) delete* but;
+		buttons.clear();
+	}
 };
 
 #endif BUTTON_H

@@ -1,35 +1,26 @@
 #include "menu.h"
 
-
 using namespace sf;
-
-
 
 void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 {
 	m_progVer = DATA.version;
 	m_mailInfo = DATA.email;
 
-	mainBut.create(FONT, window, { "New game : PVE" , "New game : PVP","About", "Exit" }, false, 10);
-	//mainBut.setLineIndent(20);
-	mainBut.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
-	/*lvlMenuBut.push_back(new Text("Choose your level", m_font, m_fontSize));// menuNum = 1
-	for (int i = 1; i <= DATA.numberLevelMax; i++)
-	{
-		std::ostringstream lvlNumber;
-		lvlNumber << i;
-		lvlMenuBut.push_back(new Text("lvl " + lvlNumber.str(), m_font, m_fontSize));
-	}*/
+	mainBut.create(FONT, window, { "New game : PVE" , "New game : PVP","Options","About", "Exit" }, false, 10);
+	mainBut.composeY(window, window.getView().getSize().x / 2, -2 * window.getView().getSize().y/10);
+
 	lvl.create(FONT, window, { "Choose your level","lvl 1", "lvl 2", "lvl 3" }, false, 10);
-	lvl.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
+	lvl.composeY(window, window.getView().getSize().x / 2, -1 * window.getView().getSize().y / 10);
 	lvl.setPressable(0, false);
 
-	about.create(FONT, window, { "Game by Andey Bogdanov ", m_progVer , "back" },false,10);
-	about.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
-
+	about.create(FONT, window, { "Game by Andey Bogdanov ", m_progVer,m_mailInfo, "back" },false,10);
+	about.composeY(window, window.getView().getSize().x / 2, -1 * window.getView().getSize().y / 10);
 	about.setPressable(false); 
-	about.setPressable(2, true);
+	about.setPressable(3, true);
 
+	option.create(FONT, window, { "1280x720", "1920x1080", "3440x1440", }, false, 10);
+	option.composeX(window, -window.getView().getSize().x / 5 - 100, 50);
 }
 
 
@@ -66,33 +57,31 @@ bool Menu::mainMenu(RenderWindow& window, int& numberLevel)
 			{
 			case 0: {
 				if (levelMenu(window, numberLevel)) return true;
-				std::cout << "level menu ended!";
-				std::cout << "isMenu = " << isMenu << "\n";
-				//sleep(milliseconds(300)); 
 				break; }
 			case 1: {
 				isMenu = false;
 				numberLevel = 101;
-				//sleep(milliseconds(300));
 				return true;
 				break;
 			}
 			case 2: {
-				aboutMenu(window);
+				optionMenu(window);
 				break;
 			}
 			case 3: {
+				aboutMenu(window);
+				break;
+			}
+			case 4: {
 				return false;
-				numberLevel = 0;
 				window.close();
-				isMenu = false;
-				//sleep(milliseconds(300));
 				break; }
 			default:
 				break;
 			}
 		}
 		mainBut.setViewable(isMenu);
+		mainBut.setLineIndent(10);
 		draw(window, mainBut);
 	}
 }
@@ -105,6 +94,12 @@ bool Menu::levelMenu(RenderWindow& window, int& numberLevel)
 	while (isMenu)
 	{
 		update(window, lvl);
+		/*for (int i = 1; i <= DATA.numberLevelMax; i++)
+		{
+			std::ostringstream lvlNumber;
+			lvlNumber << i;
+			lvlMenuBut.push_back(new Text("lvl " + lvlNumber.str(), m_font, m_fontSize));
+		}*/
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			numberLevel = m_menuNum; 
@@ -129,7 +124,7 @@ bool Menu::aboutMenu(RenderWindow& window)
 			while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ };
 			switch (m_menuNum)
 			{
-			case 2: {return false; break; }
+			case 3: {return false; break; }
 			default:
 				break;
 			}
@@ -137,5 +132,23 @@ bool Menu::aboutMenu(RenderWindow& window)
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
 		about.setViewable(isMenu);
 		draw(window, about);
+	}
+}
+
+bool Menu::optionMenu(RenderWindow& window)
+{
+	bool isMenu = true;
+	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+
+	while (isMenu)
+	{
+		update(window, option);
+		if (Mouse::isButtonPressed(Mouse::Left))
+		{
+			///
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
+		option.setViewable(isMenu);
+		draw(window, option);
 	}
 }

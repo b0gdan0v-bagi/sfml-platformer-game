@@ -24,7 +24,6 @@ public:
 	~Message()
 	{
 		delete button;
-		std::cout << "destructor woks!\n";
 	}
 	void update(float time, float X, float Y);
 	void draw(RenderWindow& window);
