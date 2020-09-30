@@ -15,15 +15,22 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	about.create(FONT, window, { "Game by Andey Bogdanov ", DATA.version, DATA.email, "back" },false,10);
 	about.setPressable(false); 
 	about.setPressable(3, true);
-	option.create(FONT, window, { "Resolution:" ,"1280x720", "1920x1080", "3440x1440", }, false, 15);
-	option.setPressable(0, false);
-	option2.create(FONT, window, { "Apply" ,"back", }, false, 15);
-	option2.setPressable(0, false);
+	option.push_back(new ButtonList(FONT, window, { "Resolution:" ,"1280x720", "1920x1080", "3440x1440", }, false, 15));
+	option[0]->setPressable(0, false);
+	option.push_back(new ButtonList(FONT, window, { "Apply" ,"  back", }, false, 15));
+	option[1]->setPressable(0, false);
+	option.push_back(new ButtonList(FONT, window, { "Show fps :      ", "yes", "no" }, false, 15));
+	option[2]->setPressable(0, false);
+
 	composeAll(window);
 
-	if (DATA.resolution.x == 1280) option.switchBackgroundTo(1);
-	if (DATA.resolution.x == 1920) option.switchBackgroundTo(2);
-	if (DATA.resolution.x == 3440) option.switchBackgroundTo(3);
+	optN.resize(option.size());
+
+	if (DATA.resolution.x == 1280) option[0]->switchBackgroundTo(1);
+	if (DATA.resolution.x == 1920) option[0]->switchBackgroundTo(2);
+	if (DATA.resolution.x == 3440) option[0]->switchBackgroundTo(3);
+	if (DATA.showFps) option[2]->switchBackgroundTo(1);
+	else option[2]->switchBackgroundTo(2);
 }
 
 void Menu::composeAll(RenderWindow& window)
@@ -35,14 +42,14 @@ void Menu::composeAll(RenderWindow& window)
 	mainBut.updateCharSize(window);
 	lvl.updateCharSize(window);
 	about.updateCharSize(window);
-	option.updateCharSize(window);
-	option2.updateCharSize(window);
+	for (std::vector<ButtonList*>::iterator op = option.begin();op!=option.end();op++) (*op)->updateCharSize(window);
 
 	mainBut.composeY(window, 0, -0.95);
 	lvl.composeY(window, 0, -0.95);
 	about.composeY(window, 0, -0.95);
-	option.composeX(window, -1 , -0.95);
-	option2.composeX(window, -1, 0);
+	option[0]->composeX(window, -1, -0.95);
+	option[1]->composeX(window, -1, 0);
+	option[2]->composeX(window, -1, -0.80);
 }
 
 
@@ -184,59 +191,93 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 {
 	bool isMenu = true;
 	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
-	int m_menuNum2;
+	bool resolutionChanged = false;
 	Vector2f resolutionBuff;
 	while (isMenu)
 	{
-		update(window, option);
-		m_menuNum2 = -1;
-		option2.checkMouseIntersects(m_menuNum2, window, Color::Blue, Color::White);
+		Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window.close();
+		}
+		window.setMouseCursorVisible(true);
+		for (int i = 0; i < optN.size(); ++i)
+		{
+			optN[i] = -1;
+			option[i]->checkMouseIntersects(optN[i], window, Color::Blue, Color::White);
+		}
+		window.clear(Color(129, 181, 221));
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			switch (m_menuNum)
+			switch (optN[0])
 			{
 			case 1: {
 				resolutionBuff.x = 1280;
 				resolutionBuff.y = 720;
-				if (!option.getBackgroundViewable(1)) option2.setPressable(0, true);
-				option.switchBackgroundTo(1);
+				if (!option[0]->getBackgroundViewable(1)) { option[1]->setPressable(0, true); resolutionChanged = true; }
+				option[0]->switchBackgroundTo(1);
+				data.isChanged = true;
 				break;
 			}
 			case 2: {
 				resolutionBuff.x = 1920;
 				resolutionBuff.y = 1080;
-				if (!option.getBackgroundViewable(2)) option2.setPressable(0, true);
-				option.switchBackgroundTo(2);
+				if (!option[0]->getBackgroundViewable(2)) { option[1]->setPressable(0, true); resolutionChanged = true; }
+				option[0]->switchBackgroundTo(2);
+				data.isChanged = true;
 				break;
 			}
 			case 3: {
 				resolutionBuff.x = 3440;
 				resolutionBuff.y = 1440;
-				if (!option.getBackgroundViewable(3)) option2.setPressable(0, true);
-				option.switchBackgroundTo(3);
+				if (!option[0]->getBackgroundViewable(3)) { option[1]->setPressable(0, true); resolutionChanged = true; }
+				option[0]->switchBackgroundTo(3);
+				
 				break;
 			}
 			default:
 				break;
 			}
-			switch (m_menuNum2)
+			switch (optN[1])
 			{
 			case 0: {
-				data.isChanged = true;
-				data.resolution = resolutionBuff;
-				option2.setPressable(0, false);
+				
+				option[1]->setPressable(0, false);
 				data.writeConfig();
-				window.close();
-				window.create(VideoMode(data.resolution.x, data.resolution.y), data.name + " " + data.version, Style::Close);
-				window.setView(data.viewInterface);
-				data.setViewInterface();
-				composeAll(window);
+				if (resolutionChanged)
+				{
+					data.resolution = resolutionBuff;
+					window.close();
+					window.create(VideoMode(data.resolution.x, data.resolution.y), data.name + " " + data.version, Style::Close);
+					window.setView(data.viewInterface);
+					data.setViewInterface();
+					composeAll(window);
+					resolutionChanged = false;
+				}
 				return true;
 				break;
 			}
 			case 1: {
-				option2.setPressable(0, false);
+				option[1]->setPressable(0, false);
 				return false;
+				break;
+			}
+			default:
+				break;
+			}
+			switch (optN[2])
+			{
+			case 1: {
+				data.showFps = true;
+				if (!option[2]->getBackgroundViewable(1)) option[1]->setPressable(0, true);
+				option[2]->switchBackgroundTo(1);
+				break;
+			}
+			case 2: {
+				data.showFps = false;
+				if (!option[2]->getBackgroundViewable(2)) option[1]->setPressable(0, true);
+				option[2]->switchBackgroundTo(2);
 				break;
 			}
 			default:
@@ -244,9 +285,11 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
-		option.setViewable(isMenu);
-		option2.setViewable(isMenu);
-		option2.draw(window, m_menuView);
-		draw(window, option);
+		for (std::vector<ButtonList*>::iterator op = option.begin(); op != option.end(); op++)
+		{
+			(*op)->setViewable(isMenu);
+			(*op)->draw(window);
+		}
+		window.display();
 	}
 }

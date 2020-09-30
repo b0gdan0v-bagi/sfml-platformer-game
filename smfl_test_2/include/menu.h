@@ -6,6 +6,7 @@
 #include "Button.h"
 #include <iostream>
 #include <sstream>
+#include <algorithm> 
 using namespace sf; 
 
 
@@ -15,7 +16,9 @@ private:
 	View m_menuView;
 	int m_menuNum;
 	Text m_text;
-	ButtonList about, mainBut, lvl, option, option2;
+	ButtonList about, mainBut, lvl; // , option, option2, option3;
+	std::vector<ButtonList*> option;
+	std::vector<int> optN;
 	std::string m_progVer, m_mailInfo;
 	void draw(RenderWindow& window, ButtonList& butList);
 	void update(RenderWindow& window, ButtonList& butList);

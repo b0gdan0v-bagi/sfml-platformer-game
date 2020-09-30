@@ -52,6 +52,7 @@ void Engine::gameRunning()
         if (!menu.mainMenu(window, data)) return;
     }
     window.setView(data.viewInterface);
+
     if (data.isChanged)  data.isChanged = false;
     if (data.numberLevel / 100 != 0) pvp = true;
     else pvp = false;

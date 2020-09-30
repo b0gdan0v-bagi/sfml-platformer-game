@@ -36,6 +36,7 @@ void Button::updateCharSize(RenderWindow& window)
 	m_indent = m_charSize;
 	m_text.setCharacterSize(window.getSize().y / m_charSize);
 	m_backGround.setSize(Vector2f(m_text.getGlobalBounds().width + m_indent * 2, m_text.getGlobalBounds().height + m_indent * 2));
+	m_backGround.setPosition(m_text.getPosition().x - m_indent, m_text.getPosition().y - m_indent);
 }
 
 void Button::draw(RenderWindow& window)
@@ -57,6 +58,17 @@ void Button::draw(RenderWindow& window, View& VIEW)
 		//if (!canPressed) m_text.setFillColor(Color::Magenta);
 		window.draw(m_text);
 	}
+}
+
+ButtonList::ButtonList(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)
+{
+	m_textSize = textSize;
+	m_backGroundShow = back_show;
+	for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); name++)
+	{
+		buttons.push_back(new Button(*name, font, WINDOW, false, textSize));
+	}
+	m_backGround.setFillColor(Color::Black);
 }
 
 void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)

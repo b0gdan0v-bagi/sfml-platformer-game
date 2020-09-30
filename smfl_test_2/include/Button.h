@@ -50,6 +50,9 @@ public:
 	std::vector<Vector2f> butPos;
 	std::vector<Button*> buttons;
 	
+	ButtonList() {}
+	ButtonList(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show = false
+		, int textSize = 25);
 	void create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show = false
 		, int textSize = 25);
 	void update();

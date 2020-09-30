@@ -22,6 +22,7 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 		buttList.setPressable(1, !m_defeatTextVisible); // dont show continue button if dead
 		buttList.setViewable(1, !m_defeatTextVisible);
 		//buttList.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
+		buttList.updateCharSize(window);
 		buttList.composeY(window, 0, -0.5);
 		window.setMouseCursorVisible(true);
 		m_menuNum = -1;
