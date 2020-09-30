@@ -55,7 +55,7 @@ void GlobalData::readConfig()
                 resolution.x = std::stoi(resX);
                 resolution.y = std::stoi(resY);
                 if ((resolution.x < 200) || (resolution.x > 3440)) resolution.x = 1280;
-                if ((resolution.y < 200) || (resolution.x > 2160)) resolution.y = 720;
+                if ((resolution.y < 200) || (resolution.y > 2160)) resolution.y = 720;
             }
             std::cout << "Resolution set to " << resolution.x << "x" << resolution.y << "\n";
         }
@@ -77,7 +77,7 @@ void GlobalData::readConfig()
         if (var1 == "ShowFpsType")
         {
             fpsBarId = std::stoi(var2);
-            if ((fpsBarId != 0) || (fpsBarId != 1)) fpsBarId == 0;
+            if ((fpsBarId != 0) && (fpsBarId != 1)) fpsBarId == 0;
         }
     }
     std::cout << "Config readed!\n";

@@ -22,6 +22,7 @@ private:
 	bool aboutMenu(RenderWindow& window);
 	bool optionMenu(RenderWindow& window, GlobalData& data);
 	bool levelMenu(RenderWindow& window, int& numberLevel);
+	void composeAll(RenderWindow& window);
 public:
 
 	void create(RenderWindow& window, Font& FONT, GlobalData& data);

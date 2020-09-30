@@ -6,7 +6,7 @@ using namespace sf;
 void GameInterface::create(RenderWindow& window, Font& FONT)
 {
 	m_indent = 5;
-	buttList.create(FONT, window, { "To main menu" ,"Continue","Restart" }, 15);
+	buttList.create(FONT, window, { "To main menu" ,"Continue","Restart" }, true, 15);
 	//buttList.composeYcenterXtop(window);
 	buttList.setViewable(false);
 	buttList.setPressable(true);
@@ -19,10 +19,10 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 	if (m_active)
 	{
 		buttList.setViewable(m_active);
-		buttList.setPressable(1, !m_defeatTextVisible); // if dont show continue button if dead
+		buttList.setPressable(1, !m_defeatTextVisible); // dont show continue button if dead
 		buttList.setViewable(1, !m_defeatTextVisible);
-		//buttList.composeYcenterXtop(window);
-		buttList.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
+		//buttList.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
+		buttList.composeY(window, 0, -0.5);
 		window.setMouseCursorVisible(true);
 		m_menuNum = -1;
 		buttList.checkMouseIntersects(m_menuNum, window, Color::Blue, Color::White);
@@ -41,7 +41,7 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 				m_active = false;
 				window.setMouseCursorVisible(false);
 				//return false;
-				STATE = 0;
+				STATE = 0; // continue
 				break;
 			}
 			case 2: { // restart

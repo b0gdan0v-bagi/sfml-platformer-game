@@ -46,13 +46,13 @@ bool Engine::loadAnimations()
 void Engine::gameRunning()
 
 {
-    window.setView(data.viewInterface);
+    
     if (!levelChanger)
     {
         if (!menu.mainMenu(window, data)) return;
     }
+    window.setView(data.viewInterface);
     if (data.isChanged)  data.isChanged = false;
-    
     if (data.numberLevel / 100 != 0) pvp = true;
     else pvp = false;
     viewChanges(); // take view ports if screen splited or not
