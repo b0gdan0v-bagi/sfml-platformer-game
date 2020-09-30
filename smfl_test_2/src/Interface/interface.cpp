@@ -7,7 +7,7 @@ void GameInterface::create(RenderWindow& window, Font& FONT)
 {
 	m_indent = 5;
 	buttList.create(FONT, window, { "To main menu" ,"Continue","Restart" }, 15);
-	buttList.composeYcenterXtop(window);
+	//buttList.composeYcenterXtop(window);
 	buttList.setViewable(false);
 	buttList.setPressable(true);
 	m_defeatTextVisible = false;

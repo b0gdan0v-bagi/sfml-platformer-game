@@ -12,6 +12,7 @@ using namespace sf;
 
 struct GlobalData
 {
+    View viewInterface; // special view for menu
     int numberLevel;
     int const numberLevelMax = 3;
     int playersPVE;
@@ -19,6 +20,7 @@ struct GlobalData
     Vector2f resolution;
     std::string version, email, name;
     bool showFps;
+    bool isChanged = { false };
     int fpsBarId;
     int const defaultHP = 20;
     int const defaultAMMO = 20;
@@ -26,7 +28,9 @@ struct GlobalData
     std::vector<int> playersAMMO = { defaultAMMO, defaultAMMO };
 
     void loadGlobalData();
-
+    void readConfig();
+    void writeConfig();
+    void setViewInterface();
 };
 
 #endif GLOBAL_DATA_H

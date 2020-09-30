@@ -8,7 +8,7 @@ void Engine::draw()
     drawSplitHelp(0);
     // for split screen
     if (pvp) drawSplitHelp(1); 
-    window.setView(view);
+    window.setView(data.viewInterface);
     //gameInterface.update(window, returnToMainMenu);
     gameInterface.draw(window);
     if (data.showFps) fpsbar.draw(window);
@@ -54,15 +54,15 @@ void Engine::viewChanges()
 {
     if (pvp)
     {
-        playerViews[0]->setSize(resolution.x / 2, resolution.y);
-        playerViews[1]->setSize(resolution.x / 2, resolution.y);
+        playerViews[0]->setSize(data.resolution.x / 2, data.resolution.y);
+        playerViews[1]->setSize(data.resolution.x / 2, data.resolution.y);
         playerViews[0]->setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
         playerViews[1]->setViewport(sf::FloatRect(0.5f, 0.f, 0.5f, 1.f));
     }
     else
     {
         playerViews[0]->setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-        playerViews[0]->setSize(resolution.x, resolution.y);
+        playerViews[0]->setSize(data.resolution.x, data.resolution.y);
     }
 }
 

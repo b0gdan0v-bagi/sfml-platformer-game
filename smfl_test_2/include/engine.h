@@ -25,17 +25,15 @@ class Engine
 {
 private:
     GlobalData data;
-    int numberLevel, numberLevelMax;
     RenderWindow window;
-    Vector2f resolution;
     Font font;
     Menu menu;
     GameInterface gameInterface;
-    bool pvp, inGameKeyInputs, returnToMainMenu, addNewWave;
-    bool levelChanger;
+    bool pvp, inGameKeyInputs = { true }, returnToMainMenu, addNewWave;
+    bool levelChanger = { false };
     std::string task;
     int gameSTATE = { 0 };
-    View view; // special view for menu
+    //View viewInterface; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
@@ -44,17 +42,12 @@ private:
     std::vector<Player*> players;
     std::vector<statBar*> playerBars;
     std::vector<Message*> messages;
-    //std::map<String, std::vector<Object>*> loadObjects;
     std::vector<TileMap*> lvl; //its a vector for expansion for multiple levels 
                                //(for example if split screen or future network),
                                //now it have only 1 lvl in storage
- 
-        
     void loadLevel();
     void loadEnemyWave(int waveN);
     void input();
-    void readConfig();
-    void writeConfig();
     bool loadImages();
     bool loadAnimations();
     void update(float time);
@@ -67,7 +60,7 @@ private:
     void checkDefeat();
     void newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER = 3000);
     bool startGame();
-    bool checkSTATE();
+    bool checkSTATE(); //take gameSTATE, if 0 -> continue, if 1 -> exit main cycle to main menu, if 2 -> exit main cycle and reload
 public:
     Engine();
     void gameRunning();

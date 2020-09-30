@@ -129,9 +129,9 @@ bool Engine::checkWin()
     {
         players[0]->win = false;
         sleep(milliseconds(50));
-        if (numberLevel < numberLevelMax)
+        if (data.numberLevel < data.numberLevelMax)
         {
-            numberLevel++;
+            data.numberLevel++;
             levelChanger = true;
             for (int i = 0; i < players.size(); ++i)
             {

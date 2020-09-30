@@ -46,13 +46,14 @@ bool Engine::loadAnimations()
 void Engine::gameRunning()
 
 {
-    window.setView(view);
+    window.setView(data.viewInterface);
     if (!levelChanger)
     {
-        if (!menu.mainMenu(window, numberLevel)) return;
+        if (!menu.mainMenu(window, data)) return;
     }
+    if (data.isChanged)  data.isChanged = false;
     
-    if (numberLevel / 100 != 0) pvp = true;
+    if (data.numberLevel / 100 != 0) pvp = true;
     else pvp = false;
     viewChanges(); // take view ports if screen splited or not
     if (levelChanger) levelChanger = false; //level changer works once
@@ -89,7 +90,7 @@ void Engine::loadLevel()
 {
     lvl.push_back(new TileMap); 
     std::ostringstream numberLevelStream;
-    numberLevelStream << numberLevel;
+    numberLevelStream << data.numberLevel;
     // lvls for pvp have id > 100
     lvl[0]->load("resourses/maps/map" + numberLevelStream.str() + ".tmx");
 
@@ -136,7 +137,7 @@ void Engine::loadLevel()
     }
     if (!pvp) task = "Go forward!";
     std::cout << "\n=========================\n";
-    std::cout << "Level number : " << numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
+    std::cout << "Level number : " << data.numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";
 }
 
@@ -159,87 +160,4 @@ void Engine::loadEnemyWave(int waveN)
     addNewWave = false;
 }
 
-void Engine::readConfig()
-{
-    std::ifstream config;
-    std::string line, var1, var2;
-    std::vector<String> AvaliableResolutions = { "1280x720","1920x1080","3440x1440","1280x1024" };
-    config.open("config.cfg");
-    if (!config.is_open())
-    {
-        std::cout << "Cannot open config.cfg\nUsing standart variables!\n";
-        resolution.x = 1280;
-        resolution.y = 720;
-        data.playersPVE = 1;
-        data.showFps = true;
-        data.fpsBarId = 1;
-        writeConfig();
-        return;
-    }
-    while (std::getline(config, line))
-    {
-        std::istringstream iss(line);
-        if (!(iss >> var1 >> var2)) { break; } // end
-        std::cout << "Read config: " << var1 << " " << var2 << "\n";
-        if ((var1 == "resolution"))
-        {
-            std::string findX = "x";
-            std::size_t posX = var2.find(findX);
-            if (posX == std::string::npos)
-            {
-                std::cout << "Incorrect resolution in config\n";
-                resolution.x = 1280;
-                resolution.y = 720;
-            }
-            else
-            {
-                std::string resX = var2.substr(0,posX);
-                std::string resY = var2.substr(posX+1);
-                resolution.x = std::stoi(resX);
-                resolution.y = std::stoi(resY);
-                if ((resolution.x < 200) || (resolution.x > 3440)) resolution.x = 1280;
-                if ((resolution.y < 200) || (resolution.x > 2160)) resolution.y = 720;
-            }
-            std::cout << "Resolution set to " << resolution.x << "x" << resolution.y << "\n";
-        }
-        if (var1 == "showFps")
-        {
-            if ((var2 == "1") || (var2 == "true")) {
-                data.showFps = true;
-            }
-            else data.showFps = false;
-            std::cout << "showFps set to " << data.showFps << "\n";
-        }
-        if (var1 == "PlayersPVE")
-        {
-            data.playersPVE = std::stoi(var2);
-            if (data.playersPVE < 1) data.playersPVE = 1;
-            if (data.playersPVE > data.maxPlayersPVE) data.playersPVE = data.maxPlayersPVE;
-            std::cout << "Number of PVE players set to " << data.playersPVE << "\n";
-        }
-        if (var1 == "ShowFpsType")
-        {
-            data.fpsBarId = std::stoi(var2);
-            if ((data.fpsBarId != 0) || (data.fpsBarId != 1)) data.fpsBarId == 0;
-        }
-    }
-    std::cout << "Config readed!\n";
-    config.close();
-}
-
-void Engine::writeConfig()
-{
-    std::ofstream configWrite("config.cfg");
-    if (configWrite.is_open())
-    {
-        configWrite << "//Availiable resolutions = {1280x720,1920x1080,3440x1440,1280x1024}\n";
-        configWrite << "resolution " << resolution.x << "x" << resolution.y << "\n";
-        configWrite << "showFps " << data.showFps << "\n";
-        configWrite << "PlayersPVE " << data.playersPVE << "\n";
-        configWrite << "ShowFpsType " << data.fpsBarId << "\n";
-        configWrite.close();
-        std::cout << "Standart config created!\n";
-    }
-    else std::cout << "Unable to create config.cfg file\n";
-}
 
