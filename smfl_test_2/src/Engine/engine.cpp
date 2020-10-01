@@ -4,20 +4,13 @@ using namespace sf;
 
 Engine::Engine()
 {
-    data.loadGlobalData();
-    //numberLevel = data.numberLevel;
-    //numberLevelMax = data.numberLevelMax;
+    //data.loadGlobalData();
     data.readConfig();
-    //inGameKeyInputs = true; // make sure that keyboard will work
-    //levelChanger = false; // we dont want up level at initialise
     window.create(VideoMode(data.resolution.x, data.resolution.y), data.name + " " + data.version, Style::Close);
     font.loadFromFile("resourses/TimesNewRoman.ttf");
     fpsbar.setFont(font);
     menu.create(window, font, data);
-    //menu.setAboutVer(data.version, data.email);
     data.setViewInterface();
-    //data.viewInterface.setCenter(data.resolution.x / 2, data.resolution.y / 2);
-    //data.viewInterface.setSize(data.resolution);
     playerViews.push_back(new View); //creating 2 view for split screen
     playerViews.push_back(new View); // in future add "for" for number of split screens and logic if needed
     if (loadImages()) std::cout << "All images succsesfully loaded!\n";

@@ -15,22 +15,29 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	about.create(FONT, window, { "Game by Andey Bogdanov ", DATA.version, DATA.email, "back" },false,10);
 	about.setPressable(false); 
 	about.setPressable(3, true);
-	option.push_back(new ButtonList(FONT, window, { "Resolution:" ,"1280x720", "1920x1080", "3440x1440", }, false, 15));
-	option[0]->setPressable(0, false);
-	option.push_back(new ButtonList(FONT, window, { "Apply" ,"  back", }, false, 15));
-	option[1]->setPressable(0, false);
-	option.push_back(new ButtonList(FONT, window, { "Show fps :      ", "yes", "no" }, false, 15));
-	option[2]->setPressable(0, false);
+	option["resolution"].create(FONT, window, { "Resolution:" ,"1280x720", "1920x1080", "3440x1440", }, false, 15);
+	option["resolution"].setPressable(0, false);
+	option["apply"].create(FONT, window, { "Apply" ,"  back", }, false, 15);
+	option["apply"].setPressable(0, false);
+	option["showfps"].create(FONT, window, { "Show fps :      ", "yes", "no" }, false, 15);
+	option["showfps"].setPressable(0, false);
+	option["players_pve"].create(FONT, window, { "Players PVE :      ", " 1 ", " 2 " }, false, 15);
+	option["players_pve"].setPressable(0, false);
+	option["players_names"].create(FONT, window, { "Names :      ", DATA.playersName[0], DATA.playersName[1] }, false, 15);
+	option["players_names"].setPressable(0, false);
 
 	composeAll(window);
 
-	optN.resize(option.size());
-
-	if (DATA.resolution.x == 1280) option[0]->switchBackgroundTo(1);
-	if (DATA.resolution.x == 1920) option[0]->switchBackgroundTo(2);
-	if (DATA.resolution.x == 3440) option[0]->switchBackgroundTo(3);
-	if (DATA.showFps) option[2]->switchBackgroundTo(1);
-	else option[2]->switchBackgroundTo(2);
+	if (DATA.resolution.x == 1280) option["resolution"].switchBackgroundTo(1);
+	if (DATA.resolution.x == 1920) option["resolution"].switchBackgroundTo(2);
+	if (DATA.resolution.x == 3440) option["resolution"].switchBackgroundTo(3);
+	if (DATA.showFps) option["showfps"].switchBackgroundTo(1);
+	else option["showfps"].switchBackgroundTo(2);
+	switch (DATA.playersPVE)
+	{
+	case 2: {option["players_pve"].switchBackgroundTo(2); break; }
+	default:{ option["players_pve"].switchBackgroundTo(1); break; }
+	}
 }
 
 void Menu::composeAll(RenderWindow& window)
@@ -42,14 +49,16 @@ void Menu::composeAll(RenderWindow& window)
 	mainBut.updateCharSize(window);
 	lvl.updateCharSize(window);
 	about.updateCharSize(window);
-	for (std::vector<ButtonList*>::iterator op = option.begin();op!=option.end();op++) (*op)->updateCharSize(window);
+	for (auto op = option.begin(); op!=option.end(); op++) (*op).second.updateCharSize(window);
 
 	mainBut.composeY(window, 0, -0.95);
 	lvl.composeY(window, 0, -0.95);
 	about.composeY(window, 0, -0.95);
-	option[0]->composeX(window, -1, -0.95);
-	option[1]->composeX(window, -1, 0);
-	option[2]->composeX(window, -1, -0.80);
+	option["resolution"].composeX(window, -1, -0.95);
+	option["apply"].composeX(window, -1, 0);
+	option["showfps"].composeX(window, -1, -0.80);
+	option["players_pve"].composeX(window, -1, -0.65);
+	option["players_names"].composeX(window, -1, -0.5);
 }
 
 
@@ -192,58 +201,84 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 	bool isMenu = true;
 	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
 	bool resolutionChanged = false;
+	int nameEntered = 0;
+	std::string nameInput = "";
 	Vector2f resolutionBuff;
 	while (isMenu)
 	{
 		Event event;
 		while (window.pollEvent(event))
 		{
+
 			if (event.type == Event::Closed)
 				window.close();
+			if (nameEntered != 0)
+			{
+				if (event.type == sf::Event::TextEntered)
+				{
+
+					if (event.text.unicode < 128)
+					{
+						nameInput += event.text.unicode;
+						option["players_names"].setButtonString(nameEntered, nameInput);
+						option["players_names"].composeX(window, -1, -0.5);
+					}
+				}
+				if (event.type == sf::Event::KeyPressed)
+					if (event.key.code == Keyboard::Enter)
+					{
+						option["apply"].setPressable(0, true);
+						data.playersName[nameEntered-1] = nameInput;
+						nameEntered = 0;
+						nameInput.clear();
+						option["players_names"].switchBackgroundTo(0);
+						
+					}
+			}
 		}
 		window.setMouseCursorVisible(true);
-		for (int i = 0; i < optN.size(); ++i)
+		for (auto op = option.begin(); op != option.end(); op++)
 		{
-			optN[i] = -1;
-			option[i]->checkMouseIntersects(optN[i], window, Color::Blue, Color::White);
+			optN[(*op).first] = -1;
+			(*op).second.checkMouseIntersects(optN[(*op).first], window, Color::Blue, Color::White);
 		}
 		window.clear(Color(129, 181, 221));
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			switch (optN[0])
+			switch (optN["resolution"])
 			{
 			case 1: {
 				resolutionBuff.x = 1280;
 				resolutionBuff.y = 720;
-				if (!option[0]->getBackgroundViewable(1)) { option[1]->setPressable(0, true); resolutionChanged = true; }
-				option[0]->switchBackgroundTo(1);
+				if (!option["resolution"].getBackgroundViewable(1)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				option["resolution"].switchBackgroundTo(1);
 				data.isChanged = true;
 				break;
 			}
 			case 2: {
 				resolutionBuff.x = 1920;
 				resolutionBuff.y = 1080;
-				if (!option[0]->getBackgroundViewable(2)) { option[1]->setPressable(0, true); resolutionChanged = true; }
-				option[0]->switchBackgroundTo(2);
+				if (!option["resolution"].getBackgroundViewable(2)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				option["resolution"].switchBackgroundTo(2);
 				data.isChanged = true;
 				break;
 			}
 			case 3: {
 				resolutionBuff.x = 3440;
 				resolutionBuff.y = 1440;
-				if (!option[0]->getBackgroundViewable(3)) { option[1]->setPressable(0, true); resolutionChanged = true; }
-				option[0]->switchBackgroundTo(3);
+				if (!option["resolution"].getBackgroundViewable(3)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				option["resolution"].switchBackgroundTo(3);
 				
 				break;
 			}
 			default:
 				break;
 			}
-			switch (optN[1])
+			switch (optN["apply"])
 			{
 			case 0: {
 				
-				option[1]->setPressable(0, false);
+				option["apply"].setPressable(0, false);
 				data.writeConfig();
 				if (resolutionChanged)
 				{
@@ -259,36 +294,69 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				break;
 			}
 			case 1: {
-				option[1]->setPressable(0, false);
+				option["apply"].setPressable(0, false);
 				return false;
 				break;
 			}
 			default:
 				break;
 			}
-			switch (optN[2])
+			switch (optN["showfps"])
 			{
 			case 1: {
 				data.showFps = true;
-				if (!option[2]->getBackgroundViewable(1)) option[1]->setPressable(0, true);
-				option[2]->switchBackgroundTo(1);
+				if (!option["showfps"].getBackgroundViewable(1)) option["apply"].setPressable(0, true);
+				option["showfps"].switchBackgroundTo(1);
 				break;
 			}
 			case 2: {
 				data.showFps = false;
-				if (!option[2]->getBackgroundViewable(2)) option[1]->setPressable(0, true);
-				option[2]->switchBackgroundTo(2);
+				if (!option["showfps"].getBackgroundViewable(2)) option["apply"].setPressable(0, true);
+				option["showfps"].switchBackgroundTo(2);
 				break;
 			}
 			default:
 				break;
 			}
+			switch (optN["players_pve"])
+			{
+			case 1: {
+				data.playersPVE = 1;
+				if (!option["players_pve"].getBackgroundViewable(1)) option["apply"].setPressable(0, true);
+				option["players_pve"].switchBackgroundTo(1);
+				break;
+			}
+			case 2: {
+				data.playersPVE = 2;
+				if (!option["players_pve"].getBackgroundViewable(2)) option["apply"].setPressable(0, true);
+				option["players_pve"].switchBackgroundTo(2);
+				break;
+			}
+			default:
+				break;
+			}
+			switch (optN["players_names"])
+			{
+			case 1: {
+				nameEntered = 1;
+				option["players_names"].switchBackgroundTo(1);
+				break;
+			}
+			case 2: {
+				nameEntered = 2;
+				option["players_names"].switchBackgroundTo(2);
+				break;
+			}
+			default: 
+				break; 
+			}
+			
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
-		for (std::vector<ButtonList*>::iterator op = option.begin(); op != option.end(); op++)
+		for (auto op = option.begin(); op != option.end(); op++)
 		{
-			(*op)->setViewable(isMenu);
-			(*op)->draw(window);
+			(*op).second.setViewable(isMenu);
+			(*op).second.draw(window);
 		}
 		window.display();
 	}

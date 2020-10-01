@@ -31,6 +31,7 @@ public:
 	void update(float X, float Y);
 	void update(Vector2f POS);
 	void updateCharSize(RenderWindow& window);
+	void setButtonString(std::string STRING_but) { 	m_text.setString(STRING_but); }
 	//FloatRect getRect() { return FloatRect(m_backGround.getPosition(),m_backGround.getSize()); }
 	FloatRect getRect() { return m_text.getGlobalBounds(); }
 	void draw(RenderWindow& window);
@@ -67,6 +68,7 @@ public:
 	void setPressable(int ID, bool pressable);
 	void setPressable(bool pressable);
 	bool getPressable(int ID);
+	void setButtonString(int ID, std::string STRING);
 	void setBackgroundViewable(int ID, bool b);
 	bool getBackgroundViewable(int ID);
 	void switchBackgroundTo(int ID);

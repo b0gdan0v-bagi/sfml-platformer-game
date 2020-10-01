@@ -193,6 +193,11 @@ bool ButtonList::getPressable(int ID)
 	return false;
 }
 
+void ButtonList::setButtonString(int ID, std::string STRING)
+{
+	if (checkID(ID)) buttons[ID]->setButtonString(STRING); 
+}
+
 void ButtonList::setBackgroundViewable(int ID, bool b)
 {
 	if (checkID(ID)) buttons[ID]->setBackgroundViewable(b);

@@ -12,22 +12,24 @@ using namespace sf;
 
 struct GlobalData
 {
-    View viewInterface; // special view for menu
-    int numberLevel;
+    View viewInterface; // special view for interface //maybe add std::map for all views (now we have special in menu.h)
+    int numberLevel = { 1 };
     int const numberLevelMax = 3;
-    int playersPVE;
+    int playersPVE = { 1 };
     int const maxPlayersPVE = 2; // here is number of total supported players
-    Vector2f resolution;
-    std::string version, email, name;
-    bool showFps;
+    Vector2f resolution = { Vector2f(1280,720) };
+    std::string const version = { "ver 0.2" }, email = { "bagizara@gmail.com" }, name = { "Platformer" };
+    bool showFps = { true };
     bool isChanged = { false };
-    int fpsBarId;
+    int fpsBarId = { 1 };
     int const defaultHP = 20;
     int const defaultAMMO = 20;
     std::vector<int> playersHP = { defaultHP, defaultHP };
     std::vector<int> playersAMMO = { defaultAMMO, defaultAMMO };
 
-    void loadGlobalData();
+    std::string const defaultName = { "Volodya" };
+    std::vector<std::string> playersName = { defaultName ,defaultName };
+
     void readConfig();
     void writeConfig();
     void setViewInterface();

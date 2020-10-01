@@ -17,8 +17,9 @@ private:
 	int m_menuNum;
 	Text m_text;
 	ButtonList about, mainBut, lvl; // , option, option2, option3;
-	std::vector<ButtonList*> option;
-	std::vector<int> optN;
+	//std::vector<ButtonList*> option;
+	std::map<std::string, int> optN;
+	std::map < std::string, ButtonList> option;
 	std::string m_progVer, m_mailInfo;
 	void draw(RenderWindow& window, ButtonList& butList);
 	void update(RenderWindow& window, ButtonList& butList);

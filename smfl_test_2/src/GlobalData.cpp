@@ -2,20 +2,6 @@
 
 using namespace sf;
 
-
-void GlobalData::loadGlobalData()
-{
-    resolution.x = 1280;
-    resolution.y = 720;
-    numberLevel = 1;
-    version = "ver 0.2";
-    email = "bagizara@gmail.com";
-    name = "Platformer";
-    showFps = true;
-    playersPVE = 1;
-    fpsBarId = 1;
-}
-
 void GlobalData::readConfig()
 {
     std::ifstream config;
@@ -25,11 +11,11 @@ void GlobalData::readConfig()
     if (!config.is_open())
     {
         std::cout << "Cannot open config.cfg\nUsing standart variables!\n";
-        resolution.x = 1280;
+        /*resolution.x = 1280;
         resolution.y = 720;
         playersPVE = 1;
         showFps = true;
-        fpsBarId = 1;
+        fpsBarId = 1;*/
         writeConfig();
         return;
     }
@@ -79,6 +65,14 @@ void GlobalData::readConfig()
             fpsBarId = std::stoi(var2);
             if ((fpsBarId != 0) && (fpsBarId != 1)) fpsBarId == 0;
         }
+        if (var1 == "PlayerName_1")
+        {
+            playersName[0] = var2;
+        }
+        if (var1 == "PlayerName_2")
+        {
+            playersName[1] = var2;
+        }
     }
     std::cout << "Config readed!\n";
     config.close();
@@ -94,6 +88,12 @@ void GlobalData::writeConfig()
         configWrite << "showFps " << showFps << "\n";
         configWrite << "PlayersPVE " << playersPVE << "\n";
         configWrite << "ShowFpsType " << fpsBarId << "\n";
+        for (int i = 0; i < playersPVE; i++)
+        {
+            std::ostringstream p;
+            p << i+1;
+            configWrite << "PlayerName_" + p.str() << " " << playersName[i] << "\n";
+        }
         configWrite.close();
         std::cout << "Standart config created!\n";
     }

@@ -130,6 +130,7 @@ void Engine::loadLevel()
     // size of vectors for reloads must be equal to number of added players!
     while (data.playersAMMO.size() < numberOfPlayersToAdd) data.playersAMMO.push_back(data.defaultAMMO);
     while (data.playersHP.size() < numberOfPlayersToAdd) data.playersHP.push_back(data.defaultHP);
+    while (data.playersName.size() < numberOfPlayersToAdd) data.playersName.push_back(data.defaultName);
 
     for (int i = 0; i < players.size(); ++i)
     {

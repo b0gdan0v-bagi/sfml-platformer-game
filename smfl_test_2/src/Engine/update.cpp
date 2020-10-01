@@ -25,7 +25,7 @@ void Engine::update(float time)
    // REMEMBER playerBars size must be <= players size
     for (int i = 0; i < playerBars.size(); ++i)
     {
-        playerBars[i]->update("Volodya", players[i]->getHealth(), players[i]->ammo, time);
+        playerBars[i]->update(data.playersName[0], players[i]->getHealth(), players[i]->ammo, time);
     }
 
     for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end();)
