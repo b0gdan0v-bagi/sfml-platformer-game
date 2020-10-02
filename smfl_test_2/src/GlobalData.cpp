@@ -11,11 +11,6 @@ void GlobalData::readConfig()
     if (!config.is_open())
     {
         std::cout << "Cannot open config.cfg\nUsing standart variables!\n";
-        /*resolution.x = 1280;
-        resolution.y = 720;
-        playersPVE = 1;
-        showFps = true;
-        fpsBarId = 1;*/
         writeConfig();
         return;
     }
@@ -73,6 +68,14 @@ void GlobalData::readConfig()
         {
             playersName[1] = var2;
         }
+        if (var1 == "PlayerModel_1")
+        {
+            playersModel[0] = var2;
+        }
+        if (var1 == "PlayerModel_2")
+        {
+            playersModel[1] = var2;
+        }
     }
     std::cout << "Config readed!\n";
     config.close();
@@ -93,6 +96,13 @@ void GlobalData::writeConfig()
             std::ostringstream p;
             p << i+1;
             configWrite << "PlayerName_" + p.str() << " " << playersName[i] << "\n";
+        }
+        configWrite << "// Availiable player models : char, player \n";
+        for (int i = 0; i < playersPVE; i++)
+        {
+            std::ostringstream p;
+            p << i + 1;
+            configWrite << "PlayerModel_" + p.str() << " " << playersModel[i] << "\n";
         }
         configWrite.close();
         std::cout << "Standart config created!\n";

@@ -18,13 +18,18 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	option["resolution"].create(FONT, window, { "Resolution:" ,"1280x720", "1920x1080", "3440x1440", }, false, 15);
 	option["resolution"].setPressable(0, false);
 	option["apply"].create(FONT, window, { "Apply" ,"  back", }, false, 15);
-	option["apply"].setPressable(0, false);
+	option["apply"].setViewAndPressable(0, false);
 	option["showfps"].create(FONT, window, { "Show fps :      ", "yes", "no" }, false, 15);
 	option["showfps"].setPressable(0, false);
 	option["players_pve"].create(FONT, window, { "Players PVE :      ", " 1 ", " 2 " }, false, 15);
 	option["players_pve"].setPressable(0, false);
 	option["players_names"].create(FONT, window, { "Names :      ", DATA.playersName[0], DATA.playersName[1] }, false, 15);
 	option["players_names"].setPressable(0, false);
+	option["input_text"].create(FONT, window, { "Enter your name and press ENTER" }, false, 15);
+	option["input_text"].setViewAndPressable(0, false);
+	option["players_models"].create(FONT, window, { "models : Player 1 :   ", DATA.playersModel[0], "    Player 2 :    " , DATA.playersModel[1] }, false, 15);
+	option["players_models"].setPressable(0, false);
+	option["players_models"].setPressable(2, false);
 
 	composeAll(window);
 
@@ -59,6 +64,8 @@ void Menu::composeAll(RenderWindow& window)
 	option["showfps"].composeX(window, -1, -0.80);
 	option["players_pve"].composeX(window, -1, -0.65);
 	option["players_names"].composeX(window, -1, -0.5);
+	option["players_models"].composeX(window, -1, -0.3);
+	option["input_text"].composeX(window, -0.8, 0.85);
 }
 
 
@@ -107,11 +114,6 @@ bool Menu::mainMenu(RenderWindow& window, GlobalData& data)
 				if (optionMenu(window, data)) 
 				{
 					composeAll(window);
-				}
-				
-				if (data.isChanged)
-				{
-
 				}
 				break;
 			}
@@ -216,7 +218,6 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			{
 				if (event.type == sf::Event::TextEntered)
 				{
-
 					if (event.text.unicode < 128)
 					{
 						nameInput += event.text.unicode;
@@ -227,11 +228,12 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				if (event.type == sf::Event::KeyPressed)
 					if (event.key.code == Keyboard::Enter)
 					{
-						option["apply"].setPressable(0, true);
+						option["apply"].setViewAndPressable(0, true);
 						data.playersName[nameEntered-1] = nameInput;
 						nameEntered = 0;
 						nameInput.clear();
-						option["players_names"].switchBackgroundTo(0);
+						option["players_names"].switchBackgroundTo();
+						option["input_text"].setViewable(0, false);
 						
 					}
 			}
@@ -250,7 +252,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 1: {
 				resolutionBuff.x = 1280;
 				resolutionBuff.y = 720;
-				if (!option["resolution"].getBackgroundViewable(1)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				if (!option["resolution"].getBackgroundViewable(1)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
 				option["resolution"].switchBackgroundTo(1);
 				data.isChanged = true;
 				break;
@@ -258,7 +260,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 2: {
 				resolutionBuff.x = 1920;
 				resolutionBuff.y = 1080;
-				if (!option["resolution"].getBackgroundViewable(2)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				if (!option["resolution"].getBackgroundViewable(2)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
 				option["resolution"].switchBackgroundTo(2);
 				data.isChanged = true;
 				break;
@@ -266,7 +268,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 3: {
 				resolutionBuff.x = 3440;
 				resolutionBuff.y = 1440;
-				if (!option["resolution"].getBackgroundViewable(3)) { option["apply"].setPressable(0, true); resolutionChanged = true; }
+				if (!option["resolution"].getBackgroundViewable(3)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
 				option["resolution"].switchBackgroundTo(3);
 				
 				break;
@@ -278,7 +280,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			{
 			case 0: {
 				
-				option["apply"].setPressable(0, false);
+				option["apply"].setViewAndPressable(0, false);
 				data.writeConfig();
 				if (resolutionChanged)
 				{
@@ -294,7 +296,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				break;
 			}
 			case 1: {
-				option["apply"].setPressable(0, false);
+				option["apply"].setViewAndPressable(0, false);
 				return false;
 				break;
 			}
@@ -305,13 +307,13 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			{
 			case 1: {
 				data.showFps = true;
-				if (!option["showfps"].getBackgroundViewable(1)) option["apply"].setPressable(0, true);
+				if (!option["showfps"].getBackgroundViewable(1)) option["apply"].setViewAndPressable(0, true);
 				option["showfps"].switchBackgroundTo(1);
 				break;
 			}
 			case 2: {
 				data.showFps = false;
-				if (!option["showfps"].getBackgroundViewable(2)) option["apply"].setPressable(0, true);
+				if (!option["showfps"].getBackgroundViewable(2)) option["apply"].setViewAndPressable(0, true);
 				option["showfps"].switchBackgroundTo(2);
 				break;
 			}
@@ -322,13 +324,13 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			{
 			case 1: {
 				data.playersPVE = 1;
-				if (!option["players_pve"].getBackgroundViewable(1)) option["apply"].setPressable(0, true);
+				if (!option["players_pve"].getBackgroundViewable(1)) option["apply"].setViewAndPressable(0, true);
 				option["players_pve"].switchBackgroundTo(1);
 				break;
 			}
 			case 2: {
 				data.playersPVE = 2;
-				if (!option["players_pve"].getBackgroundViewable(2)) option["apply"].setPressable(0, true);
+				if (!option["players_pve"].getBackgroundViewable(2)) option["apply"].setViewAndPressable(0, true);
 				option["players_pve"].switchBackgroundTo(2);
 				break;
 			}
@@ -340,18 +342,41 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 1: {
 				nameEntered = 1;
 				option["players_names"].switchBackgroundTo(1);
+				option["input_text"].setViewable(0, true);
 				break;
 			}
 			case 2: {
 				nameEntered = 2;
 				option["players_names"].switchBackgroundTo(2);
+				option["input_text"].setViewable(0, true);
 				break;
 			}
 			default: 
 				break; 
 			}
-			
+			switch (optN["players_models"])
+			{
+			case 1: {
+				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+				if (data.playersModel[0] == "player") data.playersModel[0] = "char";
+				else data.playersModel[0] = "player";
+				option["players_models"].setButtonString(1, data.playersModel[0]);
+				option["apply"].setViewAndPressable(0, true);
+				break;
+			}
+			case 3: {
+				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+				if (data.playersModel[1] == "player") data.playersModel[1] = "char";
+				else data.playersModel[1] = "player";
+				option["players_models"].setButtonString(3, data.playersModel[1]);
+				option["apply"].setViewAndPressable(0, true);
+				break;
+			}
+			default:
+				break;
+			}
 		}
+		option["apply"].composeX(window, -1, 0);
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
 		for (auto op = option.begin(); op != option.end(); op++)
 		{

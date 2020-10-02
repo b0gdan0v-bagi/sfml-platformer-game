@@ -68,10 +68,12 @@ public:
 	void setPressable(int ID, bool pressable);
 	void setPressable(bool pressable);
 	bool getPressable(int ID);
+	void setViewAndPressable(int ID, bool b) { setViewable(ID, b); setPressable(ID, b); }
 	void setButtonString(int ID, std::string STRING);
 	void setBackgroundViewable(int ID, bool b);
 	bool getBackgroundViewable(int ID);
 	void switchBackgroundTo(int ID);
+	void switchBackgroundTo();
 	void checkMouseIntersects(int& ID,RenderWindow &window, Color TRUEcolor, Color FALSEcolor);
 	bool checkID(int ID);
 	void setLineIndent(Vector2f INDENT) { m_lineIndent = INDENT; }

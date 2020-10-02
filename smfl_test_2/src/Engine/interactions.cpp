@@ -12,7 +12,8 @@ void Engine::playersShooting()
             (*itPlayer)->isShoot = false;
             (*itPlayer)->canShoot = false;
             entities.push_back(new Bullet(
-                animationManagerList["bullet"], "Bullet", *lvl[0], (*itPlayer)->getPos().x, (*itPlayer)->getPos().y + 50,
+                animationManagerList["bullet"], "Bullet", *lvl[0], (*itPlayer)->getPos().x,
+                (*itPlayer)->getPos().y + (*itPlayer)->getRect().height / 2,
                 (*itPlayer)->getDir(), (*itPlayer)->getName()));
         }//if shoot - making bullet
     }
@@ -151,6 +152,7 @@ void Engine::checkDefeat()
         inGameKeyInputs = false;
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();
+
         levelChanger = true;
     }
 }

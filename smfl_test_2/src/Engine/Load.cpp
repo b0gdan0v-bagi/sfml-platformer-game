@@ -5,7 +5,7 @@ using namespace sf;
 bool Engine::loadImages()
 {
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
-        "door", "key", "trigger" };
+        "door", "key", "trigger", "char" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -39,6 +39,8 @@ bool Engine::loadAnimations()
     animationManagerList["door"].create("stay", imageList["door"], 0, 0, 32, 64, 1, 0.005);
     animationManagerList["key"].create("stay", imageList["key"], 0, 0, 22, 13, 1, 0.005);
     animationManagerList["trigger"].create("stay", imageList["trigger"], 0, 0, 1, 400, 1, 0.005); //virtual
+    animationManagerList["char"].loadFromXML("resourses/images/char.xml", imageList["char"]);
+    animationManagerList["char"].setLoop("die");
 
     return true;
 }
@@ -51,6 +53,7 @@ void Engine::gameRunning()
     {
         if (!menu.mainMenu(window, data)) return;
     }
+
     window.setView(data.viewInterface);
 
     if (data.isChanged)  data.isChanged = false;
@@ -123,7 +126,7 @@ void Engine::loadLevel()
         std::ostringstream playerN;
         playerN << i;
         Object player = lvl[0]->getObject("player" + playerN.str());
-        players.push_back(new Player(animationManagerList["player"], "Player" + playerN.str(), *lvl[0], player.rect.left, player.rect.top));
+        players.push_back(new Player(animationManagerList[data.playersModel[i-1]], "Player" + playerN.str(), *lvl[0], player.rect.left, player.rect.top));
         std::cout << "player" + playerN.str() << " added!\n";
         playerBars.push_back(new statBar(font, pvp, i));
     }

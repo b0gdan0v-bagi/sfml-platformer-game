@@ -101,16 +101,12 @@ void ButtonList::composeY(RenderWindow& WINDOW, float X, float Y, int format)
 	float rectSizeX = 0.f;
 	for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++)
 	{
-		if ((*but)->viewable)
+		butPos.push_back(Vector2f(xCord - format * (*but)->getSizeText().x / 2, yCord + offset));
+		if ((*but)->viewable) offset += (*but)->getSize().y + m_lineIndent.y;
+		if (rectSizeX <= (*but)->getSizeText().x)
 		{
-			
-			butPos.push_back(Vector2f(xCord - format * (*but)->getSizeText().x / 2, yCord + offset));
-			offset += (*but)->getSize().y + m_lineIndent.y;
-			if (rectSizeX <= (*but)->getSizeText().x)
-			{
-				rectSizeX = (*but)->getSizeText().x;
-				maxButtonSizeId_X = std::distance(buttons.begin(), but);
-			}
+			rectSizeX = (*but)->getSizeText().x;
+			maxButtonSizeId_X = std::distance(buttons.begin(), but);
 		}
 	}
 	m_backGround.setSize(Vector2f(rectSizeX + m_lineIndent.x, offset + m_lineIndent.y));
@@ -127,12 +123,9 @@ void ButtonList::composeX(RenderWindow& WINDOW, float X, float Y)
 	float rectSizeY = m_lineIndent.y;
 	for (std::vector<Button*>::iterator but = buttons.begin(); but != buttons.end(); but++)
 	{
-		if ((*but)->viewable)
-		{	
-			butPos.push_back(Vector2f(xCord + offset, yCord));
-			offset += (*but)->getSizeText().x + m_lineIndent.x;
-			rectSizeY = (*but)->getSize().y + m_lineIndent.y;
-		}
+		butPos.push_back(Vector2f(xCord + offset, yCord));
+		if ((*but)->viewable) offset += (*but)->getSizeText().x + m_lineIndent.x;
+		rectSizeY = (*but)->getSize().y + m_lineIndent.y;
 	}
 	m_backGround.setSize(Vector2f(offset + m_lineIndent.x, rectSizeY + m_lineIndent.y));
 	m_backGround.setPosition(Vector2f(butPos[0].x - m_lineIndent.x * 2, butPos[0].y - m_lineIndent.y));
@@ -211,11 +204,16 @@ bool ButtonList::getBackgroundViewable(int ID)
 
 void ButtonList::switchBackgroundTo(int ID)
 {
+	switchBackgroundTo();
+	if (checkID(ID)) buttons[ID]->setBackgroundViewable(true);
+}
+
+void ButtonList::switchBackgroundTo()
+{
 	for (int i = 0; i < buttons.size(); ++i)
 	{
 		buttons[i]->setBackgroundViewable(false);
 	}
-	if (checkID(ID)) buttons[ID]->setBackgroundViewable(true);
 }
 
 void ButtonList::checkMouseIntersects(int& ID, RenderWindow &window, Color TRUEcolor, Color FALSEcolor)

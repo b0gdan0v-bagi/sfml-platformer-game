@@ -7,7 +7,6 @@ void GameInterface::create(RenderWindow& window, Font& FONT)
 {
 	m_indent = 5;
 	buttList.create(FONT, window, { "To main menu" ,"Continue","Restart" }, true, 15);
-	//buttList.composeYcenterXtop(window);
 	buttList.setViewable(false);
 	buttList.setPressable(true);
 	m_defeatTextVisible = false;
@@ -21,7 +20,6 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 		buttList.setViewable(m_active);
 		buttList.setPressable(1, !m_defeatTextVisible); // dont show continue button if dead
 		buttList.setViewable(1, !m_defeatTextVisible);
-		//buttList.composeY(window, window.getView().getSize().x / 2, window.getView().getSize().y / 10);
 		buttList.updateCharSize(window);
 		buttList.composeY(window, 0, -0.5);
 		window.setMouseCursorVisible(true);

@@ -30,6 +30,9 @@ struct GlobalData
     std::string const defaultName = { "Volodya" };
     std::vector<std::string> playersName = { defaultName ,defaultName };
 
+    std::string const defaultModel = { "player" };
+    std::vector<std::string> playersModel = { defaultModel ,defaultModel };
+
     void readConfig();
     void writeConfig();
     void setViewInterface();
