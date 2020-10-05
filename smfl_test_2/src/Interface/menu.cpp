@@ -65,7 +65,7 @@ void Menu::composeAll(RenderWindow& window)
 	option["players_pve"].composeX(window, -1, -0.65);
 	option["players_names"].composeX(window, -1, -0.5);
 	option["players_models"].composeX(window, -1, -0.3);
-	option["input_text"].composeX(window, -0.8, 0.85);
+	option["input_text"].composeX(window, -0.8, 0.3);
 }
 
 
@@ -132,17 +132,18 @@ bool Menu::mainMenu(RenderWindow& window, GlobalData& data)
 			//std::cout << Mouse::getPosition(window).x << " " << Mouse::getPosition(window).y << "\n";
 			//std::cout << "view center : " << window.getView().getCenter().x << "\n";
 		}
-		std::ostringstream test1, test2;
-		test1 << Mouse::getPosition(window).x;
-		test2 << Mouse::getPosition(window).y;
+		/*std::ostringstream test1, test2;
+		//test1 << Mouse::getPosition(window).x;
+		//test2 << Mouse::getPosition(window).y;
+		test1 << window.mapPixelToCoords(Mouse::getPosition(window)).x;
+		test2 << window.mapPixelToCoords(Mouse::getPosition(window)).y;
 		Text t;
 		t.setString("mouse : " + test1.str() + " " + test2.str());
 		Font f;
 		f.loadFromFile("resourses/TimesNewRoman.ttf");
 		t.setFont(f);
-		window.draw(t);
+		window.draw(t);*/
 		mainBut.setViewable(isMenu);
-		//mainBut.setLineIndent(10);
 		draw(window, mainBut);
 		
 	}
@@ -281,17 +282,19 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 0: {
 				
 				option["apply"].setViewAndPressable(0, false);
-				data.writeConfig();
+				
 				if (resolutionChanged)
 				{
 					data.resolution = resolutionBuff;
 					window.close();
 					window.create(VideoMode(data.resolution.x, data.resolution.y), data.name + " " + data.version, Style::Close);
+					window.setMouseCursorGrabbed(true);
 					window.setView(data.viewInterface);
 					data.setViewInterface();
 					composeAll(window);
 					resolutionChanged = false;
 				}
+				data.writeConfig();
 				return true;
 				break;
 			}
@@ -342,12 +345,14 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			case 1: {
 				nameEntered = 1;
 				option["players_names"].switchBackgroundTo(1);
+				option["players_names"].setButtonString(1, "_");
 				option["input_text"].setViewable(0, true);
 				break;
 			}
 			case 2: {
 				nameEntered = 2;
 				option["players_names"].switchBackgroundTo(2);
+				option["players_names"].setButtonString(2, "_");
 				option["input_text"].setViewable(0, true);
 				break;
 			}

@@ -91,14 +91,14 @@ void GlobalData::writeConfig()
         configWrite << "showFps " << showFps << "\n";
         configWrite << "PlayersPVE " << playersPVE << "\n";
         configWrite << "ShowFpsType " << fpsBarId << "\n";
-        for (int i = 0; i < playersPVE; i++)
+        for (int i = 0; i < playersName.size(); i++)
         {
             std::ostringstream p;
             p << i+1;
             configWrite << "PlayerName_" + p.str() << " " << playersName[i] << "\n";
         }
         configWrite << "// Availiable player models : char, player \n";
-        for (int i = 0; i < playersPVE; i++)
+        for (int i = 0; i < playersModel.size(); i++)
         {
             std::ostringstream p;
             p << i + 1;

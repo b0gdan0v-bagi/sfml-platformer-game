@@ -1,37 +1,113 @@
 <!DOCTYPE SpriteDecomposer>
-<sprites image="char.png" transparentColor="">
+<sprites image="char.png" transparentColor="FFFFFF">
  <animation title="walk" delay="150">
-  <cut w="21" x="87" y="595" h="27" row="1" col="1"/>
-  <cut w="21" x="343" y="595" h="27" row="1" col="1"/>
-  <cut w="16" x="25" y="596" h="28" row="1" col="1"/>
-  <cut w="16" x="153" y="596" h="28" row="1" col="1"/>
-  <cut w="11" x="219" y="596" h="28" row="1" col="1"/>
-  <cut w="16" x="281" y="596" h="28" row="1" col="1"/>
-  <cut w="16" x="409" y="596" h="28" row="1" col="1"/>
-  <cut w="11" x="475" y="596" h="28" row="1" col="1"/>
+  <cut w="42" x="174" y="1190" h="54" row="1" col="1"/>
+  <cut w="42" x="686" y="1190" h="54" row="1" col="1"/>
+  <cut w="32" x="50" y="1192" h="56" row="1" col="1"/>
+  <cut w="32" x="306" y="1192" h="56" row="1" col="1"/>
+  <cut w="22" x="438" y="1192" h="56" row="1" col="1"/>
+  <cut w="32" x="562" y="1192" h="56" row="1" col="1"/>
+  <cut w="32" x="818" y="1192" h="56" row="1" col="1"/>
+  <cut w="22" x="950" y="1192" h="56" row="1" col="1"/>
  </animation>
  <animation title="stay" delay="150">
-  <cut w="13" x="25" y="1107" h="29" row="1" col="1"/>
-  <cut w="13" x="89" y="1107" h="29" row="1" col="1"/>
-  <cut w="13" x="153" y="1108" h="28" row="1" col="1"/>
-  <cut w="13" x="217" y="1108" h="28" row="1" col="1"/>
+  <cut w="26" x="50" y="2214" h="58" row="1" col="1"/>
+  <cut w="26" x="178" y="2214" h="58" row="1" col="1"/>
+  <cut w="26" x="306" y="2216" h="56" row="1" col="1"/>
+  <cut w="26" x="434" y="2216" h="56" row="1" col="1"/>
  </animation>
  <animation title="jump" delay="150">
-  <cut w="16" x="131" y="275" h="28" row="1" col="1"/>
-  <cut w="16" x="67" y="276" h="27" row="1" col="1"/>
+  <cut w="32" x="262" y="550" h="56" row="1" col="1"/>
+  <cut w="32" x="134" y="552" h="54" row="1" col="1"/>
  </animation>
  <animation title="duck" delay="150">
-  <cut w="11" x="101" y="87" h="25" row="1" col="1"/>
+  <cut w="18" x="202" y="174" h="46" row="1" col="1"/>
  </animation>
  <animation title="die" delay="150">
-  <cut w="14" x="24" y="216" h="24" row="1" col="1"/>
-  <cut w="14" x="88" y="216" h="24" row="1" col="1"/>
-  <cut w="13" x="152" y="216" h="24" row="1" col="1"/>
-  <cut w="14" x="214" y="216" h="24" row="1" col="1"/>
-  <cut w="14" x="280" y="216" h="24" row="1" col="1"/>
-  <cut w="15" x="344" y="216" h="24" row="1" col="1"/>
-  <cut w="31" x="472" y="217" h="24" row="1" col="1"/>
-  <cut w="31" x="408" y="217" h="24" row="1" col="1"/>
-  <cut w="31" x="536" y="217" h="24" row="1" col="1"/>
+  <cut w="28" x="48" y="432" h="48" row="1" col="1"/>
+  <cut w="28" x="176" y="432" h="48" row="1" col="1"/>
+  <cut w="26" x="304" y="432" h="48" row="1" col="1"/>
+  <cut w="28" x="428" y="432" h="48" row="1" col="1"/>
+  <cut w="28" x="560" y="432" h="48" row="1" col="1"/>
+  <cut w="30" x="688" y="432" h="48" row="1" col="1"/>
+  <cut w="62" x="944" y="432" h="48" row="1" col="1"/>
+  <cut w="62" x="816" y="432" h="48" row="1" col="1"/>
+  <cut w="62" x="1072" y="432" h="48" row="1" col="1"/>
+ </animation>
+ <animation title="die_pistol" delay="150">
+  <cut w="28" x="48" y="48" h="48" row="1" col="1"/>
+  <cut w="28" x="176" y="48" h="48" row="1" col="1"/>
+  <cut w="30" x="300" y="48" h="48" row="1" col="1"/>
+  <cut w="36" x="420" y="48" h="48" row="1" col="1"/>
+  <cut w="28" x="560" y="48" h="48" row="1" col="1"/>
+  <cut w="48" x="670" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="925" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="797" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="1053" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="1181" y="48" h="48" row="1" col="1"/>
+  <cut w="14" x="542" y="88" h="6" row="1" col="1"/>
+  <cut w="14" x="798" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="926" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="1054" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="1182" y="92" h="4" row="1" col="1"/>
+ </animation>
+ <animation title="onLadder" delay="150">
+  <cut w="24" x="52" y="1058" h="56" row="1" col="1"/>
+  <cut w="24" x="180" y="1058" h="60" row="1" col="1"/>
+  <cut w="24" x="306" y="1058" h="56" row="1" col="1"/>
+  <cut w="24" x="434" y="1058" h="60" row="1" col="1"/>
+ </animation>
+<animation title="climb" delay="150">
+  <cut w="24" x="52" y="1058" h="56" row="1" col="1"/>
+  <cut w="24" x="180" y="1058" h="60" row="1" col="1"/>
+  <cut w="24" x="306" y="1058" h="56" row="1" col="1"/>
+  <cut w="24" x="434" y="1058" h="60" row="1" col="1"/>
+ </animation>
+ <animation title="duck_pistol" delay="150">
+  <cut w="36" x="138" y="302" h="50" row="1" col="1"/>
+  <cut w="34" x="266" y="302" h="50" row="1" col="1"/>
+ </animation>
+ <animation title="hit" delay="150">
+  <cut w="28" x="132" y="808" h="56" row="1" col="1"/>
+  <cut w="24" x="258" y="808" h="56" row="1" col="1"/>
+ </animation>
+ <animation title="jump_pistol" delay="150">
+  <cut w="32" x="134" y="936" h="58" row="1" col="1"/>
+  <cut w="32" x="262" y="936" h="58" row="1" col="1"/>
+ </animation>
+ <animation title="shot_pistol" delay="150">
+  <cut w="38" x="136" y="1318" h="58" row="1" col="1"/>
+  <cut w="36" x="264" y="1318" h="58" row="1" col="1"/>
+ </animation>
+ <animation title="walk_pistol" delay="150">
+  <cut w="44" x="176" y="1574" h="54" row="1" col="1"/>
+  <cut w="44" x="688" y="1574" h="54" row="1" col="1"/>
+  <cut w="40" x="52" y="1576" h="56" row="1" col="1"/>
+  <cut w="40" x="308" y="1576" h="56" row="1" col="1"/>
+  <cut w="38" x="438" y="1576" h="56" row="1" col="1"/>
+  <cut w="40" x="564" y="1576" h="56" row="1" col="1"/>
+  <cut w="40" x="820" y="1576" h="56" row="1" col="1"/>
+  <cut w="38" x="950" y="1576" h="56" row="1" col="1"/>
+ </animation>
+ <animation title="hit_pistol" delay="150">
+  <cut w="32" x="128" y="1832" h="56" row="1" col="1"/>
+  <cut w="24" x="258" y="1832" h="56" row="1" col="1"/>
+ </animation>
+ <animation title="roll_pistol" delay="150">
+  <cut w="54" x="38" y="1448" h="64" row="1" col="1"/>
+  <cut w="36" x="178" y="1462" h="50" row="1" col="1"/>
+  <cut w="46" x="298" y="1464" h="42" row="1" col="1"/>
+  <cut w="38" x="430" y="1464" h="40" row="1" col="1"/>
+  <cut w="54" x="556" y="1464" h="42" row="1" col="1"/>
+ </animation>
+ <animation title="roll" delay="150">
+  <cut w="36" x="178" y="2102" h="42" row="1" col="1"/>
+  <cut w="46" x="298" y="2104" h="42" row="1" col="1"/>
+  <cut w="38" x="430" y="2104" h="40" row="1" col="1"/>
+  <cut w="54" x="556" y="2104" h="40" row="1" col="1"/>
+  <cut w="54" x="38" y="2118" h="26" row="1" col="1"/>
+ </animation>
+ <animation title="stay_pistol" delay="150">
+  <cut w="38" x="200" y="2342" h="58" row="1" col="1"/>
  </animation>
 </sprites>

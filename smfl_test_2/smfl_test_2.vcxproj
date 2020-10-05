@@ -160,6 +160,7 @@
     <ClInclude Include="include\menu.h" />
     <ClInclude Include="include\Message.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Scenario.h" />
     <ClInclude Include="include\statBar.h" />
     <ClInclude Include="include\TinyXML\tinyxml2.h" />
     <ClInclude Include="include\Trigger.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\Interface\menu.cpp" />
     <ClCompile Include="src\level.cpp" />
     <ClCompile Include="src\Message.cpp" />
+    <ClCompile Include="src\Scenario.cpp" />
     <ClCompile Include="src\statBar.cpp" />
     <ClCompile Include="src\tinyxml2.cpp" />
   </ItemGroup>

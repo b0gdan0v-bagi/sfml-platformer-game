@@ -5,18 +5,24 @@ using namespace sf;
 
 Button::Button(const String& string, const Font& font, RenderWindow& WINDOW, bool back_show, int textSize, Color TextColor, Color BackColor)
 {
-	canPressed = true;
-	viewable = true;
-	//m_backGroundDraw = back_show;
-	m_backGroundDraw = false;
 	m_indent = textSize;
 	m_charSize = textSize;
+	m_TextColor = TextColor;
+	m_BackColor = BackColor;
 	m_text.setFont(font);
 	m_text.setFillColor(TextColor);
 	m_text.setCharacterSize(WINDOW.getView().getSize().y / textSize); // scale for different resolution
 	m_text.setString(string);
 	m_backGround.setFillColor(BackColor);
 	m_backGround.setSize(Vector2f(m_text.getGlobalBounds().width + m_indent * 2, m_text.getGlobalBounds().height + m_indent * 2));
+}
+
+void Button::setColors(Color TextColor, Color BackColor, Color HighlightingColor, Color PressedColor)
+{
+	m_TextColor = TextColor;
+	m_BackColor = BackColor;
+	m_highlightingColor = HighlightingColor;
+	m_pressedColor = PressedColor;
 }
 
 void Button::update(float X, float Y)
@@ -62,13 +68,7 @@ void Button::draw(RenderWindow& window, View& VIEW)
 
 ButtonList::ButtonList(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)
 {
-	m_textSize = textSize;
-	m_backGroundShow = back_show;
-	for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); name++)
-	{
-		buttons.push_back(new Button(*name, font, WINDOW, false, textSize));
-	}
-	m_backGround.setFillColor(Color::Black);
+	create(font, WINDOW, names, back_show, textSize);
 }
 
 void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)
@@ -80,6 +80,12 @@ void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std:
 		buttons.push_back(new Button(*name, font, WINDOW, false, textSize));
 	}
 	m_backGround.setFillColor(Color::Black);
+}
+
+void ButtonList::setColors(Color TextColor, Color BackColor, Color HighlightingColor, Color PressedColor)
+{
+	for (auto but = buttons.begin(); but != buttons.end(); but++) (*but)->setColors(TextColor, BackColor, HighlightingColor, PressedColor);
+	m_BackColor = BackColor;
 }
 
 void ButtonList::update()
@@ -229,7 +235,22 @@ void ButtonList::checkMouseIntersects(int& ID, RenderWindow &window, Color TRUEc
 	}
 }
 
-
+void ButtonList::checkPressed(RenderWindow& window)
+{
+	for (auto but = buttons.begin(); but != buttons.end(); but++)
+	{
+		if (IntRect((*but)->getRect()).contains(Mouse::getPosition(window)))
+		{
+			if ((*but)->canPressed)
+			{
+				if ((*but)->isPressed) (*but)->isPressed = true;
+				else (*but)->isPressed = false;
+			}
+		}
+		
+		
+	}
+}
 
 bool ButtonList::checkID(int ID)
 {

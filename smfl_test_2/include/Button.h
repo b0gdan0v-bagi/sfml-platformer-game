@@ -10,19 +10,24 @@ class Button
 private:
 	Text m_text; //message text
 	RectangleShape m_backGround; // background 
-	bool m_backGroundDraw;
-	float m_indent;
-	float m_charSize;
-	Vector2f m_size;
+	bool m_backGroundDraw = { false };
+	float m_indent = { 10 };
+	float m_charSize = { 20 };
+	Color m_TextColor = { Color::White };
+	Color m_BackColor = { Color::Black };
+	Color m_highlightingColor = { Color::Blue };
+	Color m_pressedColor = { Color::Red };
 public:
 
-	bool canPressed;
-	bool viewable;
+	bool canPressed = { true };
+	bool viewable = { true };
+	bool isPressed = { false };
 
 
 	Button(const String& string, const Font& font, RenderWindow& WINDOW,
 		bool back_show = false, int textSize = 25, Color TextColor = Color::White, Color BackColor = Color::Black);
-
+	void setColors(Color TextColor = Color::White, Color BackColor = Color::Black,
+		Color HighlightingColor = Color::Blue, Color PressedColor = Color::Red);
 	Vector2f getSize() { return m_backGround.getSize(); } //chancged to text
 	Vector2f getSizeText() { return Vector2f(m_text.getGlobalBounds().width, m_text.getGlobalBounds().height); }
 	void setTextFillColor(Color COLOR) { m_text.setFillColor(COLOR); }
@@ -36,6 +41,8 @@ public:
 	FloatRect getRect() { return m_text.getGlobalBounds(); }
 	void draw(RenderWindow& window);
 	void draw(RenderWindow& window, View& VIEW);
+	// this function wait for click left button mouse on area of button located and changes isPressed
+	
 };
 
 class ButtonList
@@ -47,6 +54,12 @@ private:
 	bool m_viewable = { false };
 	RectangleShape m_backGround;
 	int maxButtonSizeId_X = { 0 };
+	Color m_TextColor = { Color::White };
+	Color m_BackColor = { Color::Black };
+	Color m_highlightingColor = { Color::Blue };
+	Color m_pressedColor = { Color::Red };
+	bool checkID(int ID);
+	void update();
 public:
 	std::vector<Vector2f> butPos;
 	std::vector<Button*> buttons;
@@ -56,7 +69,8 @@ public:
 		, int textSize = 25);
 	void create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show = false
 		, int textSize = 25);
-	void update();
+	void setColors(Color TextColor = Color::White, Color BackColor = Color::Black,
+		Color HighlightingColor = Color::Blue, Color PressedColor = Color::Red);
 	void updateCharSize(RenderWindow& window);
 	void composeY(RenderWindow& WINDOW, float X, float Y, int format = 1);
 	void composeX(RenderWindow& WINDOW, float X, float Y);
@@ -75,7 +89,7 @@ public:
 	void switchBackgroundTo(int ID);
 	void switchBackgroundTo();
 	void checkMouseIntersects(int& ID,RenderWindow &window, Color TRUEcolor, Color FALSEcolor);
-	bool checkID(int ID);
+	void checkPressed(RenderWindow& window);
 	void setLineIndent(Vector2f INDENT) { m_lineIndent = INDENT; }
 
 	~ButtonList()

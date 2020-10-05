@@ -25,7 +25,7 @@ void Engine::update(float time)
    // REMEMBER playerBars size must be <= players size
     for (int i = 0; i < playerBars.size(); ++i)
     {
-        playerBars[i]->update(data.playersName[0], players[i]->getHealth(), players[i]->ammo, time);
+        playerBars[i]->update(data.playersName[i], players[i]->getHealth(), players[i]->ammo, time);
     }
 
     for (std::vector<Message*>::iterator itM = messages.begin(); itM != messages.end();)
@@ -43,6 +43,7 @@ void Engine::update(float time)
     if (data.showFps) fpsbar.update(time, data.fpsBarId);
     if (!gameInterface.getActive()) window.setMouseCursorVisible(false);
     gameInterface.update(window, gameSTATE);
+    if (scenario.active) scenarioPlay(time);
 }
 
 bool Engine::checkSTATE()
@@ -54,6 +55,7 @@ bool Engine::checkSTATE()
         break;
     }
     case 1: {
+        levelChanger = false;
         return true;
         break;
     }
@@ -65,4 +67,30 @@ bool Engine::checkSTATE()
         break;
     }
     return false;
+}
+
+void Engine::scenarioPlay(float time)
+{
+    switch (scenario.id)
+    {
+    case 1: {
+        inGameKeyInputs = false;
+        scenario.timerIncreas(time);
+       
+        if ((scenario.timer[0].first > time * 1000) && (scenario.timer[0].second))
+        {
+            newMessage("Welcome to " + data.name + " " + data.version, 0);
+            scenario.timer[0].second = false;
+        }
+        if ((scenario.timer[1].first > time * 4000) && (scenario.timer[1].second))
+        {
+            newMessage("To skip tutorial press SPACE", 0);
+            scenario.timer[1].second = false;
+            scenario.stop();
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }

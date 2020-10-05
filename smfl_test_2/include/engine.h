@@ -18,12 +18,15 @@
 #include "statBar.h"
 #include "GlobalData.h"
 #include "interface.h"
+#include "Scenario.h"
 
 using namespace sf;
+
 
 class Engine
 {
 private:
+    Scenario scenario;
     GlobalData data;
     RenderWindow window;
     Font font;
@@ -33,7 +36,6 @@ private:
     bool levelChanger = { false };
     std::string task;
     int gameSTATE = { 0 };
-    //View viewInterface; // special view for menu
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
@@ -59,6 +61,7 @@ private:
     bool checkWin();
     void checkDefeat();
     void newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER = 3000);
+    void scenarioPlay(float time);
     bool startGame();
     bool checkSTATE(); //take gameSTATE, if 0 -> continue, if 1 -> exit main cycle to main menu, if 2 -> exit main cycle and reload
 public:

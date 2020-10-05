@@ -34,6 +34,7 @@ void GameInterface::update(RenderWindow& window, int& STATE)
 				m_defeatTextVisible = false;
 				m_active = false;
 				STATE = 1; // go to main menu
+				//std::cout << "call main";
 				break; 
 			}
 			case 1: { // continue

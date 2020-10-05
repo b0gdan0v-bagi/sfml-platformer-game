@@ -89,7 +89,12 @@ void Player::Animation(float time)
 	if (m_STATE == walk) m_anim.set("walk");
 	if (m_STATE == jump) m_anim.set("jump");
 	if (m_STATE == duck) m_anim.set("duck");
-	if (m_STATE == climb) { m_anim.set("stay"); m_anim.pause(); if (m_d.y != 0) m_anim.play(); }
+	if (m_STATE == climb) 
+	{
+		m_anim.set("climb"); 
+		m_anim.pause(); 
+		if (m_d.y != 0) m_anim.play(); 
+	}
 
 	if (isShoot) {
 		//m_anim.set("shoot");
@@ -107,6 +112,7 @@ void Player::Animation(float time)
 	m_anim.flip(m_direction);
 	if (m_health <= 0)
 	{
+		m_health = 0;
 		m_anim.set("die");
 
 		if (m_anim.isPlaying() == false)
@@ -131,12 +137,16 @@ void Player::checkCollisionWithMap(float Dx, float Dy)
 				if (Dx < 0) { m_rect.left = m_obj[i].rect.left + m_obj[i].rect.width; }
 			}
 			if (m_obj[i].name == "win")
-			{
+			{ 
 				win = true;
 			}
-			if (m_obj[i].name == "ladder") { m_onLadder = true; if (m_STATE == climb) m_rect.left = m_obj[i].rect.left - 10; }
+			if (m_obj[i].name == "ladder") 
+			{ 
+				m_onLadder = true; 
+				if (m_STATE == climb) m_rect.left = m_obj[i].rect.left - 10; 
+			}
 		}
-}
+} 
 
 void Player::update(float time)
 {
@@ -163,9 +173,9 @@ void Player::update(float time)
 		}
 	}
 	m_onLadder = false;
-	m_rect.left += m_d.x * time;
+	if (m_health > 0) m_rect.left += m_d.x * time;
 	checkCollisionWithMap(m_d.x, 0);
-	m_rect.top += m_d.y * time;
+	if (m_health > 0) m_rect.top += m_d.y * time;
 	checkCollisionWithMap(0, m_d.y);
 	m_rectDuck.left = m_rect.left;
 	m_rectDuck.top = m_rectDuck.top + m_rect.height - m_rectDuck.height;

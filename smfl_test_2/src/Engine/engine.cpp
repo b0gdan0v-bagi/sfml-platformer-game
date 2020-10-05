@@ -4,9 +4,9 @@ using namespace sf;
 
 Engine::Engine()
 {
-    //data.loadGlobalData();
     data.readConfig();
     window.create(VideoMode(data.resolution.x, data.resolution.y), data.name + " " + data.version, Style::Close);
+    //window.setMouseCursorGrabbed(true);
     font.loadFromFile("resourses/TimesNewRoman.ttf");
     fpsbar.setFont(font);
     menu.create(window, font, data);

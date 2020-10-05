@@ -117,6 +117,13 @@ void Engine::entitiesInteractions()
                         
                     }
                 }
+                if (((*it)->getName() == "scenario") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
+                {
+                    {
+                        scenario.set(std::stoi((*it)->getType()));
+                        (*it)->kill();
+                    }
+                }
             }
 
         }
@@ -156,5 +163,8 @@ void Engine::checkDefeat()
         levelChanger = true;
     }
 }
+
+
+
 
 

@@ -5,7 +5,7 @@ using namespace sf;
 bool Engine::loadImages()
 {
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
-        "door", "key", "trigger", "char" };
+        "door", "key", "trigger", "char", "removallObj" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -18,14 +18,17 @@ bool Engine::loadImages()
     imageList["skelletonEnemy"].createMaskFromColor(Color(255, 255, 255));
     imageList["easyEnemy"].createMaskFromColor(Color(0, 0, 0));
     imageList["player"].createMaskFromColor(Color(255, 255, 255));
+    imageList["char"].createMaskFromColor(Color(255, 255, 255));
     imageList["vodka"].createMaskFromColor(Color(255, 255, 255));
     imageList["key"].createMaskFromColor(Color(255, 255, 255));
     imageList["trigger"].createMaskFromColor(Color(0, 0, 0));
+    imageList["removallObj"].createMaskFromColor(Color(255, 255, 255));
     return true;
 }
 bool Engine::loadAnimations()
 {
     animationManagerList["player"].create("walk", imageList["player"], 0, 0, 40, 80, 3, 0.01, 40);
+    animationManagerList["player"].create("climb", imageList["player"], 0, 0, 40, 80, 3, 0.01, 40);
     animationManagerList["player"].create("stay", imageList["player"], 0, 0, 40, 80, 1, 0);
     animationManagerList["player"].create("jump", imageList["player"], 0, 241, 40, 80, 1, 0);
     animationManagerList["player"].create("duck", imageList["player"], 0, 0, 40, 40, 1, 0);
@@ -38,6 +41,7 @@ bool Engine::loadAnimations()
     animationManagerList["vodka"].create("stay", imageList["vodka"], 0, 0, 17, 37, 1, 0.005);
     animationManagerList["door"].create("stay", imageList["door"], 0, 0, 32, 64, 1, 0.005);
     animationManagerList["key"].create("stay", imageList["key"], 0, 0, 22, 13, 1, 0.005);
+    animationManagerList["removallObj"].create("stay", imageList["removallObj"],0,0,64,112, 1, 0.005);
     animationManagerList["trigger"].create("stay", imageList["trigger"], 0, 0, 1, 400, 1, 0.005); //virtual
     animationManagerList["char"].loadFromXML("resourses/images/char.xml", imageList["char"]);
     animationManagerList["char"].setLoop("die");
@@ -83,7 +87,9 @@ void Engine::gameRunning()
     gameSTATE = 0;
     inGameKeyInputs = true; //make sure that keybord for players is working
     returnToMainMenu = false; //break bool for main cycle
-    
+    scenario.reGlobalLoad();
+
+
     if (startGame()) // main cycle of game 
     {
         gameRunning(); //loop game runs
@@ -99,8 +105,8 @@ void Engine::loadLevel()
     lvl[0]->load("resourses/maps/map" + numberLevelStream.str() + ".tmx");
 
     loadEnemyWave(0);
-    std::vector<std::string> vObjTrig = {"vodka", "door", "key"};
-    for (std::vector<std::string>::iterator itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
+    std::vector<std::string> vObjTrig = {"vodka", "door", "key", "removallObj"};
+    for (auto itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
     {
         std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
         for (int i = 0; i < load.size(); i++)
@@ -109,13 +115,26 @@ void Engine::loadLevel()
                 *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
         }
     }
-    std::vector<Object> load = lvl[0]->getObjectsByName("trigger");
+    /*std::vector<Object> load = lvl[0]->getObjectsByName("trigger");
     for (int i = 0; i < load.size(); i++)
     {
         entities.push_back(new Trigger(animationManagerList["trigger"],
             "trigger", *lvl[0], load[i].rect.left, load[i].rect.top,
             load[i].GetPropertyString("text"))); //in text we have new messages!
+    }*/
+
+    vObjTrig = { "trigger" , "scenario" };
+    for (auto itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
+    {
+        std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);
+        for (int i = 0; i < load.size(); i++)
+        {
+            entities.push_back(new Trigger(animationManagerList["trigger"], //animManList is absolutly invisible
+                *itObj, *lvl[0], load[i].rect.left, load[i].rect.top,
+                load[i].GetPropertyString("text"))); //in text we have new messages or names of scenarios
+        }
     }
+    
 
 
     int numberOfPlayersToAdd;
@@ -144,6 +163,10 @@ void Engine::loadLevel()
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << data.numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";
+
+    if (data.numberLevel == 1) {
+        for (auto it = players.begin(); it != players.end(); it++) (*it)->ammo = 0;
+    }
 }
 
 void Engine::loadEnemyWave(int waveN)
