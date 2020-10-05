@@ -169,6 +169,7 @@ void Engine::loadLevel()
     if (data.numberLevel == 1) {
         for (auto it = players.begin(); it != players.end(); it++) (*it)->ammo = 0;
     }
+    bossFight_2nd_phase_dont_repeat = true;
 }
 
 void Engine::loadEnemyWave(int waveN)

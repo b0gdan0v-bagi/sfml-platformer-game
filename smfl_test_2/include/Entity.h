@@ -5,6 +5,9 @@
 #include "animation.h"
 #include "level.h"
 #include <iostream>
+#include <stdio.h>      
+#include <stdlib.h>    
+#include <time.h> 
 
 
 using namespace sf;
@@ -24,7 +27,10 @@ protected:
 	AnimationManager m_anim;
 	std::string m_name;
 	std::string m_type;
+
 public:
+	bool isShoot, canShoot;
+	int gun_number = { 0 };
 
 	Entity(AnimationManager& A, std::string Name, float X, float Y);
 
@@ -46,8 +52,6 @@ public:
 	void kill() { m_life = false; }
 
 	bool getDir() { return m_direction; }
-
-
 
 	virtual void update(float time) = 0;
 

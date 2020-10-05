@@ -23,9 +23,41 @@ void Engine::entitiesInteractions()
 {
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
     {
-        if ((*it)->getRect().intersects(players[0]->getRect()))
+        if (((*it)->getName() == "feel") && (data.numberLevel != 1))
         {
+            if ((*it)->canShoot)
+            {
+                float y_for_bullet;
+                bool find_direction;
+                (*it)->canShoot = false;
+                switch ((*it)->gun_number)
+                {
+                    
+                case 0:
+                {
+                    if ((*it)->getRect().left < players[0]->getRect().left) find_direction = false;
+                    else find_direction = true;
+                    y_for_bullet = (*it)->getPos().y;
+                   // if ((*it)->getRect().top > players[0]->getRect().top) y_for_bullet = (*it)->getPos().y;
+                    //else if ((*it)->getRect().top + (*it)->getRect().height < players[0]->getRect().top) y_for_bullet = (*it)->getPos().y + (*it)->getRect().height - 15;
+                   // else y_for_bullet = players[0]->getRect().top;
+                    break;
+                }
+                case 1: {find_direction = true; y_for_bullet = (*it)->getPos().y + (*it)->getRect().height / 2; break; }
+                case 2: {find_direction = false; y_for_bullet = (*it)->getPos().y + (*it)->getRect().height / 2; break; }
+                case 3: {find_direction = true; y_for_bullet = (*it)->getPos().y + (*it)->getRect().height - 15; break; }
+                case 4: {find_direction = false; y_for_bullet = (*it)->getPos().y; break; }
+                case 5: {find_direction = true; y_for_bullet = (*it)->getPos().y; break; }
+                case 6: {find_direction = false; y_for_bullet = (*it)->getPos().y + (*it)->getRect().height - 15; break; }
+                default:
+                    break;
+                }  
 
+                entities.push_back(new Bullet(
+                    animationManagerList["bullet"], "Bullet", *lvl[0], (*it)->getPos().x,
+                    y_for_bullet,
+                    find_direction, (*it)->getName()));
+            }
         }
         for (std::list<Entity*>::iterator it2 = entities.begin(); it2 != entities.end(); it2++)
         {
@@ -35,6 +67,16 @@ void Engine::entitiesInteractions()
                 if (((*it)->getRect().intersects((*it2)->getRect())) &&
                     ((*it)->getType() == "enemy") &&
                     ((*it2)->getName() == "Bullet") &&
+                    ((*it2)->getDamage() != 0))// intersects of bullet and enemy
+                {
+                    //(*it)->dx = 0;//stop enemy
+                    (*it)->takeDamage((*it2)->getDamage()); // damage enemy
+                    (*it2)->setDamage(0);
+                    (*it2)->setHealth(0); // kill bullet
+                }
+                if (((*it)->getRect().intersects((*it2)->getRect())) &&
+                    ((*it)->getType() == "boss") &&
+                    ((*it2)->getName() == "Bullet") && ((*it2)->getType() != "feel") &&
                     ((*it2)->getDamage() != 0))// intersects of bullet and enemy
                 {
                     //(*it)->dx = 0;//stop enemy
@@ -82,8 +124,8 @@ void Engine::entitiesInteractions()
                 {
                     if ((*itPlayer)->getSpeed().y > 0)
                     {
-                        (*itPlayer)->takeHP(10);
-                        (*itPlayer)->ammo += 10;
+                        (*itPlayer)->takeHP(5);
+                        (*itPlayer)->ammo += 7;
                         newMessage("I got health and ammo!", std::distance(players.begin(), itPlayer));
                         (*it)->kill();
                     }
@@ -126,8 +168,29 @@ void Engine::entitiesInteractions()
                         (*it)->kill();
                     }
                 }
-            }
+                if (((*it)->getName() == "feel") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
+                {
+                    (*itPlayer)->setSpeedX((*it)->getSpeed().x * 3);
+                    (*itPlayer)->setSpeedY(-0.1);
+                    (*itPlayer)->takeDamage(5);
+                    if ((*itPlayer)->getHealth() == 0) (*itPlayer)->setSpeedX(0.f);
+                    //(*it)->takeDamage(1);
+                }
+                if (((*it)->getName() == "Bullet") && ((*it)->getType() == "feel") && ((*itPlayer)->getHealth() > 0))
+                {
+                    (*itPlayer)->takeDamage((*it)->getDamage());
+                    (*it)->setDamage(0);
+                    (*it)->setHealth(0); // kill bullet
+                }
+                
 
+            }
+            if (((*it)->getName() == "feel") && ((*it)->getHealth() < 50) && (bossFight_2nd_phase_dont_repeat))
+            {
+                newMessage("Cmon he is almost dead!", 0);
+                bossFight_2nd_phase_dont_repeat = false;
+                addNewWave = true;
+            }
         }
 
     }

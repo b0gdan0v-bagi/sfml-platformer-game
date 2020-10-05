@@ -6,16 +6,26 @@ Enemy::Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y) :
 	m_obj = lvl.getObjectsByName("solid");
 	option(Name, 0.1, 10, "move");
 	m_anim.set("move");
+	int random_direction;
+	srand(time(NULL));
+
+	
 	m_d.x = 0.1;
 	if ((m_name == "EasyEnemy") || (m_name == "Skelleton"));
 	{
 		m_type = "enemy";
+		random_direction = rand() % 10 + 1;
+		if (random_direction > 5) m_d.x = 0.1;
+		else {
+			m_d.x = -0.1; m_anim.flip(true);
+		}
 	}
 	if (m_name == "feel")
 	{
 		m_type = "boss";
-		m_health = 50;
+		m_health = 150;
 		m_shooter = true;
+		m_d.x = 0.1;
 	}
 }
 
@@ -35,6 +45,20 @@ void Enemy::checkCollisionWithMap(float Dx, float Dy)
 
 void Enemy::update(float time)
 {
+	if (m_shooter)
+	{
+		if (!canShoot) // for delay in shooting
+		{
+			m_shootTimer += time;
+			if (m_shootTimer > 1500)
+			{
+				gun_number++;
+				if (gun_number > 6) gun_number = 0;
+				canShoot = true;
+				m_shootTimer = 0;
+			}
+		}
+	}
 	m_rect.left += m_d.x * time;
 	checkCollisionWithMap(m_d.x, 0);
 	m_rect.top += m_d.y * time;

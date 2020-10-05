@@ -18,7 +18,7 @@ struct GlobalData
     int playersPVE = { 1 };
     int const maxPlayersPVE = 2; // here is number of total supported players
     Vector2f resolution = { Vector2f(1280,720) };
-    std::string const version = { "ver 0.2" }, email = { "bagizara@gmail.com" }, name = { "Platformer" };
+    std::string const version = { "ver 0.3" }, email = { "bagizara@gmail.com" }, name = { "Platformer" };
     bool showFps = { true };
     bool isChanged = { false };
     int fpsBarId = { 1 };

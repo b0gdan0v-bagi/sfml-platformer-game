@@ -47,6 +47,7 @@ private:
     std::vector<TileMap*> lvl; //its a vector for expansion for multiple levels 
                                //(for example if split screen or future network),
                                //now it have only 1 lvl in storage
+    bool bossFight_2nd_phase_dont_repeat;
     void loadLevel();
     void loadEnemyWave(int waveN);
     void input();

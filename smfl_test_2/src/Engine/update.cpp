@@ -17,6 +17,12 @@ void Engine::update(float time)
         (*it)->update(time);
         if ((*it)->getLife() == false)
         {
+            if ((*it)->getName() == "feel")
+            {
+                entities.push_back(new Trigger(animationManagerList["key"],
+                    "key", *lvl[0], (*it)->getRect().left + (*it)->getRect().width / 2, (*it)->getRect().top + (*it)->getRect().height / 2));
+                newMessage("EZ", 0);
+            }
             delete* it;
             it = entities.erase(it);
         }
@@ -96,6 +102,12 @@ void Engine::scenarioPlay(float time)
         }
         if ((scenario.timer[3].first > 3500) && (scenario.timer[3].second))
         {
+            newMessage("Use Q to ask task", 0);
+            scenario.timer[3].second = false;
+            scenario.timer[4].second = true;
+        }
+        if ((scenario.timer[4].first > 3500) && (scenario.timer[4].second))
+        {
             newMessage("Go FORWARD and PLAY!", 0);
             scenario.stop();
         }
@@ -130,6 +142,38 @@ void Engine::scenarioPlay(float time)
 
         break;
 
+    }
+    case 3:
+    {
+        inGameKeyInputs = false;
+
+        scenario.timerIncreas(time);
+
+        if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
+        {
+            newMessage("I havent find my mom!", 0);
+            scenario.timer[0].second = false;
+            scenario.timer[1].second = true;
+        }
+        if ((scenario.timer[1].first > 3500) && (scenario.timer[1].second))
+        {
+            newMessage("But I have vodka and dotka", 0);
+            scenario.timer[1].second = false;
+            scenario.timer[2].second = true;
+        }
+        if ((scenario.timer[2].first > 3500) && (scenario.timer[2].second))
+        {
+            newMessage("Thank you for playing!", 0);
+            scenario.timer[2].second = false;
+            scenario.timer[3].second = true;
+        }
+        if ((scenario.timer[3].first > 3500) && (scenario.timer[3].second))
+        {
+            players[0]->win = true;
+            scenario.stop();
+        }
+
+        break;
     }
     default:
         break;

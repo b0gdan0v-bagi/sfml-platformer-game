@@ -175,7 +175,7 @@ void Player::update(float time)
 	m_onLadder = false;
 	if (m_health > 0) m_rect.left += m_d.x * time;
 	checkCollisionWithMap(m_d.x, 0);
-	if (m_health > 0) m_rect.top += m_d.y * time;
+	m_rect.top += m_d.y * time;
 	checkCollisionWithMap(0, m_d.y);
 	m_rectDuck.left = m_rect.left;
 	m_rectDuck.top = m_rectDuck.top + m_rect.height - m_rectDuck.height;
