@@ -76,19 +76,60 @@ void Engine::scenarioPlay(float time)
     case 1: {
         inGameKeyInputs = false;
         scenario.timerIncreas(time);
-       
-        if ((scenario.timer[0].first > time * 1000) && (scenario.timer[0].second))
+        if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
         {
             newMessage("Welcome to " + data.name + " " + data.version, 0);
             scenario.timer[0].second = false;
+            scenario.timer[1].second = true;
         }
-        if ((scenario.timer[1].first > time * 4000) && (scenario.timer[1].second))
+        if ((scenario.timer[1].first > 3500) && (scenario.timer[1].second))
         {
             newMessage("To skip tutorial press SPACE", 0);
             scenario.timer[1].second = false;
+            scenario.timer[2].second = true;
+        }
+        if ((scenario.timer[2].first > 3500) && (scenario.timer[2].second))
+        {
+            newMessage("Use WASD to move, SPACE for shooting", 0);
+            scenario.timer[2].second = false;
+            scenario.timer[3].second = true;
+        }
+        if ((scenario.timer[3].first > 3500) && (scenario.timer[3].second))
+        {
+            newMessage("Go FORWARD and PLAY!", 0);
             scenario.stop();
         }
+
+        if (Keyboard::isKeyPressed(Keyboard::Space)) scenario.stop();
         break;
+    }
+    case 2: {
+        inGameKeyInputs = false;
+
+        scenario.timerIncreas(time);
+
+        if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
+        {
+            addNewWave = true;
+            loadEnemyWave(2);
+            newMessage("Oh, that man stole my mom", 0);
+            scenario.timer[0].second = false;
+            scenario.timer[1].second = true;
+        }
+        if ((scenario.timer[1].first > 3500) && (scenario.timer[1].second))
+        {
+            newMessage("I must find him!", 0);
+            scenario.timer[1].second = false;
+            scenario.timer[2].second = true;
+        }
+        if ((scenario.timer[2].first > 3500) && (scenario.timer[2].second))
+        {
+            players[0]->win = true;
+            scenario.stop();
+        }
+
+        break;
+
     }
     default:
         break;

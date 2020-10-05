@@ -8,8 +8,11 @@ class Enemy :public Entity
 {
 private:
 	bool m_onGround;
-
+	float m_shootTimer = { false };
+	bool m_shooter = { false };
 public:
+	bool isShoot, canShoot;
+
 	Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y);
 
 	void checkCollisionWithMap(float Dx, float Dy);

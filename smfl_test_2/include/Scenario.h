@@ -2,6 +2,7 @@
 #define SCENARIO_H
 
 #include "SFML/Graphics.hpp"
+#include <iostream>
 
 using namespace sf;
 
@@ -10,9 +11,12 @@ struct Scenario
 	int id;
 	bool active;
 	std::vector<std::pair<float, bool>> timer;
-	//std::vector<float> timer = { 0,0,0,0,0,0,0,0,0 };
-	void set(int ID) {
-		id = ID; active = true; timer.resize(10); zeroTimer();
+	void set(int ID, int TIMERS = 10) {
+		id = ID;
+		active = true;
+		timer.resize(TIMERS); 
+		zeroTimer();
+		std::cout << "Scenario " << id << " is set! Number of timers set to " << timer.size() << "\n";
 	}
 	void reGlobalLoad() { id = 0; active = false; zeroTimer();
 	}
@@ -26,12 +30,14 @@ struct Scenario
 		}
 
 	}
-	void zeroTimer() {
+	void zeroTimer(bool toggle = false, int TIMERS = 10) {
+		timer.resize(10);
 		for (auto i = timer.begin(); i != timer.end(); i++)
 		{
 			(*i).first = 0;
-			(*i).second = true;
+			(*i).second = toggle;
 		}
+		timer[0].second = true; // 1 st timer active
 	}
 };
 

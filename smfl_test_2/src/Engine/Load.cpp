@@ -5,7 +5,7 @@ using namespace sf;
 bool Engine::loadImages()
 {
     std::vector<std::string> imageName = { "bullet","player","easyEnemy", "skelletonEnemy", "vodka",
-        "door", "key", "trigger", "char", "removallObj" };
+        "door", "key", "trigger", "char", "removallObj", "feel" };
     for (std::vector<std::string>::iterator IMAGE = imageName.begin(); IMAGE != imageName.end(); ++IMAGE)
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
@@ -23,6 +23,7 @@ bool Engine::loadImages()
     imageList["key"].createMaskFromColor(Color(255, 255, 255));
     imageList["trigger"].createMaskFromColor(Color(0, 0, 0));
     imageList["removallObj"].createMaskFromColor(Color(255, 255, 255));
+    //imageList["feel"].createMaskFromColor(Color(255, 255, 255));
     return true;
 }
 bool Engine::loadAnimations()
@@ -45,6 +46,7 @@ bool Engine::loadAnimations()
     animationManagerList["trigger"].create("stay", imageList["trigger"], 0, 0, 1, 400, 1, 0.005); //virtual
     animationManagerList["char"].loadFromXML("resourses/images/char.xml", imageList["char"]);
     animationManagerList["char"].setLoop("die");
+    animationManagerList["feel"].create("move", imageList["feel"], 0, 0, 128, 128, 1, 0.005);
 
     return true;
 }
@@ -174,7 +176,7 @@ void Engine::loadEnemyWave(int waveN)
     std::ostringstream waveNstream;
     waveNstream << waveN;
     std::vector<std::string> vObjEnemy;
-    vObjEnemy = { "easyEnemy", "skelleton", };
+    vObjEnemy = { "easyEnemy", "skelleton", "feel" };
     for (std::vector<std::string>::iterator itObj = vObjEnemy.begin(); itObj != vObjEnemy.end(); ++itObj)
     {
         std::vector<Object> load = lvl[0]->getObjectsByName(*itObj);

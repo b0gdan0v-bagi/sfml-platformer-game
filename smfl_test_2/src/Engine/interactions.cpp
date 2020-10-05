@@ -96,7 +96,9 @@ void Engine::entitiesInteractions()
                             (*itPlayer2)->setDoorKey(true);
                         }
                         (*it)->kill(); // kill key
-                        newMessage("I got key!\n Go back to the door!", std::distance(players.begin(), itPlayer));
+                        if (data.numberLevel == 2) newMessage("I got key!\n Go back to the door!", std::distance(players.begin(), itPlayer));
+                        if (data.numberLevel == 1) newMessage("I got key!\n Beware another enemy", std::distance(players.begin(), itPlayer));
+                            
                         addNewWave = true;
                     }
                 }

@@ -11,6 +11,12 @@ Enemy::Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y) :
 	{
 		m_type = "enemy";
 	}
+	if (m_name == "feel")
+	{
+		m_type = "boss";
+		m_health = 50;
+		m_shooter = true;
+	}
 }
 
 void Enemy::checkCollisionWithMap(float Dx, float Dy)
