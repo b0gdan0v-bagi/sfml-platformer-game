@@ -73,6 +73,8 @@ ButtonList::ButtonList(const Font& font, RenderWindow& WINDOW, std::vector<std::
 
 void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std::string> names, bool back_show, int textSize)
 {
+	if (!m_clickBuffer.loadFromFile("resourses/sound/click.ogg")) std::cout << "Cannot load click sound into button list!\n";
+	m_click.setBuffer(m_clickBuffer);
 	m_textSize = textSize;
 	m_backGroundShow = back_show;
 	for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); name++)
@@ -230,6 +232,12 @@ void ButtonList::checkMouseIntersects(int& ID, RenderWindow &window, Color TRUEc
 		{
 			(*but)->setTextFillColor(TRUEcolor);
 			ID = std::distance(buttons.begin(), but);
+			if (ID != m_saveID)
+			{
+				m_click.play();
+				m_saveID = ID;
+			}
+			
 		}
 		else (*but)->setTextFillColor(FALSEcolor);
 	}

@@ -101,28 +101,29 @@ bool Menu::mainMenu(RenderWindow& window, GlobalData& data)
 		{
 			switch (m_menuNum)
 			{
-			case 0: {
+			case 0: { m_intersectSound.play();
 				if (levelMenu(window, data.numberLevel)) return true;
 				break; }
-			case 1: {
+			case 1: { m_intersectSound.play();
 				isMenu = false;
 				data.numberLevel = 101;
 				return true;
 				break;
 			}
-			case 2: {
+			case 2: { m_intersectSound.play();
 				if (optionMenu(window, data)) 
 				{
 					composeAll(window);
 				}
 				break;
 			}
-			case 3: {
+			case 3: { m_intersectSound.play();
 				aboutMenu(window);
 
 				break;
 			}
-			case 4: {
+			case 4: { m_intersectSound.play();
+				while (m_intersectSound.getStatus() == 2) {} // wait for playing sound
 				return false;
 				window.close();
 				break; }
@@ -167,7 +168,9 @@ bool Menu::levelMenu(RenderWindow& window, int& numberLevel)
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			numberLevel = m_menuNum; 
-			if ((m_menuNum != 0) && (m_menuNum != -1))  return true;
+			if ((m_menuNum != 0) && (m_menuNum != -1)) {
+				m_intersectSound.play(); return true;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
 		lvl.setViewable(isMenu);
@@ -188,7 +191,7 @@ bool Menu::aboutMenu(RenderWindow& window)
 			while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ };
 			switch (m_menuNum)
 			{
-			case 3: {return false; break; }
+			case 3: {m_intersectSound.play(); return false; break; }
 			default:
 				break;
 			}
@@ -250,7 +253,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 		{
 			switch (optN["resolution"])
 			{
-			case 1: {
+			case 1: { m_intersectSound.play();
 				resolutionBuff.x = 1280;
 				resolutionBuff.y = 720;
 				if (!option["resolution"].getBackgroundViewable(1)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
@@ -258,7 +261,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				data.isChanged = true;
 				break;
 			}
-			case 2: {
+			case 2: { m_intersectSound.play();
 				resolutionBuff.x = 1920;
 				resolutionBuff.y = 1080;
 				if (!option["resolution"].getBackgroundViewable(2)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
@@ -266,7 +269,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				data.isChanged = true;
 				break;
 			}
-			case 3: {
+			case 3: { m_intersectSound.play();
 				resolutionBuff.x = 3440;
 				resolutionBuff.y = 1440;
 				if (!option["resolution"].getBackgroundViewable(3)) { option["apply"].setViewAndPressable(0, true); resolutionChanged = true; }
@@ -280,7 +283,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			switch (optN["apply"])
 			{
 			case 0: {
-				
+				m_intersectSound.play();
 				option["apply"].setViewAndPressable(0, false);
 				
 				if (resolutionChanged)
@@ -299,6 +302,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				break;
 			}
 			case 1: {
+				m_intersectSound.play();
 				option["apply"].setViewAndPressable(0, false);
 				return false;
 				break;
@@ -308,13 +312,13 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			}
 			switch (optN["showfps"])
 			{
-			case 1: {
+			case 1: { m_intersectSound.play();
 				data.showFps = true;
 				if (!option["showfps"].getBackgroundViewable(1)) option["apply"].setViewAndPressable(0, true);
 				option["showfps"].switchBackgroundTo(1);
 				break;
 			}
-			case 2: {
+			case 2: { m_intersectSound.play();
 				data.showFps = false;
 				if (!option["showfps"].getBackgroundViewable(2)) option["apply"].setViewAndPressable(0, true);
 				option["showfps"].switchBackgroundTo(2);
@@ -325,13 +329,13 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			}
 			switch (optN["players_pve"])
 			{
-			case 1: {
+			case 1: { m_intersectSound.play();
 				data.playersPVE = 1;
 				if (!option["players_pve"].getBackgroundViewable(1)) option["apply"].setViewAndPressable(0, true);
 				option["players_pve"].switchBackgroundTo(1);
 				break;
 			}
-			case 2: {
+			case 2: { m_intersectSound.play();
 				data.playersPVE = 2;
 				if (!option["players_pve"].getBackgroundViewable(2)) option["apply"].setViewAndPressable(0, true);
 				option["players_pve"].switchBackgroundTo(2);
@@ -342,14 +346,14 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			}
 			switch (optN["players_names"])
 			{
-			case 1: {
+			case 1: { m_intersectSound.play();
 				nameEntered = 1;
 				option["players_names"].switchBackgroundTo(1);
 				option["players_names"].setButtonString(1, "_");
 				option["input_text"].setViewable(0, true);
 				break;
 			}
-			case 2: {
+			case 2: { m_intersectSound.play();
 				nameEntered = 2;
 				option["players_names"].switchBackgroundTo(2);
 				option["players_names"].setButtonString(2, "_");
@@ -361,7 +365,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			}
 			switch (optN["players_models"])
 			{
-			case 1: {
+			case 1: { m_intersectSound.play();
 				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
 				if (data.playersModel[0] == "player") data.playersModel[0] = "char";
 				else data.playersModel[0] = "player";
@@ -369,7 +373,7 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 				option["apply"].setViewAndPressable(0, true);
 				break;
 			}
-			case 3: {
+			case 3: { m_intersectSound.play();
 				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
 				if (data.playersModel[1] == "player") data.playersModel[1] = "char";
 				else data.playersModel[1] = "player";

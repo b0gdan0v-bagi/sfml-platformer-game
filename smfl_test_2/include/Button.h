@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
-#include "SFML/Graphics.hpp";
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include <iostream>
 
 using namespace sf;
@@ -17,6 +18,8 @@ private:
 	Color m_BackColor = { Color::Black };
 	Color m_highlightingColor = { Color::Blue };
 	Color m_pressedColor = { Color::Red };
+
+	
 public:
 
 	bool canPressed = { true };
@@ -60,6 +63,10 @@ private:
 	Color m_pressedColor = { Color::Red };
 	bool checkID(int ID);
 	void update();
+	int m_saveID = { -1 }; // for not repeated sounds into checkMouseIntersects
+
+	SoundBuffer m_clickBuffer;
+	Sound m_click;
 public:
 	std::vector<Vector2f> butPos;
 	std::vector<Button*> buttons;
@@ -71,6 +78,7 @@ public:
 		, int textSize = 25);
 	void setColors(Color TextColor = Color::White, Color BackColor = Color::Black,
 		Color HighlightingColor = Color::Blue, Color PressedColor = Color::Red);
+
 	void updateCharSize(RenderWindow& window);
 	void composeY(RenderWindow& WINDOW, float X, float Y, int format = 1);
 	void composeX(RenderWindow& WINDOW, float X, float Y);

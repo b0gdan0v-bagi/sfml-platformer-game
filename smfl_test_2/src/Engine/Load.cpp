@@ -10,7 +10,7 @@ bool Engine::loadImages()
     {
         if (!imageList[*IMAGE].loadFromFile("resourses/images/" + *IMAGE + ".png"))
         {
-            std::cout << "Cannot load " + *IMAGE + " image!";
+            std::cout << "Cannot load " + *IMAGE + " image!\n";
             return false;
         }
     }
@@ -51,15 +51,47 @@ bool Engine::loadAnimations()
     return true;
 }
 
+bool Engine::loadSounds()
+{
+    std::vector<std::string> soundsName{ "wearenoslaves","maslina","gameover","priunil","enhance_success","magnum","click","intersect", "kick"};
+    for (auto SOUND = soundsName.begin(); SOUND != soundsName.end(); ++SOUND)
+    {
+        if (!soundsBuffer[*SOUND].loadFromFile("resourses/sound/" + *SOUND + ".ogg"))
+        {
+            std::cout << "Cannot load " + *SOUND + " sound!\n";
+            return false;
+        }
+        else
+        {
+            sounds[*SOUND].setBuffer(soundsBuffer[*SOUND]);
+        }
+    }
+    std::vector<std::string> musicName{ "chimai","lvl1","lvl2" ,"lvl3","menu" };
+    for (auto MUSIC = musicName.begin(); MUSIC != musicName.end(); ++MUSIC)
+    {
+        if (!music[*MUSIC].openFromFile("resourses/sound/music/" + *MUSIC + ".ogg"))
+        {
+            std::cout << "Cannot load " + *MUSIC + " sound!\n";
+            return false;
+        }
+    }
+    return true;
+}
+
 void Engine::gameRunning()
 
 {
-    
+    //for (auto i = sounds.begin(); i != sounds.end(); i++) (*i).second.stop();
+    for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
+
+    music["menu"].play();
+    music["menu"].setVolume(100*data.musicVolume);
+    music["menu"].setLoop(true);
     if (!levelChanger)
     {
         if (!menu.mainMenu(window, data)) return;
     }
-
+    music["menu"].stop();
     window.setView(data.viewInterface);
 
     if (data.isChanged)  data.isChanged = false;
@@ -91,9 +123,25 @@ void Engine::gameRunning()
     returnToMainMenu = false; //break bool for main cycle
     scenario.reGlobalLoad();
 
+    
+    for (int i = 1; i <= data.numberLevelMax; i++)
+    {
+        std::ostringstream numberLevelStream;
+        numberLevelStream << i;
+        if (i == data.numberLevel)
+        {
+            music["lvl" + numberLevelStream.str()].play();
+            music["lvl" + numberLevelStream.str()].setVolume(100 * data.musicVolume);
+            music["lvl" + numberLevelStream.str()].setLoop(true);
+        }
+        else music["lvl" + numberLevelStream.str()].stop();
+    }
 
+    //if (data.numberLevel == 2) music["eyeoftiger"].play();
+    
     if (startGame()) // main cycle of game 
     {
+        
         gameRunning(); //loop game runs
     }
 }
@@ -117,13 +165,6 @@ void Engine::loadLevel()
                 *itObj, *lvl[0], load[i].rect.left, load[i].rect.top));
         }
     }
-    /*std::vector<Object> load = lvl[0]->getObjectsByName("trigger");
-    for (int i = 0; i < load.size(); i++)
-    {
-        entities.push_back(new Trigger(animationManagerList["trigger"],
-            "trigger", *lvl[0], load[i].rect.left, load[i].rect.top,
-            load[i].GetPropertyString("text"))); //in text we have new messages!
-    }*/
 
     vObjTrig = { "trigger" , "scenario" };
     for (auto itObj = vObjTrig.begin(); itObj != vObjTrig.end(); ++itObj)
@@ -170,6 +211,7 @@ void Engine::loadLevel()
         for (auto it = players.begin(); it != players.end(); it++) (*it)->ammo = 0;
     }
     bossFight_2nd_phase_dont_repeat = true;
+    defeatSoundsPlay = false;
 }
 
 void Engine::loadEnemyWave(int waveN)

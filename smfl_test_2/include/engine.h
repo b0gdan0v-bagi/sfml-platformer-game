@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Entity.h"
 #include "Bullet.h"
 #include "Player.h"
@@ -34,11 +35,15 @@ private:
     GameInterface gameInterface;
     bool pvp, inGameKeyInputs = { true }, returnToMainMenu, addNewWave;
     bool levelChanger = { false };
+    bool defeatSoundsPlay;
     std::string task;
     int gameSTATE = { 0 };
     std::vector<View*> playerViews; // for split screen, id 0 for first player
     std::map<String, Image> imageList;
     std::map<String, AnimationManager> animationManagerList;
+    std::map<String, SoundBuffer> soundsBuffer;
+    std::map<String, Sound> sounds;
+    std::map<String, Music> music;
     FpsBar fpsbar;
     std::list<Entity*> entities;
     std::vector<Player*> players;
@@ -53,6 +58,7 @@ private:
     void input();
     bool loadImages();
     bool loadAnimations();
+    bool loadSounds();
     void update(float time);
     void draw();
     void drawSplitHelp(int viewId);

@@ -4,13 +4,25 @@ using namespace sf;
 
 void Engine::update(float time)
 {
-    if (addNewWave) loadEnemyWave(1);
+    
+    
+    // sounds updates
+   /* Time position = sounds["lvl2"].getPlayingOffset();
+    if ((position.asSeconds() > 10) 
+        && (sounds["lvl2"].getStatus() == 2)
+        && (sounds["lvl2"].getVolume() > 10))  sounds["lvl2"].setVolume(100 - 10 * (position.asSeconds() - 10));
+    
+    if (position.asSeconds() > 20) sounds["lvl2"].stop();*/
 
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->update(time);
     }
 
+    if (sounds["gameover"].getStatus() == 2) sounds["masilina"].stop();
+
+
+    if (addNewWave) loadEnemyWave(1);
     // all entities update
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end();)
     {
@@ -23,6 +35,7 @@ void Engine::update(float time)
                     "key", *lvl[0], (*it)->getRect().left + (*it)->getRect().width / 2, (*it)->getRect().top + (*it)->getRect().height / 2));
                 newMessage("EZ", 0);
             }
+            if ((*it)->getType() == "enemy") sounds["priunil"].play();
             delete* it;
             it = entities.erase(it);
         }
@@ -117,7 +130,9 @@ void Engine::scenarioPlay(float time)
     }
     case 2: {
         inGameKeyInputs = false;
-
+        music["lvl1.stop"].stop();
+        music["chimai"].play();
+        music["chimai"].setPlayingOffset(seconds(7));
         scenario.timerIncreas(time);
 
         if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
@@ -146,9 +161,9 @@ void Engine::scenarioPlay(float time)
     case 3:
     {
         inGameKeyInputs = false;
-
+        
         scenario.timerIncreas(time);
-
+        
         if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
         {
             newMessage("I havent find my mom!", 0);
@@ -166,6 +181,7 @@ void Engine::scenarioPlay(float time)
             newMessage("Thank you for playing!", 0);
             scenario.timer[2].second = false;
             scenario.timer[3].second = true;
+            sounds["wearenoslaves"].play();
         }
         if ((scenario.timer[3].first > 3500) && (scenario.timer[3].second))
         {

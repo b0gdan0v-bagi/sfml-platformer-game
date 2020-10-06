@@ -33,6 +33,8 @@ struct GlobalData
     std::string const defaultModel = { "player" };
     std::vector<std::string> playersModel = { defaultModel ,defaultModel };
 
+    float musicVolume = 0.3f;
+
     void readConfig();
     void writeConfig();
     void setViewInterface();

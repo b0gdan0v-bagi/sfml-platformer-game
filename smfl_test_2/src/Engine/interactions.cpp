@@ -11,6 +11,7 @@ void Engine::playersShooting()
             (*itPlayer)->ammo -= 1; // !!!! FOR TEST !!!!
             (*itPlayer)->isShoot = false;
             (*itPlayer)->canShoot = false;
+            sounds["magnum"].play();
             entities.push_back(new Bullet(
                 animationManagerList["bullet"], "Bullet", *lvl[0], (*itPlayer)->getPos().x,
                 (*itPlayer)->getPos().y + (*itPlayer)->getRect().height / 2,
@@ -38,9 +39,6 @@ void Engine::entitiesInteractions()
                     if ((*it)->getRect().left < players[0]->getRect().left) find_direction = false;
                     else find_direction = true;
                     y_for_bullet = (*it)->getPos().y;
-                   // if ((*it)->getRect().top > players[0]->getRect().top) y_for_bullet = (*it)->getPos().y;
-                    //else if ((*it)->getRect().top + (*it)->getRect().height < players[0]->getRect().top) y_for_bullet = (*it)->getPos().y + (*it)->getRect().height - 15;
-                   // else y_for_bullet = players[0]->getRect().top;
                     break;
                 }
                 case 1: {find_direction = true; y_for_bullet = (*it)->getPos().y + (*it)->getRect().height / 2; break; }
@@ -119,6 +117,7 @@ void Engine::entitiesInteractions()
                     if ((*itPlayer)->getHealth() == 0) (*itPlayer)->setSpeedX(0.f);
                     (*it)->setHealth(0);
                     (*it)->setDamage(0);
+                    sounds["kick"].play();
                 }
                 if (((*it)->getName() == "vodka") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
                 {
@@ -128,6 +127,7 @@ void Engine::entitiesInteractions()
                         (*itPlayer)->ammo += 7;
                         newMessage("I got health and ammo!", std::distance(players.begin(), itPlayer));
                         (*it)->kill();
+                        sounds["kick"].play();
                     }
                 }
                 if (((*it)->getName() == "key") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
@@ -137,6 +137,8 @@ void Engine::entitiesInteractions()
                         {
                             (*itPlayer2)->setDoorKey(true);
                         }
+                        sounds["enhance_success"].play();
+                        sounds["enhance_success"].setVolume(15.f);
                         (*it)->kill(); // kill key
                         if (data.numberLevel == 2) newMessage("I got key!\n Go back to the door!", std::distance(players.begin(), itPlayer));
                         if (data.numberLevel == 1) newMessage("I got key!\n Beware another enemy", std::distance(players.begin(), itPlayer));
@@ -158,6 +160,7 @@ void Engine::entitiesInteractions()
                         task = (*it)->getType(); // change output message for help
                         newMessage(task, std::distance(players.begin(), itPlayer));
                         (*it)->kill();
+                        
                         
                     }
                 }
@@ -181,6 +184,7 @@ void Engine::entitiesInteractions()
                     (*itPlayer)->takeDamage((*it)->getDamage());
                     (*it)->setDamage(0);
                     (*it)->setHealth(0); // kill bullet
+                    if (sounds["maslina"].getStatus() != 2) sounds["maslina"].play();
                 }
                 
 
@@ -224,7 +228,11 @@ void Engine::checkDefeat()
         inGameKeyInputs = false;
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();
-
+        if ((sounds["gameover"].getStatus() != 2) && (!defeatSoundsPlay))
+        {
+            defeatSoundsPlay = true;
+            sounds["gameover"].play();
+        }
         levelChanger = true;
     }
 }

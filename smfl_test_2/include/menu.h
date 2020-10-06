@@ -27,9 +27,11 @@ private:
 	bool optionMenu(RenderWindow& window, GlobalData& data);
 	bool levelMenu(RenderWindow& window, int& numberLevel);
 	void composeAll(RenderWindow& window);
+	Sound m_intersectSound;
 public:
 
 	void create(RenderWindow& window, Font& FONT, GlobalData& data);
+	void setSound(Sound& SOUND) { m_intersectSound = SOUND; }
 	bool mainMenu(RenderWindow& window, GlobalData& data);
 
 };
