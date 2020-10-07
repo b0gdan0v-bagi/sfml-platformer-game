@@ -34,7 +34,12 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	option["sound"].create(FONT, window, { "Sound : music :   ", DATA.musicVolumeString, "    interactions :    " , DATA.sndVolumeString }, false, 15);
 	option["sound"].setPressable(0, false);
 	option["sound"].setPressable(2, false);
-	levelChange.create(FONT, window, { "bla","To main menu","continue" }, false, 10);
+	DATA.setContersToString();
+	levelChange.create(FONT, window, { "Congratulations!",DATA.nOfKilledStr,DATA.nOfShotsStr,DATA.nOfBotGainedStr,"To main menu","continue" }, false, 10);
+	levelChange.setPressable(0, false);
+	levelChange.setPressable(1, false);
+	levelChange.setPressable(2, false);
+	levelChange.setPressable(3, false);
 
 	composeAll(window);
 
@@ -441,6 +446,10 @@ bool Menu::levelChangeMenu(RenderWindow& window, GlobalData& data)
 		// bla bla bla
 	}
 	else isFinal = false;
+	data.setContersToString();
+	levelChange.setButtonString(1, data.nOfKilledStr);
+	levelChange.setButtonString(2, data.nOfShotsStr);
+	levelChange.setButtonString(3, data.nOfBotGainedStr);
 	while (isMenu)
 	{
 		update(window, levelChange);
@@ -448,11 +457,11 @@ bool Menu::levelChangeMenu(RenderWindow& window, GlobalData& data)
 		{
 			switch (m_menuNum)
 			{
-			case 1: { m_intersectSound.play();
+			case 4: { m_intersectSound.play();
 				return false;
 				break;
 			}
-			case 2: { m_intersectSound.play();
+			case 5: { m_intersectSound.play();
 				return true;
 				break;
 			}

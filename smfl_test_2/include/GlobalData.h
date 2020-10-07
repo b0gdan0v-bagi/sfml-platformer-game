@@ -47,6 +47,9 @@ struct GlobalData
     int numberOfBottlesGained = { 0 };
     int numberOfBottlesGainedSum = { 0 };
 
+    std::string nOfShotsStr, nOfKilledStr, nOfBotGainedStr;
+
+    void setContersToString(bool isFinalStat = false);
     void zeroPlayerStat();
     void calculateSumStat();
     void volumeToString();

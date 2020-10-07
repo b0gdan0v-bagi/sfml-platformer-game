@@ -16,6 +16,8 @@ void Engine::playersShooting()
                 animationManagerList["bullet"], "Bullet", *lvl[0], (*itPlayer)->getPos().x,
                 (*itPlayer)->getPos().y + (*itPlayer)->getRect().height / 2,
                 (*itPlayer)->getDir(), (*itPlayer)->getName()));
+            data.numberOfShots++;
+            std::cout << "Shot number " << data.numberOfShots << "\n";
         }//if shoot - making bullet
     }
 }
@@ -129,6 +131,8 @@ void Engine::entitiesInteractions()
                         newMessage("I got health and ammo!", std::distance(players.begin(), itPlayer));
                         (*it)->kill();
                         sounds["kick"].play();
+                        data.numberOfBottlesGained++;
+                        std::cout << "Bottle gained N " << data.numberOfBottlesGained << "\n";
                     }
                 }
                 if (((*it)->getName() == "key") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
@@ -207,16 +211,14 @@ bool Engine::checkWin()
     {
         players[0]->win = false;
         sleep(milliseconds(50));
-        //if (data.numberLevel < data.numberLevelMax)
-        //{
-            data.numberLevel++;
-            levelChanger = true;
-            for (int i = 0; i < players.size(); ++i)
-            {
-                data.playersAMMO[i] = players[i]->ammo;
-                data.playersHP[i] = players[i]->getHealth();
-            }
-        //}
+        data.numberLevel++;
+        levelChanger = true;
+        levelNexter = true;
+        for (int i = 0; i < players.size(); ++i)
+        {
+            data.playersAMMO[i] = players[i]->ammo;
+            data.playersHP[i] = players[i]->getHealth();
+        }
         return true;
     }
 }

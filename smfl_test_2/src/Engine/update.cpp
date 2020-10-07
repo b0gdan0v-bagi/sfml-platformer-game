@@ -25,7 +25,12 @@ void Engine::update(float time)
                     "key", *lvl[0], (*it)->getRect().left + (*it)->getRect().width / 2, (*it)->getRect().top + (*it)->getRect().height / 2));
                 newMessage("EZ", 0);
             }
-            if ((*it)->getType() == "enemy") sounds["priunil"].play();
+            if ((*it)->getType() == "enemy")
+            {
+                sounds["priunil"].play();
+                data.numberOfKilled++;
+                std::cout << "Killed monster counter " << data.numberOfKilled << "\n";
+            }
             delete* it;
             it = entities.erase(it);
         }

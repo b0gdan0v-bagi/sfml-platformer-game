@@ -2,6 +2,24 @@
 
 using namespace sf;
 
+
+
+void GlobalData::setContersToString(bool isFinalStat)
+{
+    if (isFinalStat)
+    {
+        nOfKilledStr = "Mobs killed : " + std::to_string(numberOfKilled) + " total: " + std::to_string(numberOfKilledSum);
+        nOfShotsStr = "Shots : " + std::to_string(numberOfShots) + " total: " + std::to_string(numberOfShotsSum);
+        nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained) + " total: " + std::to_string(numberOfBottlesGainedSum);
+    }
+    else
+    {
+        nOfKilledStr = "Mobs killed : " + std::to_string(numberOfKilled);
+        nOfShotsStr = "Shots : " + std::to_string(numberOfShots);
+        nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained);
+    }
+}
+
 void GlobalData::zeroPlayerStat()
 {
     numberOfShots = 0;

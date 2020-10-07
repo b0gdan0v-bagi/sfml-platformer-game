@@ -88,14 +88,17 @@ void Engine::gameRunning()
     for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
 
     
-    if (levelChanger)
+    if (levelNexter)
     {
-        if (!menu.levelChangeMenu(window, data)) levelChanger = false;
+        levelNexter = false;
+        if (!menu.levelChangeMenu(window, data)) levelChanger = false; // make sure we go to main menu
+        data.calculateSumStat(); //summ global counters and zero local
     }
     sounds["wearenoslaves"].stop();
     music["menu"].play();
     if (!levelChanger)
     {
+        data.zeroPlayerStat(); // zero all counters
         if (!menu.mainMenu(window, data)) return;
     }
     music["menu"].stop();

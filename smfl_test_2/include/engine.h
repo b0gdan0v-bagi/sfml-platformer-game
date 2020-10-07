@@ -35,6 +35,7 @@ private:
     GameInterface gameInterface;
     bool pvp, inGameKeyInputs = { true }, returnToMainMenu, addNewWave;
     bool levelChanger = { false };
+    bool levelNexter = { false }; // if level is increasing cause of end of map -> win
     bool defeatSoundsPlay;
     std::string task;
     int gameSTATE = { 0 };
