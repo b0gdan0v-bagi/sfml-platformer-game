@@ -130,26 +130,33 @@ void Engine::scenarioPlay(float time)
     }
     case 2: {
         inGameKeyInputs = false;
-        music["lvl1.stop"].stop();
-        music["chimai"].play();
-        music["chimai"].setPlayingOffset(seconds(7));
+        
+        
         scenario.timerIncreas(time);
 
         if ((scenario.timer[0].first > 100) && (scenario.timer[0].second))
         {
             addNewWave = true;
+            music["lvl1"].stop();
+            music["chimai"].play();
+            music["chimai"].setPlayingOffset(seconds(7));
             loadEnemyWave(2);
-            newMessage("Oh, that man stole my mom", 0);
             scenario.timer[0].second = false;
             scenario.timer[1].second = true;
         }
         if ((scenario.timer[1].first > 3500) && (scenario.timer[1].second))
         {
-            newMessage("I must find him!", 0);
+            newMessage("Oh, that man stole my mom", 0);
             scenario.timer[1].second = false;
             scenario.timer[2].second = true;
         }
         if ((scenario.timer[2].first > 3500) && (scenario.timer[2].second))
+        {
+            newMessage("I must find him!", 0);
+            scenario.timer[2].second = false;
+            scenario.timer[3].second = true;
+        }
+        if ((scenario.timer[3].first > 4500) && (scenario.timer[3].second))
         {
             players[0]->win = true;
             scenario.stop();
@@ -169,6 +176,9 @@ void Engine::scenarioPlay(float time)
             newMessage("I havent find my mom!", 0);
             scenario.timer[0].second = false;
             scenario.timer[1].second = true;
+            music["lvl3"].stop();
+            sounds["wearenoslaves"].play();
+            sounds["wearenoslaves"].setPlayingOffset(seconds(4));
         }
         if ((scenario.timer[1].first > 3500) && (scenario.timer[1].second))
         {
@@ -181,10 +191,11 @@ void Engine::scenarioPlay(float time)
             newMessage("Thank you for playing!", 0);
             scenario.timer[2].second = false;
             scenario.timer[3].second = true;
-            sounds["wearenoslaves"].play();
+            
         }
-        if ((scenario.timer[3].first > 3500) && (scenario.timer[3].second))
+        if ((scenario.timer[3].first > 7500) && (scenario.timer[3].second))
         {
+            sounds["wearenoslaves"].stop();
             players[0]->win = true;
             scenario.stop();
         }

@@ -76,6 +76,16 @@ void GlobalData::readConfig()
         {
             playersModel[1] = var2;
         }
+        if (var1 == "music_volume")
+        {
+            musicVolume = std::stoi(var2);
+            if ((musicVolume < 0) || (musicVolume > 100)) musicVolume = 30;
+        }
+        if (var1 == "snd_volume")
+        {
+            sndVolume = std::stoi(var2);
+            if ((sndVolume < 0) || (sndVolume > 100)) sndVolume = 15;
+        }
     }
     std::cout << "Config readed!\n";
     config.close();
@@ -104,6 +114,8 @@ void GlobalData::writeConfig()
             p << i + 1;
             configWrite << "PlayerModel_" + p.str() << " " << playersModel[i] << "\n";
         }
+        configWrite << "music_volume " << musicVolume << "\n";
+        configWrite << "snd_volume " << sndVolume << "\n";
         configWrite.close();
         std::cout << "Standart config created!\n";
     }

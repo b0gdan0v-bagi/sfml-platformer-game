@@ -75,6 +75,7 @@ void ButtonList::create(const Font& font, RenderWindow& WINDOW, std::vector<std:
 {
 	if (!m_clickBuffer.loadFromFile("resourses/sound/click.ogg")) std::cout << "Cannot load click sound into button list!\n";
 	m_click.setBuffer(m_clickBuffer);
+	m_click.setVolume(40);
 	m_textSize = textSize;
 	m_backGroundShow = back_show;
 	for (std::vector<std::string>::iterator name = names.begin(); name != names.end(); name++)

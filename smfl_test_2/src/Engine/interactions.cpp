@@ -225,6 +225,7 @@ void Engine::checkDefeat()
     if ((!pvp) && (!players[0]->getLife()))
     {
         newMessage("WASTED", 0);
+        for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
         inGameKeyInputs = false;
         gameInterface.setDefeatTextVisible(true);
         gameInterface.callInGameMenu();

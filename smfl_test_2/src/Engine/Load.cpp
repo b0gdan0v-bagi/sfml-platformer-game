@@ -64,8 +64,10 @@ bool Engine::loadSounds()
         else
         {
             sounds[*SOUND].setBuffer(soundsBuffer[*SOUND]);
+            sounds[*SOUND].setVolume(data.sndVolume);
         }
     }
+    sounds["intersect"].setVolume(100);
     std::vector<std::string> musicName{ "chimai","lvl1","lvl2" ,"lvl3","menu" };
     for (auto MUSIC = musicName.begin(); MUSIC != musicName.end(); ++MUSIC)
     {
@@ -74,7 +76,10 @@ bool Engine::loadSounds()
             std::cout << "Cannot load " + *MUSIC + " sound!\n";
             return false;
         }
+        music[*MUSIC].setVolume(data.musicVolume);
+        music[*MUSIC].setLoop(true);
     }
+    
     return true;
 }
 
@@ -85,8 +90,7 @@ void Engine::gameRunning()
     for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
 
     music["menu"].play();
-    music["menu"].setVolume(100*data.musicVolume);
-    music["menu"].setLoop(true);
+    
     if (!levelChanger)
     {
         if (!menu.mainMenu(window, data)) return;
@@ -128,22 +132,12 @@ void Engine::gameRunning()
     {
         std::ostringstream numberLevelStream;
         numberLevelStream << i;
-        if (i == data.numberLevel)
-        {
-            music["lvl" + numberLevelStream.str()].play();
-            music["lvl" + numberLevelStream.str()].setVolume(100 * data.musicVolume);
-            music["lvl" + numberLevelStream.str()].setLoop(true);
-        }
+        if (i == data.numberLevel) music["lvl" + numberLevelStream.str()].play();
         else music["lvl" + numberLevelStream.str()].stop();
     }
 
-    //if (data.numberLevel == 2) music["eyeoftiger"].play();
-    
-    if (startGame()) // main cycle of game 
-    {
-        
-        gameRunning(); //loop game runs
-    }
+    // main cycle of game 
+    if (startGame()) gameRunning(); //loop game runs
 }
 
 void Engine::loadLevel()
