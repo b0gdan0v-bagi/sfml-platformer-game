@@ -4,16 +4,6 @@ using namespace sf;
 
 void Engine::update(float time)
 {
-    
-    
-    // sounds updates
-   /* Time position = sounds["lvl2"].getPlayingOffset();
-    if ((position.asSeconds() > 10) 
-        && (sounds["lvl2"].getStatus() == 2)
-        && (sounds["lvl2"].getVolume() > 10))  sounds["lvl2"].setVolume(100 - 10 * (position.asSeconds() - 10));
-    
-    if (position.asSeconds() > 20) sounds["lvl2"].stop();*/
-
     for (std::vector<Player*>::iterator itPlayer = players.begin(); itPlayer != players.end(); ++itPlayer)
     {
         (*itPlayer)->update(time);
@@ -125,7 +115,7 @@ void Engine::scenarioPlay(float time)
             scenario.stop();
         }
 
-        if (Keyboard::isKeyPressed(Keyboard::Space)) scenario.stop();
+        if ((Keyboard::isKeyPressed(Keyboard::Space)) || (Keyboard::isKeyPressed(Keyboard::Escape))) scenario.stop();
         break;
     }
     case 2: {
@@ -195,7 +185,6 @@ void Engine::scenarioPlay(float time)
         }
         if ((scenario.timer[3].first > 7500) && (scenario.timer[3].second))
         {
-            sounds["wearenoslaves"].stop();
             players[0]->win = true;
             scenario.stop();
         }

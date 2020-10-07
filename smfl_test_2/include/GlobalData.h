@@ -15,6 +15,7 @@ struct GlobalData
     View viewInterface; // special view for interface //maybe add std::map for all views (now we have special in menu.h)
     int numberLevel = { 1 };
     int const numberLevelMax = 3;
+    int numberLevelAvailiable = { 1 };
     int playersPVE = { 1 };
     int const maxPlayersPVE = 2; // here is number of total supported players
     Vector2f resolution = { Vector2f(1280,720) };
@@ -35,7 +36,20 @@ struct GlobalData
 
     float musicVolume = {30.f };
     float sndVolume = { 15.f };
+    std::string musicVolumeString;
+    std::string sndVolumeString;
 
+    // player stat
+    int numberOfShots = { 0 };
+    int numberOfShotsSum = { 0 };
+    int numberOfKilled = { 0 };
+    int numberOfKilledSum = { 0 };
+    int numberOfBottlesGained = { 0 };
+    int numberOfBottlesGainedSum = { 0 };
+
+    void zeroPlayerStat();
+    void calculateSumStat();
+    void volumeToString();
     void readConfig();
     void writeConfig();
     void setViewInterface();

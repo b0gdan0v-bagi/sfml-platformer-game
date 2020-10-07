@@ -30,6 +30,11 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	option["players_models"].create(FONT, window, { "models : Player 1 :   ", DATA.playersModel[0], "    Player 2 :    " , DATA.playersModel[1] }, false, 15);
 	option["players_models"].setPressable(0, false);
 	option["players_models"].setPressable(2, false);
+	DATA.volumeToString();
+	option["sound"].create(FONT, window, { "Sound : music :   ", DATA.musicVolumeString, "    interactions :    " , DATA.sndVolumeString }, false, 15);
+	option["sound"].setPressable(0, false);
+	option["sound"].setPressable(2, false);
+	levelChange.create(FONT, window, { "bla","To main menu","continue" }, false, 10);
 
 	composeAll(window);
 
@@ -54,17 +59,20 @@ void Menu::composeAll(RenderWindow& window)
 	mainBut.updateCharSize(window);
 	lvl.updateCharSize(window);
 	about.updateCharSize(window);
+	levelChange.updateCharSize(window);
 	for (auto op = option.begin(); op!=option.end(); op++) (*op).second.updateCharSize(window);
 
 	mainBut.composeY(window, 0, -0.95);
 	lvl.composeY(window, 0, -0.95);
 	about.composeY(window, 0, -0.95);
+	levelChange.composeY(window, 0, -0.9);
 	option["resolution"].composeX(window, -1, -0.95);
-	option["apply"].composeX(window, -1, 0);
+	option["apply"].composeX(window, -1, 0.1);
 	option["showfps"].composeX(window, -1, -0.80);
 	option["players_pve"].composeX(window, -1, -0.65);
 	option["players_names"].composeX(window, -1, -0.5);
 	option["players_models"].composeX(window, -1, -0.3);
+	option["sound"].composeX(window, -1, -0.1);
 	option["input_text"].composeX(window, -0.8, 0.3);
 }
 
@@ -102,7 +110,7 @@ bool Menu::mainMenu(RenderWindow& window, GlobalData& data)
 			switch (m_menuNum)
 			{
 			case 0: { m_intersectSound.play();
-				if (levelMenu(window, data.numberLevel)) return true;
+				if (levelMenu(window, data)) return true;
 				break; }
 			case 1: { m_intersectSound.play();
 				isMenu = false;
@@ -151,7 +159,7 @@ bool Menu::mainMenu(RenderWindow& window, GlobalData& data)
 	return false;
 }
 
-bool Menu::levelMenu(RenderWindow& window, int& numberLevel)
+bool Menu::levelMenu(RenderWindow& window, GlobalData& data)
 {
 	bool isMenu = true;
 	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
@@ -159,15 +167,14 @@ bool Menu::levelMenu(RenderWindow& window, int& numberLevel)
 	while (isMenu)
 	{
 		update(window, lvl);
-		/*for (int i = 1; i <= DATA.numberLevelMax; i++)
+		for (int i = 1; i <= data.numberLevelMax; i++)
 		{
-			std::ostringstream lvlNumber;
-			lvlNumber << i;
-			lvlMenuBut.push_back(new Text("lvl " + lvlNumber.str(), m_font, m_fontSize));
-		}*/
+			if (i <= data.numberLevelAvailiable) lvl.setViewAndPressable(i, true);
+			else lvl.setViewAndPressable(i, false);
+		}
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
-			numberLevel = m_menuNum; 
+			data.numberLevel = m_menuNum; 
 			if ((m_menuNum != 0) && (m_menuNum != -1)) {
 				m_intersectSound.play(); return true;
 			}
@@ -384,8 +391,32 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 			default:
 				break;
 			}
+			switch (optN["sound"])
+			{
+			case 1: { m_intersectSound.play();
+				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+				
+				data.musicVolume += 15;
+				if (data.musicVolume >= 100) data.musicVolume = 0;
+				data.volumeToString();
+				option["sound"].setButtonString(1, data.musicVolumeString);
+				option["apply"].setViewAndPressable(0, true);
+				break;
+			}
+			case 3: { m_intersectSound.play();
+				while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+				data.sndVolume += 15;
+				if (data.sndVolume >= 100) data.sndVolume = 0;
+				data.volumeToString();
+				option["sound"].setButtonString(3, data.sndVolumeString);
+				option["apply"].setViewAndPressable(0, true);
+				break;
+			}
+			default:
+				break;
+			}
 		}
-		option["apply"].composeX(window, -1, 0);
+		option["apply"].composeX(window, -1, 0.1);
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) return false;
 		for (auto op = option.begin(); op != option.end(); op++)
 		{
@@ -394,4 +425,44 @@ bool Menu::optionMenu(RenderWindow& window, GlobalData& data)
 		}
 		window.display();
 	}
+}
+
+bool Menu::levelChangeMenu(RenderWindow& window, GlobalData& data)
+{
+	window.setView(m_menuView);
+	bool isMenu = true;
+	bool isFinal;
+	while (Mouse::isButtonPressed(Mouse::Left)) {/* here is stop until mouse is unpressed */ }
+	if (data.numberLevel > data.numberLevelMax)
+	{
+		isFinal = true;
+		levelChange.setViewAndPressable(2, false);
+		data.numberLevel = data.numberLevelMax;
+		// bla bla bla
+	}
+	else isFinal = false;
+	while (isMenu)
+	{
+		update(window, levelChange);
+		if (Mouse::isButtonPressed(Mouse::Left))
+		{
+			switch (m_menuNum)
+			{
+			case 1: { m_intersectSound.play();
+				return false;
+				break;
+			}
+			case 2: { m_intersectSound.play();
+				return true;
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		levelChange.setViewable(isMenu);
+		draw(window, levelChange);
+
+	}
+	return false;
 }

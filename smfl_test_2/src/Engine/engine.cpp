@@ -13,9 +13,12 @@ Engine::Engine()
     data.setViewInterface();
     playerViews.push_back(new View); //creating 2 view for split screen
     playerViews.push_back(new View); // in future add "for" for number of split screens and logic if needed
+    Clock timeForLoad;
+    timeForLoad.restart();
     if (loadImages()) std::cout << "All images succsesfully loaded!\n";
     if (loadAnimations()) std::cout << "All animations succsesfully loaded!\n";
     if (loadSounds()) std::cout << "All sounds succsesfully loaded\n";
+    std::cout << "Resourses have been loaded in " << timeForLoad.getElapsedTime().asMilliseconds() << " milliseconds!\n";
     gameInterface.create(window, font);
     menu.setSound(sounds["intersect"]);
 }

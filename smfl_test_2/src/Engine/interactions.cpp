@@ -64,7 +64,8 @@ void Engine::entitiesInteractions()
                 //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
                 if (((*it)->getRect().intersects((*it2)->getRect())) &&
                     ((*it)->getType() == "enemy") &&
-                    ((*it2)->getName() == "Bullet") &&
+                    ((*it2)->getName() == "Bullet") && 
+                    ((*it2)->getType() != "feel") &&
                     ((*it2)->getDamage() != 0))// intersects of bullet and enemy
                 {
                     //(*it)->dx = 0;//stop enemy
@@ -206,8 +207,8 @@ bool Engine::checkWin()
     {
         players[0]->win = false;
         sleep(milliseconds(50));
-        if (data.numberLevel < data.numberLevelMax)
-        {
+        //if (data.numberLevel < data.numberLevelMax)
+        //{
             data.numberLevel++;
             levelChanger = true;
             for (int i = 0; i < players.size(); ++i)
@@ -215,7 +216,7 @@ bool Engine::checkWin()
                 data.playersAMMO[i] = players[i]->ammo;
                 data.playersHP[i] = players[i]->getHealth();
             }
-        }
+        //}
         return true;
     }
 }

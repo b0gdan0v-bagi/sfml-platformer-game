@@ -84,18 +84,26 @@ bool Engine::loadSounds()
 }
 
 void Engine::gameRunning()
-
 {
-    //for (auto i = sounds.begin(); i != sounds.end(); i++) (*i).second.stop();
     for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
 
-    music["menu"].play();
     
+    if (levelChanger)
+    {
+        if (!menu.levelChangeMenu(window, data)) levelChanger = false;
+    }
+    sounds["wearenoslaves"].stop();
+    music["menu"].play();
     if (!levelChanger)
     {
         if (!menu.mainMenu(window, data)) return;
     }
     music["menu"].stop();
+
+    //set Volumes if changed
+    for (auto i = music.begin(); i != music.end(); i++) (*i).second.setVolume(data.musicVolume);
+    for (auto i = sounds.begin(); i != sounds.end(); i++) (*i).second.setVolume(data.sndVolume);
+
     window.setView(data.viewInterface);
 
     if (data.isChanged)  data.isChanged = false;
@@ -111,6 +119,8 @@ void Engine::gameRunning()
             data.playersHP[i] = data.defaultHP;
         }
     }
+    while (data.numberLevel > data.numberLevelAvailiable) data.numberLevelAvailiable++;
+    data.writeConfig();
     // delete memory for global engine vectors
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) delete *it;
     entities.clear(); 
@@ -171,8 +181,6 @@ void Engine::loadLevel()
                 load[i].GetPropertyString("text"))); //in text we have new messages or names of scenarios
         }
     }
-    
-
 
     int numberOfPlayersToAdd;
     if (pvp) numberOfPlayersToAdd = 2;
@@ -197,6 +205,7 @@ void Engine::loadLevel()
         players[i]->setHealth(data.playersHP[i]);
     }
     if (!pvp) task = "Go forward!";
+
     std::cout << "\n=========================\n";
     std::cout << "Level number : " << data.numberLevel << " is succsessfully loaded\n" << "pvp set : " << pvp << "\n";
     std::cout << "=========================\n";

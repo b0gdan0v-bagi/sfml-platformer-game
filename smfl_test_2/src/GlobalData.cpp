@@ -2,6 +2,34 @@
 
 using namespace sf;
 
+void GlobalData::zeroPlayerStat()
+{
+    numberOfShots = 0;
+    numberOfShotsSum = 0;
+    numberOfKilled = 0;
+    numberOfKilledSum = 0;
+    numberOfBottlesGained = 0;
+    numberOfBottlesGainedSum = 0;
+}
+
+void GlobalData::calculateSumStat()
+{
+    numberOfShotsSum += numberOfShots;
+    numberOfKilledSum += numberOfKilled;
+    numberOfBottlesGainedSum += numberOfBottlesGained;
+    numberOfShots = 0;
+    numberOfKilled = 0;
+    numberOfBottlesGained = 0;
+}
+
+void GlobalData::volumeToString()
+{
+    if (musicVolume == 0) musicVolumeString = "off";
+    else  musicVolumeString = std::to_string((int)musicVolume);
+    if (sndVolume == 0) sndVolumeString = "off";
+    else sndVolumeString = std::to_string((int)sndVolume);
+}
+
 void GlobalData::readConfig()
 {
     std::ifstream config;
@@ -18,7 +46,7 @@ void GlobalData::readConfig()
     {
         std::istringstream iss(line);
         if (!(iss >> var1 >> var2)) { break; } // end
-        std::cout << "Read config: " << var1 << " " << var2 << "\n";
+        //std::cout << "Read config: " << var1 << " " << var2 << "\n";
         if ((var1 == "resolution"))
         {
             std::string findX = "x";
@@ -86,6 +114,13 @@ void GlobalData::readConfig()
             sndVolume = std::stoi(var2);
             if ((sndVolume < 0) || (sndVolume > 100)) sndVolume = 15;
         }
+        if (var1 == "lvl_able")
+        {
+            numberLevelAvailiable = std::stoi(var2);
+            
+            if ((numberLevelAvailiable < 1) || (numberLevelAvailiable > numberLevelMax)) numberLevelAvailiable = 1;
+            std::cout << numberLevelAvailiable << " numberLevelAvailiable\n";
+        }
     }
     std::cout << "Config readed!\n";
     config.close();
@@ -116,6 +151,7 @@ void GlobalData::writeConfig()
         }
         configWrite << "music_volume " << musicVolume << "\n";
         configWrite << "snd_volume " << sndVolume << "\n";
+        configWrite << "lvl_able " << numberLevelAvailiable << "\n";
         configWrite.close();
         std::cout << "Standart config created!\n";
     }

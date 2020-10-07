@@ -1,0 +1,3 @@
+1) add menu between lvl
+2) duck shooting and get rect
+3) 
