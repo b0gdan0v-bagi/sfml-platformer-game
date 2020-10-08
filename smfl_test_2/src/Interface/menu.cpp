@@ -35,7 +35,7 @@ void Menu::create(RenderWindow& window, Font& FONT, GlobalData &DATA)
 	option["sound"].setPressable(0, false);
 	option["sound"].setPressable(2, false);
 	DATA.setContersToString();
-	levelChange.create(FONT, window, { "Congratulations!",DATA.nOfKilledStr,DATA.nOfShotsStr,DATA.nOfBotGainedStr,"To main menu","continue" }, false, 10);
+	levelChange.create(FONT, window, { "Congratulations!",DATA.nOfKilledStr,DATA.nOfShotsStr,DATA.nOfBotGainedStr,"To main menu","CONTINUE" }, false, 10);
 	levelChange.setPressable(0, false);
 	levelChange.setPressable(1, false);
 	levelChange.setPressable(2, false);
@@ -70,7 +70,7 @@ void Menu::composeAll(RenderWindow& window)
 	mainBut.composeY(window, 0, -0.95);
 	lvl.composeY(window, 0, -0.95);
 	about.composeY(window, 0, -0.95);
-	levelChange.composeY(window, 0, -0.9);
+	levelChange.composeY(window, -0.9, -0.9 , 0);
 	option["resolution"].composeX(window, -1, -0.95);
 	option["apply"].composeX(window, -1, 0.1);
 	option["showfps"].composeX(window, -1, -0.80);
@@ -441,12 +441,17 @@ bool Menu::levelChangeMenu(RenderWindow& window, GlobalData& data)
 	if (data.numberLevel > data.numberLevelMax)
 	{
 		isFinal = true;
-		//levelChange.setViewAndPressable(2, false);
+		levelChange.setViewAndPressable(5, false);
 		data.numberLevel = data.numberLevelMax;
 		// bla bla bla
 	}
-	else isFinal = false;
-	data.setContersToString(isFinal);
+	else {
+		levelChange.setViewAndPressable(5, true);
+		isFinal = false;
+	}
+	data.calculateSumStat(); //summ global counters and zero local
+	data.setContersToString();
+	data.zeroPlayerStat(isFinal);
 	levelChange.setButtonString(1, data.nOfKilledStr);
 	levelChange.setButtonString(2, data.nOfShotsStr);
 	levelChange.setButtonString(3, data.nOfBotGainedStr);

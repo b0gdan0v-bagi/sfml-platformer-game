@@ -4,31 +4,32 @@ using namespace sf;
 
 
 
-void GlobalData::setContersToString(bool isFinalStat)
+void GlobalData::setContersToString()
 {
-    if (isFinalStat)
-    {
-        nOfKilledStr = "Mobs killed : " + std::to_string(numberOfKilled) + " total: " + std::to_string(numberOfKilledSum);
-        nOfShotsStr = "Shots : " + std::to_string(numberOfShots) + " total: " + std::to_string(numberOfShotsSum);
-        nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained) + " total: " + std::to_string(numberOfBottlesGainedSum);
-    }
-    else
-    {
-        nOfKilledStr = "Mobs killed : " + std::to_string(numberOfKilled);
-        nOfShotsStr = "Shots : " + std::to_string(numberOfShots);
-        nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained);
-    }
+    nOfKilledStr = "Mobs killed : " + std::to_string(numberOfKilled) + "     TOTAL: " + std::to_string(numberOfKilledSum);
+    nOfShotsStr = "Shots : " + std::to_string(numberOfShots) + "               TOTAL: " + std::to_string(numberOfShotsSum);
+    nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained) + " TOTAL: " + std::to_string(numberOfBottlesGainedSum);
     std::cout << nOfKilledStr << "\n" << nOfShotsStr << "\n" << nOfBotGainedStr << "\n";
 }
 
-void GlobalData::zeroPlayerStat()
+void GlobalData::zeroPlayerStat(bool isGlobal)
 {
-    numberOfShots = 0;
-    numberOfShotsSum = 0;
-    numberOfKilled = 0;
-    numberOfKilledSum = 0;
-    numberOfBottlesGained = 0;
-    numberOfBottlesGainedSum = 0;
+    if (!isGlobal) 
+    {
+        numberOfShots = 0;
+        numberOfKilled = 0;
+        numberOfBottlesGained = 0;
+    }
+    else 
+    {
+        numberOfShots = 0;
+        numberOfKilled = 0;
+        numberOfBottlesGained = 0;
+        numberOfShotsSum = 0;
+        numberOfKilledSum = 0;
+        numberOfBottlesGainedSum = 0;
+    }
+    
 }
 
 void GlobalData::calculateSumStat()
@@ -36,9 +37,7 @@ void GlobalData::calculateSumStat()
     numberOfShotsSum += numberOfShots;
     numberOfKilledSum += numberOfKilled;
     numberOfBottlesGainedSum += numberOfBottlesGained;
-    numberOfShots = 0;
-    numberOfKilled = 0;
-    numberOfBottlesGained = 0;
+    std::cout << "stats " << numberOfShotsSum << " " << numberOfBottlesGainedSum << " " << numberOfKilledSum << "\n";
 }
 
 void GlobalData::volumeToString()

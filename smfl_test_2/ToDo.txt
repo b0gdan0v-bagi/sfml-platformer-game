@@ -1,3 +1,1 @@
-1) add menu between lvl
-2) duck shooting and get rect
-3) pvp activity shouldnt set availiable lvl
+1) duck shooting and get rect

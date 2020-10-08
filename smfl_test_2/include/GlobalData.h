@@ -49,8 +49,8 @@ struct GlobalData
 
     std::string nOfShotsStr, nOfKilledStr, nOfBotGainedStr;
 
-    void setContersToString(bool isFinalStat = false);
-    void zeroPlayerStat();
+    void setContersToString();
+    void zeroPlayerStat(bool isGlobal = false);
     void calculateSumStat();
     void volumeToString();
     void readConfig();

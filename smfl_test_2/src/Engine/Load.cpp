@@ -85,20 +85,19 @@ bool Engine::loadSounds()
 
 void Engine::gameRunning()
 {
-    for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
-
-    
+    //load screen stat if lvl ended with win coniditon
     if (levelNexter)
     {
         levelNexter = false;
         if (!menu.levelChangeMenu(window, data)) levelChanger = false; // make sure we go to main menu
-        data.calculateSumStat(); //summ global counters and zero local
+       
     }
+    for (auto i = music.begin(); i != music.end(); i++) (*i).second.stop();
     sounds["wearenoslaves"].stop();
     music["menu"].play();
     if (!levelChanger)
     {
-        data.zeroPlayerStat(); // zero all counters
+        data.zeroPlayerStat(true); // zero all counters
         if (!menu.mainMenu(window, data)) return;
     }
     music["menu"].stop();
@@ -122,7 +121,9 @@ void Engine::gameRunning()
             data.playersHP[i] = data.defaultHP;
         }
     }
-    while (data.numberLevel > data.numberLevelAvailiable) data.numberLevelAvailiable++;
+    if (data.numberLevel < 100) { //make sure that lvl is not pvp
+        while (data.numberLevel > data.numberLevelAvailiable) data.numberLevelAvailiable++;
+    }
     data.writeConfig();
     // delete memory for global engine vectors
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) delete *it;
