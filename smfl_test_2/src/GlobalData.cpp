@@ -18,6 +18,7 @@ void GlobalData::setContersToString(bool isFinalStat)
         nOfShotsStr = "Shots : " + std::to_string(numberOfShots);
         nOfBotGainedStr = "Bottles gained : " + std::to_string(numberOfBottlesGained);
     }
+    std::cout << nOfKilledStr << "\n" << nOfShotsStr << "\n" << nOfBotGainedStr << "\n";
 }
 
 void GlobalData::zeroPlayerStat()

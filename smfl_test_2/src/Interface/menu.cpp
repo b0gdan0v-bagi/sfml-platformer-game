@@ -441,12 +441,12 @@ bool Menu::levelChangeMenu(RenderWindow& window, GlobalData& data)
 	if (data.numberLevel > data.numberLevelMax)
 	{
 		isFinal = true;
-		levelChange.setViewAndPressable(2, false);
+		//levelChange.setViewAndPressable(2, false);
 		data.numberLevel = data.numberLevelMax;
 		// bla bla bla
 	}
 	else isFinal = false;
-	data.setContersToString();
+	data.setContersToString(isFinal);
 	levelChange.setButtonString(1, data.nOfKilledStr);
 	levelChange.setButtonString(2, data.nOfShotsStr);
 	levelChange.setButtonString(3, data.nOfBotGainedStr);
