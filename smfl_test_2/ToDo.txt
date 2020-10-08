@@ -1,1 +1,2 @@
 1) duck shooting and get rect
+2) new constructos for bullet +dy difference, better get m_direction of all entities

@@ -111,6 +111,11 @@ void Engine::gameRunning()
     if (data.isChanged)  data.isChanged = false;
     if (data.numberLevel / 100 != 0) pvp = true;
     else pvp = false;
+
+    //EXPEREMENTAL TO ADD FRIENDLY FIRE
+
+    if (data.playersPVE > 1) pvp = true;
+
     viewChanges(); // take view ports if screen splited or not
     if (levelChanger) levelChanger = false; //level changer works once
     else // restore DATA to defaults
@@ -189,6 +194,9 @@ void Engine::loadLevel()
     int numberOfPlayersToAdd;
     if (pvp) numberOfPlayersToAdd = 2;
     else numberOfPlayersToAdd = data.playersPVE;
+
+   
+
     for (int i = 1; i <= numberOfPlayersToAdd; ++i)
     {
         std::ostringstream playerN;

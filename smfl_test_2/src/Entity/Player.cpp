@@ -4,9 +4,8 @@ using namespace sf;
 
 Player::Player(AnimationManager& A, String Name, TileMap& lev, float X, float Y) :Entity(A, Name, X, Y)
 {
-	m_rectDuck.width = m_anim.getW("duck");
-	m_rectDuck.height = m_anim.getH("duck");
-	
+	m_duckDiff.x = m_anim.getW("stay") - m_anim.getW("duck");
+	m_duckDiff.y = m_anim.getH("stay") - m_anim.getH("duck");
 	option(Name, 0, 20, "stay");
 	m_obj = lev.getAllObjects();
 	m_STATE = stay;
@@ -177,8 +176,7 @@ void Player::update(float time)
 	checkCollisionWithMap(m_d.x, 0);
 	m_rect.top += m_d.y * time;
 	checkCollisionWithMap(0, m_d.y);
-	m_rectDuck.left = m_rect.left;
-	m_rectDuck.top = m_rectDuck.top + m_rect.height - m_rectDuck.height;
+
 	ifDuck();
 	
 }

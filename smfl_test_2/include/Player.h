@@ -11,7 +11,6 @@ private:
 	bool m_onLadder, m_hit;
 	float m_shootTimer;
 	Vector2f m_duckDiff, m_StayPos;
-	FloatRect m_rectDuck;
 	bool m_doorKey;
 	
 public:
@@ -27,7 +26,8 @@ public:
 	bool ifDuck(); // for checking intersects with bullet and no conflicts with collisions
 	void setDoorKey(bool DOOR_KEY) { m_doorKey = DOOR_KEY; }
 	bool getDoorKey() { return m_doorKey; }
-	FloatRect getDuckRect() { return m_rectDuck; }
+	Vector2f getDuckDiff() { return m_duckDiff; }
+
 };
 
 #endif PLAYER_H

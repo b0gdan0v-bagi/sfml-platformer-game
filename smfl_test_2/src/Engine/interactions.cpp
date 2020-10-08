@@ -17,7 +17,6 @@ void Engine::playersShooting()
                 (*itPlayer)->getPos().y + (*itPlayer)->getRect().height / 2,
                 (*itPlayer)->getDir(), (*itPlayer)->getName()));
             data.numberOfShots++;
-            std::cout << "Shot number " << data.numberOfShots << "\n";
         }//if shoot - making bullet
     }
 }
@@ -25,7 +24,7 @@ void Engine::playersShooting()
 void Engine::entitiesInteractions()
 {
     for (std::list<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
-    {
+    {//boss shooting
         if (((*it)->getName() == "feel") && (data.numberLevel != 1))
         {
             if ((*it)->canShoot)
@@ -92,24 +91,27 @@ void Engine::entitiesInteractions()
         {
             if ((*it)->getRect().intersects((*itPlayer)->getRect()))
             {
-                /*if (((*itPlayer)->ifDuck()) && ((*it)->getRect().intersects((*itPlayer)->getDuckRect())))
-                {
-                    if (((*it)->getName() == "Bullet") && ((*it)->getType() != (*itPlayer)->getName()) && ((*itPlayer)->getHealth() > 0))
-                    {
-                        (*itPlayer)->takeDamage((*it)->getDamage());
-                        (*it)->setDamage(0);
-                        (*it)->setHealth(0); // kill bullet
-                        std::cout << "abs";
-                    }
-                }*/
-                //if ((!(*itPlayer)->ifDuck()) && (*it)->getRect().intersects((*itPlayer)->getRect()))
                 if (pvp)
                 {
                     if (((*it)->getName() == "Bullet") && ((*it)->getType() != (*itPlayer)->getName()) && ((*itPlayer)->getHealth() > 0))
                     {
-                        (*itPlayer)->takeDamage((*it)->getDamage());
-                        (*it)->setDamage(0);
-                        (*it)->setHealth(0); // kill bullet
+                        if ((*itPlayer)->ifDuck() == false) //players get normal bullet if he staying
+                        {
+                            (*itPlayer)->takeDamage((*it)->getDamage());
+                            (*it)->setDamage(0);
+                            (*it)->setHealth(0); // kill bullet
+                        }
+                        else
+                        { // player was sitting and we need to calculate his new rect which is lower in y then original
+                            if ((*it)->getRect().intersects(FloatRect((*itPlayer)->getRect().left,
+                                (*itPlayer)->getRect().top + (*itPlayer)->getDuckDiff().y,
+                                (*itPlayer)->getRect().width, (*itPlayer)->getRect().height)))
+                            {
+                                (*itPlayer)->takeDamage((*it)->getDamage());
+                                (*it)->setDamage(0);
+                                (*it)->setHealth(0); // kill bullet
+                            }
+                        }
                     }
                 }
                 if (((*it)->getType() == "enemy") && ((*itPlayer)->getLife()))
@@ -132,7 +134,6 @@ void Engine::entitiesInteractions()
                         (*it)->kill();
                         sounds["kick"].play();
                         data.numberOfBottlesGained++;
-                        std::cout << "Bottle gained N " << data.numberOfBottlesGained << "\n";
                     }
                 }
                 if (((*it)->getName() == "key") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
@@ -165,8 +166,7 @@ void Engine::entitiesInteractions()
                         task = (*it)->getType(); // change output message for help
                         newMessage(task, std::distance(players.begin(), itPlayer));
                         (*it)->kill();
-                        
-                        
+                      
                     }
                 }
                 if (((*it)->getName() == "scenario") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
@@ -186,10 +186,25 @@ void Engine::entitiesInteractions()
                 }
                 if (((*it)->getName() == "Bullet") && ((*it)->getType() == "feel") && ((*itPlayer)->getHealth() > 0))
                 {
-                    (*itPlayer)->takeDamage((*it)->getDamage());
-                    (*it)->setDamage(0);
-                    (*it)->setHealth(0); // kill bullet
-                    if (sounds["maslina"].getStatus() != 2) sounds["maslina"].play();
+                    if ((*itPlayer)->ifDuck() == false) //players get normal bullet if he staying
+                    {
+                        (*itPlayer)->takeDamage((*it)->getDamage());
+                        (*it)->setDamage(0);
+                        (*it)->setHealth(0); // kill bullet
+                        if (sounds["maslina"].getStatus() != 2) sounds["maslina"].play();
+                    }
+                    else
+                    { // player was sitting and we need to calculate his new rect which is lower in y then original
+                        if ((*it)->getRect().intersects(FloatRect((*itPlayer)->getRect().left,
+                            (*itPlayer)->getRect().top + (*itPlayer)->getDuckDiff().y,
+                            (*itPlayer)->getRect().width, (*itPlayer)->getRect().height)))
+                        {
+                            (*itPlayer)->takeDamage((*it)->getDamage());
+                            (*it)->setDamage(0);
+                            (*it)->setHealth(0); // kill bullet
+                            if (sounds["maslina"].getStatus() != 2) sounds["maslina"].play();
+                        }
+                    }
                 }
                 
 

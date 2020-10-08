@@ -41,6 +41,8 @@ bool Engine::startGame()
         {
             if (event.type == Event::Closed)  window.close();
             playersShooting(); // in event while
+            if (event.type == Event::KeyPressed)
+                if (event.key.code == Keyboard::R) std::cout << players[0]->ifDuck() << "\n";
         }
 
         input();
