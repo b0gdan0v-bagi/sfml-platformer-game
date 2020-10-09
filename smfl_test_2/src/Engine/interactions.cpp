@@ -58,31 +58,31 @@ void Engine::entitiesInteractions()
                     find_direction, (*it)->getName()));
             }
         }
-        for (std::list<Entity*>::iterator it2 = entities.begin(); it2 != entities.end(); it2++)
+        for (std::list<Entity*>::iterator bullet = entities.begin(); bullet != entities.end(); bullet++)
         {
-            if ((*it)->getRect() != (*it2)->getRect()) //different rectanglles
+            if ((*it)->getRect() != (*bullet)->getRect()) //different rectanglles
             {
-                //if (((*it)->getRect().intersects((*it2)->getRect())) && ((*it)->name == "EasyEnemy") && ((*it2)->name == "Bullet"))// intersects of bullet and enemy
-                if (((*it)->getRect().intersects((*it2)->getRect())) &&
+                //if (((*it)->getRect().intersects((*bullet)->getRect())) && ((*it)->name == "EasyEnemy") && ((*bullet)->name == "Bullet"))// intersects of bullet and enemy
+                if (((*it)->getRect().intersects((*bullet)->getRect())) &&
                     ((*it)->getType() == "enemy") &&
-                    ((*it2)->getName() == "Bullet") && 
-                    ((*it2)->getType() != "feel") &&
-                    ((*it2)->getDamage() != 0))// intersects of bullet and enemy
+                    ((*bullet)->getName() == "Bullet") && 
+                    ((*bullet)->getType() != "feel") &&
+                    ((*bullet)->getDamage() != 0))// intersects of bullet and enemy
                 {
                     //(*it)->dx = 0;//stop enemy
-                    (*it)->takeDamage((*it2)->getDamage()); // damage enemy
-                    (*it2)->setDamage(0);
-                    (*it2)->setHealth(0); // kill bullet
+                    (*it)->takeDamage((*bullet)->getDamage()); // damage enemy
+                    (*bullet)->setDamage(0);
+                    (*bullet)->setHealth(0); // kill bullet
                 }
-                if (((*it)->getRect().intersects((*it2)->getRect())) &&
+                if (((*it)->getRect().intersects((*bullet)->getRect())) &&
                     ((*it)->getType() == "boss") &&
-                    ((*it2)->getName() == "Bullet") && ((*it2)->getType() != "feel") &&
-                    ((*it2)->getDamage() != 0))// intersects of bullet and enemy
+                    ((*bullet)->getName() == "Bullet") && ((*bullet)->getType() != "feel") &&
+                    ((*bullet)->getDamage() != 0))// intersects of bullet and enemy
                 {
                     //(*it)->dx = 0;//stop enemy
-                    (*it)->takeDamage((*it2)->getDamage()); // damage enemy
-                    (*it2)->setDamage(0);
-                    (*it2)->setHealth(0); // kill bullet
+                    (*it)->takeDamage((*bullet)->getDamage()); // damage enemy
+                    (*bullet)->setDamage(0);
+                    (*bullet)->setHealth(0); // kill bullet
                 }
             }
 
@@ -114,16 +114,7 @@ void Engine::entitiesInteractions()
                         }
                     }
                 }
-                if (((*it)->getType() == "enemy") && ((*itPlayer)->getLife()))
-                {
-                    (*itPlayer)->setSpeedX((*it)->getSpeed().x * 3);
-                    (*itPlayer)->setSpeedY(-0.1);
-                    (*itPlayer)->takeDamage(5);
-                    if ((*itPlayer)->getHealth() == 0) (*itPlayer)->setSpeedX(0.f);
-                    (*it)->setHealth(0);
-                    (*it)->setDamage(0);
-                    sounds["kick"].play();
-                }
+                if (((*itPlayer)->getLife()) && ((*it)->getLife())) collission_EvsP(it, itPlayer);
                 if (((*it)->getName() == "vodka") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
                 {
                     if ((*itPlayer)->getSpeed().y > 0)
@@ -152,6 +143,7 @@ void Engine::entitiesInteractions()
                         addNewWave = true;
                     }
                 }
+
                 if (((*it)->getName() == "door") && ((*itPlayer)->getLife()) && ((*it)->getLife()) && ((*itPlayer)->getDoorKey()))
                 { //destroy the door if we have key
                     {
@@ -176,14 +168,7 @@ void Engine::entitiesInteractions()
                         (*it)->kill();
                     }
                 }
-                if (((*it)->getName() == "feel") && ((*itPlayer)->getLife()) && ((*it)->getLife()))
-                {
-                    (*itPlayer)->setSpeedX((*it)->getSpeed().x * 3);
-                    (*itPlayer)->setSpeedY(-0.1);
-                    (*itPlayer)->takeDamage(5);
-                    if ((*itPlayer)->getHealth() == 0) (*itPlayer)->setSpeedX(0.f);
-                    //(*it)->takeDamage(1);
-                }
+
                 if (((*it)->getName() == "Bullet") && ((*it)->getType() == "feel") && ((*itPlayer)->getHealth() > 0))
                 {
                     if ((*itPlayer)->ifDuck() == false) //players get normal bullet if he staying
@@ -217,6 +202,26 @@ void Engine::entitiesInteractions()
             }
         }
 
+    }
+}
+
+void Engine::collission_EvsP(std::list<Entity*>::iterator& ent, std::vector<Player*>::iterator& plr)
+{
+    if ((*ent)->getType() == "enemy")
+    {
+        (*plr)->setSpeedX((*ent)->getSpeed().x * 3);
+        (*plr)->setSpeedY(-0.1);
+        (*plr)->takeDamage(5);
+        if ((*plr)->getHealth() == 0) (*plr)->setSpeedX(0.f);
+        (*ent)->setHealth(0);
+        (*ent)->setDamage(0);
+        sounds["kick"].play();
+    }
+    if ((*ent)->getName() == "feel")
+    {
+        (*plr)->setSpeedX((*ent)->getSpeed().x * 3);
+        (*plr)->takeDamage(5);
+        if ((*plr)->getHealth() == 0) (*plr)->setSpeedX(0.f);
     }
 }
 

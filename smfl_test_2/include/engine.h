@@ -66,12 +66,14 @@ private:
     void viewChanges(); // take view ports if screen splited or not
     void playersShooting();
     void entitiesInteractions();
+    void collission_EvsP(std::list<Entity*>::iterator &ent, std::vector<Player*>::iterator &plr);
     bool checkWin();
     void checkDefeat();
     void newMessage(String MESSAGE, int PLAYER_N, float MESSAGE_TIMER = 3000);
     void scenarioPlay(float time);
     bool startGame();
     bool checkSTATE(); //take gameSTATE, if 0 -> continue, if 1 -> exit main cycle to main menu, if 2 -> exit main cycle and reload
+
 public:
     Engine();
     void gameRunning();
