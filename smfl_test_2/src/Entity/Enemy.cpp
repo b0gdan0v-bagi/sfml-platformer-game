@@ -23,7 +23,7 @@ Enemy::Enemy(AnimationManager& A, String Name, TileMap& lvl, float X, float Y) :
 	if (m_name == "feel")
 	{
 		m_type = "boss";
-		m_health = 150;
+		m_health = 170;
 		m_shooter = true;
 		m_d.x = 0.1;
 	}
@@ -50,7 +50,7 @@ void Enemy::update(float time)
 		if (!canShoot) // for delay in shooting
 		{
 			m_shootTimer += time;
-			if (m_shootTimer > 1500)
+			if (m_shootTimer > m_health * 5 + 800)
 			{
 				gun_number++;
 				if (gun_number > 6) gun_number = 0;

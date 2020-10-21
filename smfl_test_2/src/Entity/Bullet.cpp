@@ -12,13 +12,35 @@ Bullet::Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y,
 	m_damage = 10;
 	m_life = true;
 	m_type = TYPE;
+	m_horisontal = true;
+	option(Name, 0.8, 1, "move");
+}
+
+Bullet::Bullet(AnimationManager& A, String Name, TileMap& lvl, float X, float Y, float angle, String TYPE) :Entity(A, Name, X, Y)
+{
+	m_obj = lvl.getObjectsByName("solid");// find solid objects
+	m_rect.left = X;
+	m_rect.height = Y;
+	//m_direction = (SPEED.x > 0) ? true : false;
+	m_speed = 0.8;
+	
+	m_damage = 10;
+	m_life = true;
+	m_type = TYPE;
+	m_horisontal = false;
 	option(Name, 0.8, 1, "move");
 }
 
 void Bullet::update(float time)
 {
-	if (m_direction) m_d.x = -m_speed;
-	else m_d.x = +m_speed;
+	if (m_horisontal)
+	{
+		if (m_direction) m_d.x = -m_speed;
+		else m_d.x = +m_speed;
+	}
+	else m_d = m_speedVec;
+		
+	
 
 	m_rect.left += m_d.x * time;//x moving
 	m_rect.height += m_d.y * time;//y moving

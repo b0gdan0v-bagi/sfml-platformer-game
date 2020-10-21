@@ -51,11 +51,13 @@ void Engine::entitiesInteractions()
                 default:
                     break;
                 }  
-
-                entities.push_back(new Bullet(
-                    animationManagerList["bullet"], "Bullet", *lvl[0], (*it)->getPos().x,
-                    y_for_bullet,
-                    find_direction, (*it)->getName()));
+                if ((*it)->gun_number != 0) 
+                {
+                    entities.push_back(new Bullet(
+                        animationManagerList["bullet"], "Bullet", *lvl[0], (*it)->getPos().x,
+                        y_for_bullet,
+                        find_direction, (*it)->getName()));
+                }
             }
         }
         for (std::list<Entity*>::iterator bullet = entities.begin(); bullet != entities.end(); bullet++)
