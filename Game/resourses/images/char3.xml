@@ -1,0 +1,20 @@
+<!DOCTYPE SpriteDecomposer>
+<sprites image="char.png" transparentColor="FFFFFF">
+ <animation title="die_pistol" delay="150">
+  <cut w="28" x="48" y="48" h="48" row="1" col="1"/>
+  <cut w="28" x="176" y="48" h="48" row="1" col="1"/>
+  <cut w="30" x="300" y="48" h="48" row="1" col="1"/>
+  <cut w="36" x="420" y="48" h="48" row="1" col="1"/>
+  <cut w="28" x="560" y="48" h="48" row="1" col="1"/>
+  <cut w="48" x="670" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="925" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="797" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="1053" y="48" h="48" row="1" col="1"/>
+  <cut w="82" x="1181" y="48" h="48" row="1" col="1"/>
+  <cut w="14" x="542" y="88" h="6" row="1" col="1"/>
+  <cut w="14" x="798" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="926" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="1054" y="92" h="4" row="1" col="1"/>
+  <cut w="14" x="1182" y="92" h="4" row="1" col="1"/>
+ </animation>
+</sprites>

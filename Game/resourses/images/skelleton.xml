@@ -1,0 +1,18 @@
+<!DOCTYPE SpriteDecomposer>
+<sprites image="SkeletonWalk.png" transparentColor="">
+ <animation title="move" delay="150">
+  <cut w="20" x="66" y="0" h="33" row="1" col="1"/>
+  <cut w="21" x="88" y="0" h="33" row="1" col="1"/>
+  <cut w="22" x="110" y="0" h="33" row="1" col="1"/>
+  <cut w="18" x="1" y="1" h="32" row="1" col="1"/>
+  <cut w="18" x="23" y="1" h="32" row="1" col="1"/>
+  <cut w="18" x="45" y="1" h="32" row="1" col="1"/>
+  <cut w="22" x="132" y="1" h="32" row="1" col="1"/>
+  <cut w="22" x="154" y="1" h="32" row="1" col="1"/>
+  <cut w="22" x="176" y="1" h="32" row="1" col="1"/>
+  <cut w="22" x="198" y="1" h="32" row="1" col="1"/>
+  <cut w="20" x="221" y="1" h="32" row="1" col="1"/>
+  <cut w="18" x="244" y="1" h="32" row="1" col="1"/>
+  <cut w="17" x="266" y="1" h="32" row="1" col="1"/>
+ </animation>
+</sprites>
